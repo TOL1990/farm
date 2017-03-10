@@ -23,13 +23,28 @@ public class BuildingConstruct extends Command {
 
     public boolean run() {
         //нельзя строить в непустой клетке
-        if (field.getCell(x,y).getType() != CellType.Empty) return false;
+        validation();
+        if (!isValid) return false;
 
-        building.setxPosition(x);
-        building.setyPosition(y);
+            building.setxPosition(x);
+            building.setyPosition(y);
 
-        field.setCell(building, x,y); // ложим в ячейку здание
+            field.setCell(building, x, y); // ложим в ячейку здание
+            return true;
 
-        return true;
+    }
+    public void validation()
+    {
+        if (field.getCell(x,y).getType() != CellType.Empty){
+            System.out.println("Ячейка не пуста. Невозможно построить здание.");
+            setValid(false);
+        }
+        //если такого здания нету в базе
+        //хватает ли денег
+        if(field.getAvaliableMoney() < building.getPrice())
+        {
+            System.out.println("Нехватает денег для постройки здания");
+            setValid(false);
+        }
     }
 }

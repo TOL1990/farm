@@ -24,15 +24,29 @@ public class PlantConstuct extends Command {
 
     public boolean run() {
         //нельзя строить в непустой клетке
-        if (field.getCell(x,y).getType() != CellType.Empty) {
-            System.out.println("Нельзя посадить растение в занятую клетку");
-            return false;
-        }
+        validation();
+        if (!isValid) return false;
 
         plant.setxPosition(x);
         plant.setyPosition(y);
 
         field.setCell(plant, x,y); // ложим в ячейку растение
         return true;
+    }
+
+    public void validation()
+    {
+        if (field.getCell(x,y).getType() != CellType.Empty){
+            System.out.println("Ячейка не пуста. Невозможно посадить растение.");
+            setValid(false);
+        }
+        //если такого здания нету в базе
+
+        //хватает ли денег
+        if(field.getAvaliableMoney() < plant.getPrice())
+        {
+            System.out.println("Нехватает денег для посадки растения");
+            setValid(false);
+        }
     }
 }

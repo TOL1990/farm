@@ -10,12 +10,17 @@ public class Field {
     private final int CELL_LIMIT = 64;
     private final int HORIZONTAL_CELL = 8;
     private final int VERTICAL_CELL = 8;
-
+    private Player player;
 
     public List<Cell> cells;
 
     public Field() {
         cells = new ArrayList<Cell>();
+    }
+
+    public Field(Player player) {
+        cells = new ArrayList<Cell>();
+        this.player = player;
     }
 
     public void createEmptyCells() {
@@ -88,5 +93,9 @@ public class Field {
         }
             System.out.println();
 
+    }
+    public long getAvaliableMoney()
+    {
+        return player.getBalance();
     }
 }
