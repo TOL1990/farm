@@ -30,7 +30,7 @@ public class Server {
             while (true) {
                 Socket socket = server.accept();
 
-                ServerThread con = new ServerThread(socket, serverThreads, this);
+                ServerThread con = new ServerThread(socket, this);
                 serverThreads.add(con);
                 con.start();
             }

@@ -1,6 +1,8 @@
 package model.dao.util;
 
+import model.dao.FieldDao;
 import model.dao.PlayerDao;
+import model.dao.impl.FieldDaoImpl;
 import model.dao.impl.PlayerDaoImpl;
 
 /**
@@ -9,35 +11,28 @@ import model.dao.impl.PlayerDaoImpl;
 public class FactoryDao {
 
     private static PlayerDao playerDao = null;
-    //        private static ProductDAO productDAO= null;
-//        private static ProductTypeDAO productTypeDAO= null;
+    private static FieldDao fieldDao = null;
     private static FactoryDao instance = null;
 
-    public static synchronized FactoryDao getInstance(){
-        if (instance == null){
+    public static synchronized FactoryDao getInstance() {
+        if (instance == null) {
             instance = new FactoryDao();
         }
         return instance;
     }
 
-    public PlayerDao getPlayerDao(){
-        if (playerDao == null){
+    public PlayerDao getPlayerDao() {
+        if (playerDao == null) {
             playerDao = new PlayerDaoImpl();
         }
         return playerDao;
     }
-//
-//        public DriverDAO getDriverDAO(){
-//            if (driverDAO == null){
-//                driverDAO = new DriverDAOImpl();
-//            }
-//            return driverDAO;
-//        }
-//
-//        public RouteDAO getRouteDAO(){
-//            if (routeDAO == null){
-//                routeDAO = new RouteDAOImpl();
-//            }
-//            return routeDAO;
-//        }
+
+    public FieldDao getFieldDao() {
+        if (fieldDao == null) {
+            fieldDao = new FieldDaoImpl();
+        }
+        return fieldDao;
+    }
+
 }

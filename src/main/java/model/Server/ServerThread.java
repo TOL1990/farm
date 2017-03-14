@@ -1,6 +1,8 @@
 package model.Server;
 
+import model.entity.Field;
 import model.entity.Player;
+import model.service.GameService;
 import model.service.PlayerService;
 
 import java.io.BufferedReader;
@@ -14,18 +16,25 @@ import java.util.List;
 /**
  * Created by Taras on 09.03.2017.
  */
-public class ServerThread extends  Thread{
+public class ServerThread extends Thread {
     List<ServerThread> connections;
+    private List<Player> players;
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
     private String nick = "";
+    private Player player;
+    private Field field;
+    private GameService gameService;
+
     private Server server;
 
-    public ServerThread(Socket socket, List<ServerThread> connections, Server server) {
+    public ServerThread(Socket socket, Server server) {
         this.socket = socket;
-        this.connections = connections;
         this.server = server;
+        gameService = new GameService();
+        players = gameService.getAllPlayers();   //поднимаем из базы лист игроков
+
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.out = new PrintWriter(socket.getOutputStream(), true);
@@ -40,39 +49,64 @@ public class ServerThread extends  Thread{
         try {
 
             authorisation();
-            synchronized (connections) {
-                for (ServerThread con :
-                        connections) {
-                    con.out.println(nick + " connected");
-                }
-            }
+            out.println(nick + " залогинился в игру");
+            out.println(gameService.soutFarm());
+
+            // Команды пользовательского ввода
 
             String msg = "";
             while (true) {
-                msg = in.readLine();
-                if (msg.equals("exit")) break;
+                msg = in.readLine().toUpperCase();
+                String[] strArr = msg.split(" ");//розбиваем команду пользователя
+                // на составляющие и в зав.  от команды указывает параметры
+                if (msg.equals("FARM STATUS")) {
+                    out.println(gameService.soutFarm());
+                }
+                if (msg.equals("EXIT")) {
+                    break;
+                }
+                if (msg.equals("EXIT SERVER")) {
+                    //todo тушим сервер
+                }
+                if (msg.equals("GET AV Р")) {
+                    out.println(gameService.getAvaliablePlants());
+                }
+                if (msg.equals("GET AV B")) {
+                    out.println(gameService.getAvaliableBuildings());
+                }
+                if (strArr[0].equals("SET") && strArr[1].equals("PLANT")) {
+                    String plantName = strArr[2];
+                    String x = strArr[4];
+                    String y = strArr[5];
+                    gameService.setPlant(plantName, x, y);
 
-                synchronized (connections) {
-                    for (ServerThread con :
-                            connections) {
-                        con.out.println(nick + ": " + msg);
-                    }
+                }
+                if (strArr[0].equals("PICK") && strArr[1].equals("UP")) {
+                    String x = strArr[3];
+                    String y = strArr[4];
+                    gameService.pickupPlant(x, y);
+                }
+                if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
+                    String x = strArr[2];
+                    String y = strArr[3];
+                    gameService.delPlant(x, y);
+                }
+                if (strArr[0].equals("SET") && strArr[1].equals("BUILDING")) {
+                    String buildingName = strArr[2];
+                    String x = strArr[4];
+                    String y = strArr[5];
+                    gameService.setBuilding(buildingName, x, y);
+                }
+                if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
+                    String x = strArr[2];
+                    String y = strArr[3];
+                    gameService.delBuilding(x, y);
                 }
             }
-            synchronized (connections) {
-                synchronized (connections) {
-                    for (ServerThread con :
-                            connections) {
-                        con.out.println(nick + " has left.");
-                    }
-                }
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             close();
-
         }
     }
 
@@ -89,17 +123,20 @@ public class ServerThread extends  Thread{
                 out.println("Write a password");
                 String pass = in.readLine();
                 Player loginedPlayer = new Player(nick, pass);
-                ArrayList<Player> players = (ArrayList<Player>) new PlayerService().getAllPlayers();
+//                ArrayList<Player> players = (ArrayList<Player>) new PlayerService().getAllPlayers();
 
-                if (isLoginExist(nick, players)) {
-                    if (isPasswordCorrect(loginedPlayer, players)) {
+                if (isLoginExist(nick, (ArrayList<Player>) players)) {
+                    if (isPasswordCorrect(loginedPlayer, (ArrayList<Player>)players)) {
+//                        gameService = new GameService(new Player(nick, pass)); //создаем сессию игры
+                         gameService.setPlayer(new Player(nick, pass));
                         break; // If login and password correct break from authorization
                     } else {
                         out.println("Wrong password, Try again.");
                         continue;
                     }
                 } else {
-                    addNewUser(nick, pass);
+                    gameService.addNewPlayer(nick, pass);
+                    players = gameService.getAllPlayers();
                     out.println("new User added");
                 }
             } catch (IOException e) {

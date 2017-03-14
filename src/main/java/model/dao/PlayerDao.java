@@ -9,9 +9,11 @@ import java.util.List;
  */
 public interface PlayerDao {
     //    public Player findById(Long id);
-    public List<Player> getAllPlayers();
+     List<Player> getAllPlayers();
 
-    public void addPlayer(Player player);
+     void addPlayer(Player player);
+
+    Player getPlayerByNick(String nick);
 //    public void updatePlayer(Long player_id, Player player) ;
 //    public Player getPlayerById(Long empl_id);
 //    public void deletePlayer(Player player) ;
