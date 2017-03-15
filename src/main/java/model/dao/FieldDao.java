@@ -14,4 +14,6 @@ public interface FieldDao {
     Field getField(Player player);
 
     List<Cell> getCellsByFieldId(long id);
+
+    void addField(Player player);
 }

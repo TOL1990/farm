@@ -29,9 +29,10 @@ public class ServerThread extends Thread {
 
     private Server server;
 
-    public ServerThread(Socket socket, Server server) {
+    public ServerThread(Socket socket,  List<ServerThread> connections, Server server) {
         this.socket = socket;
         this.server = server;
+        this.connections = connections;
         gameService = new GameService();
         players = gameService.getAllPlayers();   //поднимаем из базы лист игроков
 

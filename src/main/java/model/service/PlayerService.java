@@ -23,6 +23,7 @@ public class PlayerService {
     public void addPlayer(String nick, String password) {
         playerDao.addPlayer(new Player(nick, password));
     }
+
     public Player getPlayerByNick(String nick) {
         return playerDao.getPlayerByNick(nick);
     }

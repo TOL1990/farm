@@ -26,14 +26,18 @@ public class Field {
     }
 
     public Field(Field copyField) {
-        this.cells = copyField.cells;
+        this.cells = copyField.getCells();
+        this.player = copyField.getPlayer();
+        this.id = copyField.getId();
+        this.avaliablePlants = copyField.getAvaliablePlants();
+        this.avaliableBuildings =   copyField.getAvaliableBuildings();
     }
 
     public void createEmptyCells() {
         if (cells != null) {
             for (int i = 1; i < HORIZONTAL_CELL + 1; i++) {
                 for (int j = 1; j < VERTICAL_CELL + 1; j++) {
-                    cells.add(new EmptyCell(i, j)); //засадим пустыми клетками
+                    cells.add(new EmptyCell(j, i)); //засадим пустыми клетками
                 }
             }
         } else
@@ -117,5 +121,29 @@ public class Field {
 
     public void setCells(List<Cell> cells) {
         this.cells = cells;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public List<Plant> getAvaliablePlants() {
+        return avaliablePlants;
+    }
+
+    public void setAvaliablePlants(List<Plant> avaliablePlants) {
+        this.avaliablePlants = avaliablePlants;
+    }
+
+    public List<Building> getAvaliableBuildings() {
+        return avaliableBuildings;
+    }
+
+    public void setAvaliableBuildings(List<Building> avaliableBuildings) {
+        this.avaliableBuildings = avaliableBuildings;
     }
 }

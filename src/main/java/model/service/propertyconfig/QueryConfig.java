@@ -17,6 +17,7 @@ public class QueryConfig {
     public static String ADD_PLAYER;
     public static String GET_PLAYER_BY_NICK;
     public static String GET_FIELD_BY_USER_ID;
+    public static String ADD_FIELD_BY_USER_ID;
     public static String GET_CELLS_BY_FIELD_ID;
     public static String ADD_NEW_EMPTY_CELL;
     public static String UPDATE_CELL;
@@ -34,6 +35,7 @@ public class QueryConfig {
             ADD_PLAYER = properties.getProperty("ADD_PLAYER");
             GET_PLAYER_BY_NICK = properties.getProperty("GET_PLAYER_BY_NICK");
             GET_FIELD_BY_USER_ID = properties.getProperty("GET_FIELD_BY_USER_ID");
+            ADD_FIELD_BY_USER_ID = properties.getProperty("ADD_FIELD_BY_USER_ID");
             GET_CELLS_BY_FIELD_ID = properties.getProperty("GET_CELLS_BY_FIELD_ID");
             ADD_NEW_EMPTY_CELL = properties.getProperty("ADD_NEW_EMPTY_CELL");
             UPDATE_CELL = properties.getProperty("UPDATE_CELL");

@@ -23,6 +23,16 @@ public class Player {
         this.password = password;
     }
 
+    public Player(long id, String nick, String password) {
+        this.id = id;
+        this.nick = nick;
+        this.password = password;
+    }
+
+    public Player(long id) {
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }

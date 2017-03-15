@@ -5,8 +5,6 @@ import model.dao.util.FactoryDao;
 import model.entity.Field;
 import model.entity.Player;
 
-import java.util.List;
-
 /**
  * Created by Taras on 09.03.2017.
  */
@@ -27,5 +25,10 @@ public class FieldService {
 
     public void setFieldDao(FieldDao fieldDao) {
         this.fieldDao = fieldDao;
+    }
+
+    public void addField(Player player) {
+        if (player != null) fieldDao.addField(player);
+        else System.out.println("Cant add field, player  = null. FieldService.addField");
     }
 }

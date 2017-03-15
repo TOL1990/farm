@@ -39,12 +39,15 @@ public class GameService {
     public void addNewPlayer(String nickName, String password) {
         playerService.addPlayer(nickName, password);
 
+        Player player = playerService.getPlayerByNick(nickName);
+        fieldService.addField(player);//добавить поле клиенту с ником nickName
     }
 
     /**
      * вывести ферму на екран
      */
     public String soutFarm() {
+        //todo написать вывод фермы в консоль
         cleanConsole();
         return null;
     }
@@ -53,15 +56,14 @@ public class GameService {
      *
      */
     public String getAvaliablePlants() {
+        //todo реализовать цепочку
+
         return null;
     }
 
     public String getAvaliableBuildings() {
+        //todo реализовать цепочку
         return null;
-    }
-
-
-    public void addNewPlayer() {
     }
 
     private void cleanConsole() {

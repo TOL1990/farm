@@ -14,25 +14,35 @@ public class FactoryDao {
     private static FieldDao fieldDao = null;
     private static FactoryDao instance = null;
 
+    //    public FieldDao getFieldDao() {
+//        if (fieldDao == null) {
+//            fieldDao = new FieldDaoImpl();
+//        }
+//        return fieldDao;
+//    }
+
+    //    public PlayerDao getPlayerDao() {
+//        if (playerDao == null) {
+//            playerDao = new PlayerDaoImpl();
+//        }
+//        return playerDao;
+//    }
+
+    public FieldDao getFieldDao() {
+        fieldDao = new FieldDaoImpl();
+        return fieldDao;
+    }
+
+    public PlayerDao getPlayerDao() {
+        playerDao = new PlayerDaoImpl();
+        return playerDao;
+    }
+
     public static synchronized FactoryDao getInstance() {
         if (instance == null) {
             instance = new FactoryDao();
         }
         return instance;
-    }
-
-    public PlayerDao getPlayerDao() {
-        if (playerDao == null) {
-            playerDao = new PlayerDaoImpl();
-        }
-        return playerDao;
-    }
-
-    public FieldDao getFieldDao() {
-        if (fieldDao == null) {
-            fieldDao = new FieldDaoImpl();
-        }
-        return fieldDao;
     }
 
 }
