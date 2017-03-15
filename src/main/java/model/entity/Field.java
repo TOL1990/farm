@@ -30,7 +30,7 @@ public class Field {
         this.player = copyField.getPlayer();
         this.id = copyField.getId();
         this.avaliablePlants = copyField.getAvaliablePlants();
-        this.avaliableBuildings =   copyField.getAvaliableBuildings();
+        this.avaliableBuildings = copyField.getAvaliableBuildings();
     }
 
     public void createEmptyCells() {
@@ -87,7 +87,7 @@ public class Field {
         return ((y - 1) + 8 * (x - 1));//индексы с 0 начинаются
     }
 
-    public void consoleSoutField() {//20 клеток
+    public void consoleSoutField() {
         for (int i = 0; i < 8; i++) {
             System.out.print(cells.get(i) + "  ");
         }
@@ -100,7 +100,73 @@ public class Field {
             System.out.print(cells.get(i) + "  ");
         }
         System.out.println();
+        for (int i = 24; i < 32; i++) {
+            System.out.print(cells.get(i) + "  ");
+        }
+        System.out.println();
+        for (int i = 32; i < 40; i++) {
+            System.out.print(cells.get(i) + "  ");
+        }
+        System.out.println();
+        for (int i = 40; i < 48; i++) {
+            System.out.print(cells.get(i) + "  ");
+        }
+        System.out.println();
+        for (int i = 48; i < 56; i++) {
+            System.out.print(cells.get(i) + "  ");
+        }
+        System.out.println();
+        for (int i = 56; i < 64; i++) {
+            System.out.print(cells.get(i) + "  ");
+        }
+        System.out.println();
 
+    }
+
+    public String getConsoleSoutField() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Хазяин поля" + player.toString());
+        builder.append("\n");
+
+        builder.append("id = " + id);
+        builder.append("\n");
+
+
+
+        for (int i = 0; i < 8; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+        for (int i = 8; i < 16; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+        for (int i = 16; i < 24; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+        for (int i = 24; i < 32; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+        for (int i = 32; i < 40; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+        for (int i = 40; i < 48; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+        for (int i = 48; i < 56; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+        for (int i = 56; i < 64; i++) {
+            builder.append(cells.get(i) + "  ");
+        }
+        builder.append("\n");
+
+        return builder.toString();
     }
 
     public long getAvaliableMoney() {

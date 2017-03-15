@@ -8,6 +8,7 @@ import model.core.BuildingConfig;
 public class Building extends Cell{
     private long id;
     private String name;
+    private int typeId;
     private BuildingBonus bonus;
     private long price;
     private byte increase;
@@ -22,6 +23,10 @@ public class Building extends Cell{
         this.bonus = config.bonus;
         this.price = config.price;
         this.increase = config.increase;
+    }
+
+    public Building(int x, int y, int typeId) {
+        super();
     }
 
     public long getId() {
@@ -64,4 +69,7 @@ public class Building extends Cell{
         this.increase = increase;
     }
 
+    public int getTypeId() {return typeId;}
+
+    public void setTypeId(int typeId) {this.typeId = typeId;}
 }

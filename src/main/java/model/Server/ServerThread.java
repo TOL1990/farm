@@ -33,12 +33,13 @@ public class ServerThread extends Thread {
         this.socket = socket;
         this.server = server;
         this.connections = connections;
+
         gameService = new GameService();
         players = gameService.getAllPlayers();   //поднимаем из базы лист игроков
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.out = new PrintWriter(socket.getOutputStream(), true);
+            this.out = new PrintWriter(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
             close();
@@ -51,8 +52,7 @@ public class ServerThread extends Thread {
 
             authorisation();
             out.println(nick + " залогинился в игру");
-            out.println(gameService.soutFarm());
-
+            out.flush();
             // Команды пользовательского ввода
 
             String msg = "";
@@ -61,7 +61,9 @@ public class ServerThread extends Thread {
                 String[] strArr = msg.split(" ");//розбиваем команду пользователя
                 // на составляющие и в зав.  от команды указывает параметры
                 if (msg.equals("FARM STATUS")) {
+                    System.out.println("msg = " + msg);
                     out.println(gameService.soutFarm());
+                    out.flush();
                 }
                 if (msg.equals("EXIT")) {
                     break;
@@ -103,6 +105,7 @@ public class ServerThread extends Thread {
                     String y = strArr[3];
                     gameService.delBuilding(x, y);
                 }
+                out.println(msg + " Данная команда не найдена. попробуйте еще");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,17 +122,20 @@ public class ServerThread extends Thread {
         while (true) {
             try {
                 out.println("Write a login");
+                out.flush();
                 nick = in.readLine();
 
                 out.println("Write a password");
+                out.flush();
                 String pass = in.readLine();
                 Player loginedPlayer = new Player(nick, pass);
 //                ArrayList<Player> players = (ArrayList<Player>) new PlayerService().getAllPlayers();
 
                 if (isLoginExist(nick, (ArrayList<Player>) players)) {
                     if (isPasswordCorrect(loginedPlayer, (ArrayList<Player>)players)) {
-//                        gameService = new GameService(new Player(nick, pass)); //создаем сессию игры
-                         gameService.setPlayer(new Player(nick, pass));
+                        gameService.setPlayer(loginedPlayer); //назначаем игрока
+                        gameService.getField(gameService.getPlayer());
+                       gameService.initial();
                         break; // If login and password correct break from authorization
                     } else {
                         out.println("Wrong password, Try again.");

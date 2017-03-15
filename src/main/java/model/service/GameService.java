@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Taras on 13.03.2017.
  * сервис в которые можно кидать команды для работы с игрой инициализируется
- * корректным юзером полсе авторизации
+ * корректным юзером после авторизации
  */
 public class GameService {
 
@@ -17,6 +17,8 @@ public class GameService {
     private Player player;
     private Field field;
 
+
+    //Слои для работы с дао
     private PlayerService playerService;
     private FieldService fieldService;
 
@@ -27,13 +29,15 @@ public class GameService {
     }
 
     public GameService(Player player) {
+        //todo неюзать нигде пока
+        playerService = new PlayerService();
+        fieldService = new FieldService();
+
         this.player = player;
 
         if (this.field == null) {
-            field = FactoryDao.getInstance().getFieldDao().getField(player);
+            field = FactoryDao.getInstance().getFieldDao().getFieldId(player); // проверить логику что и нахера возвращает
         }
-        playerService = new PlayerService();
-        fieldService = new FieldService();
     }
 
     public void addNewPlayer(String nickName, String password) {
@@ -47,9 +51,11 @@ public class GameService {
      * вывести ферму на екран
      */
     public String soutFarm() {
-        //todo написать вывод фермы в консоль
-        cleanConsole();
-        return null;
+//        cleanConsole();
+        StringBuilder stringBuilder = new StringBuilder();
+        Field field = fieldService.getFieldDao().getField();
+
+        return field.getConsoleSoutField();
     }
 
     /**
@@ -87,7 +93,7 @@ public class GameService {
     }
 
     public List<Player> getAllPlayers() {
-        return  playerService.getAllPlayers();
+        return playerService.getAllPlayers();
     }
 
     public Player getPlayer() {
@@ -95,14 +101,34 @@ public class GameService {
     }
 
     public void setPlayer(Player player) {
-        this.player = player;
+
+        if (player.getId() == 0 && player.getNick() != null && player.getNick() != "")
+            setPlayerByNick(player.getNick());
+
+    }
+
+    public void setPlayerByNick(String nick) {
+        this.player = playerService.getPlayerByNick(nick);
     }
 
     public Field getField() {
         return field;
     }
+    public void getField(Player player) {
+        fieldService.getFieldDao().getField(player)
+    }
 
     public void setField(Field field) {
         this.field = field;
     }
+
+
+    public void initial() {
+        if(player != null)
+        {
+            field = fieldService.getFieldDao().getField(player);
+        }
+    }
+
+
 }

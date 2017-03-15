@@ -23,11 +23,16 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="d9d3e2e8-55a2-46cb-b67c-12c3fad30316">
+        <schema name="farmdb" object-types="column, constraint, function, index, procedure, table, dataset trigger, view" />
+        <schema name="mysql" object-types="function, table, view" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="d9d3e2e8-55a2-46cb-b67c-12c3fad30316">
-      <console name="Connection" type="STANDARD"><![CDATA[SELECT cell_type.name, cell.cell_type_id, cell.planted, cell.pos_x, cell.pos_y FROM cell, cell_type WHERE  cell.cell_type_id = cell_type.id_cell_type and field_id = '1']]></console>
+      <console name="Connection" type="STANDARD"><![CDATA[SELECT cell_type.name, cell.cell_type_id, cell.planted, cell.pos_x, cell.pos_y FROM cell, cell_type WHERE  cell.cell_type_id = cell_type.id_cell_type and field_id = 19]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">

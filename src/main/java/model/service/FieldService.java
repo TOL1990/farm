@@ -15,8 +15,8 @@ public class FieldService {
         this.fieldDao = FactoryDao.getInstance().getFieldDao();
     }
 
-    public Field getField(Player player) {
-        return fieldDao.getField(player);
+    public Field getFieldId(Player player) {
+        return fieldDao.getFieldId(player);
     }
 
     public FieldDao getFieldDao() {

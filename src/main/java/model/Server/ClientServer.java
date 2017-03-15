@@ -20,7 +20,6 @@ public class ClientServer {
 //        createBuilding();
 //    startgame();
 
-        if(CellType.Empty.equals("Empty")) System.out.println("Empty");
 
     }
 

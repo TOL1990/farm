@@ -41,10 +41,11 @@ public class GameCash {
     }
 
     public void init(Player player) {
-        this.player = player;
-        PlayerService playerService = new PlayerService();
-        this.player = playerService.getPlayerByNick(player.getNick());
-        FieldService fs = new FieldService();
-        this.field = fs.getField(player);
+        //todo удалить если все будет работать без этого
+//        this.player = player;
+//        PlayerService playerService = new PlayerService();
+//        this.player = playerService.getPlayerByNick(player.getNick());
+//        FieldService fs = new FieldService();
+//        this.field = fs.getField(player);
     }
 }

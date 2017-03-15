@@ -2,10 +2,7 @@ package model.dao.impl;
 
 import model.dao.FieldDao;
 import model.dao.utils.DaoUtils;
-import model.entity.Cell;
-import model.entity.CellType;
-import model.entity.Field;
-import model.entity.Player;
+import model.entity.*;
 import model.service.propertyconfig.QueryConfig;
 
 import java.sql.*;
@@ -25,23 +22,47 @@ public class FieldDaoImpl implements FieldDao {
         fieldCash = new Field();
     }
 
-    public Field getField(long id) {
-        return getField(new Player(id)); //это обновит кеш
+
+    public Field getFieldId(long id) {
+        return getFieldId(new Player(id)); //это обновит кеш
     }
 
     /**
      * @return ферму из кеша. Если кеш пустой из БД по юзеру и обновляет кеш
      */
-    public Field getField(Player player) {
+    public Field getFieldId(Player player) {
 
         //todo затестить
         if (fieldCash.getId() == 0L) {
-            getFieldDB(player);// обновляем кеш
+            getFieldIdDB(player);// обновляем кеш
         }
         return fieldCash;
     }
 
-    private Field getFieldDB(Player player) {
+    public Field getField() {
+        //нахрена пока не понятно
+        return null;
+    }
+
+    public void setField(Field fieldCash) {
+        this.fieldCash = fieldCash;
+    }
+
+    //    public Field getField() {
+//        return fieldCash;
+//    }
+    public Field getField(Player player) {
+        if (fieldCash == null)
+        //todo в этом месте кеш должен набить полностью ферму из базы id, cells
+        {
+            getFieldIdDB(player); // это обновит кеш ид fieldCash из базы
+            fieldCash.setCells(getCellsByFieldId(fieldCash.getId()));
+
+        }
+        return fieldCash;
+    }
+
+    private Field getFieldIdDB(Player player) {
 
         Connection connection = DaoUtils.getConnection();
         PreparedStatement preparedStatement = null;
@@ -90,12 +111,21 @@ public class FieldDaoImpl implements FieldDao {
             while (resultSet.next()) {
                 int x = resultSet.getInt("pos_x");
                 int y = resultSet.getInt("pos_y");
-                int typeId = resultSet.getInt("type_id");
+                int typeId = resultSet.getInt("type_id"); // ид конкретного растения или здания
+                //todo по typeId нам нужно запустить проверку которая вернет название расстения
+                //или строения
                 String typeName = resultSet.getString("name");
                 Date plantedDate = resultSet.getDate("planted");
 
-                if (typeName.equals(CellType.Empty)) ;
-
+                if (typeName.equals(CellType.Empty)) {
+                    cells.add(new EmptyCell(x, y));
+                }
+                if (typeName.equals(CellType.Plant)) {// хотя на данном этапе мы можем проставить typeId цыфрами а после получения доступных строений/расстений обновить
+                    cells.add(new Plant(x, y, typeId, plantedDate));
+                }
+                if (typeName.equals(CellType.Building)) {
+                    cells.add(new Building(x,y, typeId));
+                }
             }
 
         } catch (SQLException e) {
@@ -107,7 +137,7 @@ public class FieldDaoImpl implements FieldDao {
                 e.printStackTrace();
             }
         }
-        return null;
+        return cells;
     }
 
     public void addField(Player player) {
@@ -131,14 +161,13 @@ public class FieldDaoImpl implements FieldDao {
                 e.printStackTrace();
             }
         }
-        getField(player.getId());//обновить кеш //todo переделать по человечи
+        getFieldId(player.getId());//обновить кеш //todo переделать по человечи
 
         addEmptyCells(fieldCash);
 
         //создать новое поле в бд для игрока с ником nickName
 
     }
-
 
     public void addEmptyCells(Field field) {
         if (field == null) System.out.println("Boroda. addEmptyCells" +
@@ -183,10 +212,6 @@ public class FieldDaoImpl implements FieldDao {
 
 
         return stringBuilder.toString();
-    }
-
-    private void addEmptyCells() {
-
     }
 
 

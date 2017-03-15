@@ -10,9 +10,11 @@ import model.dao.impl.PlayerDaoImpl;
  */
 public class FactoryDao {
 
-    private static PlayerDao playerDao = null;
-    private static FieldDao fieldDao = null;
     private static FactoryDao instance = null;
+    //    private static PlayerDao playerDao = null;
+//    private static FieldDao fieldDao = null;
+    private PlayerDao playerDao = null;
+    private FieldDao fieldDao = null;
 
     //    public FieldDao getFieldDao() {
 //        if (fieldDao == null) {
@@ -28,6 +30,13 @@ public class FactoryDao {
 //        return playerDao;
 //    }
 
+    public static synchronized FactoryDao getInstance() {
+        if (instance == null) {
+            instance = new FactoryDao();
+        }
+        return instance;
+    }
+
     public FieldDao getFieldDao() {
         fieldDao = new FieldDaoImpl();
         return fieldDao;
@@ -36,13 +45,6 @@ public class FactoryDao {
     public PlayerDao getPlayerDao() {
         playerDao = new PlayerDaoImpl();
         return playerDao;
-    }
-
-    public static synchronized FactoryDao getInstance() {
-        if (instance == null) {
-            instance = new FactoryDao();
-        }
-        return instance;
     }
 
 }

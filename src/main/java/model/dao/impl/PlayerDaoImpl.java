@@ -1,6 +1,5 @@
 package model.dao.impl;
 
-import model.Server.GameCash;
 import model.dao.PlayerDao;
 import model.dao.utils.DaoUtils;
 import model.entity.Player;
@@ -17,13 +16,20 @@ public class PlayerDaoImpl implements PlayerDao {
     private static long PLAYERS_STARTING_MONEY = 1000;
     // private static List<Player> playersList;
     private List<Player> playersCash;
-    private GameCash gameCash;
 
     public PlayerDaoImpl() {
-//        gameCash = new GameCash();
+        getAllPlayers();
     }
 
-    public static List<Player> getAllPlayersFromDB() {
+    public List<Player> getAllPlayers() {
+        if (playersCash == null) {
+            playersCash = getAllPlayersFromDB();
+            return playersCash;
+        } else
+            return playersCash;
+    }
+
+    private List<Player> getAllPlayersFromDB() {
 
         Connection connection = DaoUtils.getConnection();
         List<Player> players = new ArrayList<Player>();
@@ -63,17 +69,9 @@ public class PlayerDaoImpl implements PlayerDao {
 //        } else
 //            return playersList;
 //    }
-    public List<Player> getAllPlayers() {
-        if (playersCash == null) {
-            playersCash = getAllPlayersFromDB();
-            return playersCash;
-        } else
-            return playersCash;
-    }
 
     public void addPlayer(Player player) {
         Connection connection = DaoUtils.getConnection();
-        ////гдето добавить стартовые бабки юзеру
         PreparedStatement statement = null;
         try {
             statement = connection.prepareStatement(QueryConfig.ADD_PLAYER);
@@ -107,12 +105,30 @@ public class PlayerDaoImpl implements PlayerDao {
             }
             System.err.println("getPlayerByNick - ник в кеше не найден");
             return null; // не нашел игрока с таким ником
-        }
-       else
-        {
+        } else {
             return getPlayerByNickDB(nick); //тащим юзера из БД
         }
 
+    }
+
+    public Player getPlayerById(long id) {
+        if (playersCash != null) {
+            for (Player p :
+                    playersCash) {
+                if (p.getId() == id) return p;
+            }
+
+            updatePlayersCash();// если не нашли в кеше - обновим его и поищщем еще раз
+            for (Player p :
+                    playersCash) {
+                if (p.getId() == id) return p;
+            }
+
+        } else {
+            System.err.println("getPlayerById - id в кеше не найден");
+            return null; // не нашел игрока с таким id
+        }
+        return null;
     }
 
 
@@ -147,7 +163,6 @@ public class PlayerDaoImpl implements PlayerDao {
                 e.printStackTrace();
             }
         }
-
         return player;
     }
 

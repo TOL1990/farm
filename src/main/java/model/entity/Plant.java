@@ -1,16 +1,24 @@
 package model.entity;
 
+import java.sql.Date;
+
 /**
  * Created by Taras on 09.03.2017.
  */
-public class Plant extends Cell{
+public class Plant extends Cell {
     private long id;
     private String name;
+    private int typeId; // это нужно для того чтобы по нему сравнивать из лейвой сущности // todo перепроверить это
     private long price;
     private long proseed; //выручка
-    private int  growTime;
+    private int growTime;
+    private Date plantedTime;
 
-    public Plant() {
+    public Plant(int xPosition, int yPosition, int typeId, Date plantedTime) {
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.typeId = typeId;
+        this.plantedTime = plantedTime;
         this.setType(CellType.Plant);
     }
 
@@ -52,5 +60,21 @@ public class Plant extends Cell{
 
     public void setGrowTime(int growTime) {
         this.growTime = growTime;
+    }
+
+    public Date getPlantedTime() {
+        return plantedTime;
+    }
+
+    public void setPlantedTime(Date plantedTime) {
+        this.plantedTime = plantedTime;
+    }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 }

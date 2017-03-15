@@ -30,6 +30,12 @@ public class ClientThread extends Thread {
                     setStop();
                     break;
                 }
+                if(str.equals("exit"))
+                {
+                    System.out.println("Server closed connection with command exit");
+                    setStop();
+                    break;
+                }
                 System.out.println(str);
             }
         } catch (IOException e) {

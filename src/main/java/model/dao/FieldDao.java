@@ -11,9 +11,12 @@ import java.util.List;
  */
 public interface FieldDao {
 
-    Field getField(Player player);
+    Field getFieldId(Player player);
+    Field getField();
 
     List<Cell> getCellsByFieldId(long id);
 
     void addField(Player player);
+
+    Field getField(Player player);
 }
