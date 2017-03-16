@@ -27,4 +27,6 @@ public class PlayerService {
     public Player getPlayerByNick(String nick) {
         return playerDao.getPlayerByNick(nick);
     }
+
+    public void updatePlayerBallance(Player player) { playerDao.updatePlayerBallance(player);}
 }

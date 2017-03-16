@@ -131,6 +131,27 @@ public class PlayerDaoImpl implements PlayerDao {
         return null;
     }
 
+    public void updatePlayerBallance(Player player) {
+        Connection con = DaoUtils.getConnection();
+
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(QueryConfig.UPDATE_PLAYER_BALLANCE);
+            statement.setLong(1, player.getBalance());
+            statement.setLong(1, player.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                DaoUtils.close(con, statement);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public Player getPlayerByNickDB(String nick) {
         Connection connection = DaoUtils.getConnection();

@@ -2,10 +2,7 @@ package model.Server;
 
 import model.core.BuildingConstruct;
 import model.dao.impl.PlayerDaoImpl;
-import model.entity.Building;
-import model.entity.CellType;
-import model.entity.Field;
-import model.entity.Player;
+import model.entity.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,8 +16,7 @@ public class ClientServer {
 
 //        createBuilding();
 //    startgame();
-
-
+        EmptyCell e = new EmptyCell(1,2);
     }
 
 

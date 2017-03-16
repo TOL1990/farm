@@ -16,6 +16,8 @@ public interface PlayerDao {
     Player getPlayerByNick(String nick);
 //    public void updatePlayer(Long player_id, Player player) ;
     public Player getPlayerById(long playerId);
+
+    void updatePlayerBallance(Player player);
 //    public void deletePlayer(Player player) ;
 
 }

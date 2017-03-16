@@ -13,8 +13,8 @@ public class Field {
     private List<Cell> cells;
     private Player player;
     private long id;
-    private List<Plant> avaliablePlants;
-    private List<Building> avaliableBuildings;
+    private List<Plant> allPlants;
+    private List<Building> allBuildings;
 
     public Field() {
         cells = new ArrayList<Cell>();
@@ -29,8 +29,8 @@ public class Field {
         this.cells = copyField.getCells();
         this.player = copyField.getPlayer();
         this.id = copyField.getId();
-        this.avaliablePlants = copyField.getAvaliablePlants();
-        this.avaliableBuildings = copyField.getAvaliableBuildings();
+        this.allPlants = copyField.getAllPlants();
+        this.allBuildings = copyField.getAllBuildings();
     }
 
     public void createEmptyCells() {
@@ -60,6 +60,8 @@ public class Field {
      * @param y- номер клетки по верикали
      */
     public void setCell(Cell obj, int x, int y) {
+
+
         ///вариант с instanceOf
 //        if (obj instanceof Building) {
 //            cells.set(getIndexInList(x, y), obj);
@@ -84,7 +86,7 @@ public class Field {
      * @return позицию файла в листе
      */
     private int getIndexInList(int x, int y) {
-        return ((y - 1) + 8 * (x - 1));//индексы с 0 начинаются
+        return ((x - 1) + 8 * (y - 1));//индексы с 0 начинаются
     }
 
     public void consoleSoutField() {
@@ -125,7 +127,7 @@ public class Field {
 
     public String getConsoleSoutField() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Хазяин поля" + player.toString());
+        builder.append("Хазяин поля " + player.toString());
         builder.append("\n");
 
         builder.append("id = " + id);
@@ -197,19 +199,19 @@ public class Field {
         this.player = player;
     }
 
-    public List<Plant> getAvaliablePlants() {
-        return avaliablePlants;
+    public List<Plant> getAllPlants() {
+        return allPlants;
     }
 
-    public void setAvaliablePlants(List<Plant> avaliablePlants) {
-        this.avaliablePlants = avaliablePlants;
+    public void setAllPlants(List<Plant> allPlants) {
+        this.allPlants = allPlants;
     }
 
-    public List<Building> getAvaliableBuildings() {
-        return avaliableBuildings;
+    public List<Building> getAllBuildings() {
+        return allBuildings;
     }
 
-    public void setAvaliableBuildings(List<Building> avaliableBuildings) {
-        this.avaliableBuildings = avaliableBuildings;
+    public void setAllBuildings(List<Building> allBuildings) {
+        this.allBuildings = allBuildings;
     }
 }

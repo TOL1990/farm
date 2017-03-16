@@ -25,6 +25,9 @@ public class DaoUtils {
     public static void close(Statement st) throws SQLException {
         close(null, st, null);
     }
+    public static void close(Connection con, Statement st) throws SQLException {
+        close(con, st, null);
+    }
 
     public static Connection getConnection() {
 

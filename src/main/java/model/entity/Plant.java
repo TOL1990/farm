@@ -22,6 +22,15 @@ public class Plant extends Cell {
         this.setType(CellType.Plant);
     }
 
+    public  Plant(long id, String name, long price, long proseed, int growTime) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.proseed = proseed;
+        this.growTime = growTime;
+        this.setType(CellType.Plant);
+    }
+
     public long getId() {
         return id;
     }
@@ -76,5 +85,18 @@ public class Plant extends Cell {
 
     public void setTypeId(int typeId) {
         this.typeId = typeId;
+    }
+
+    @Override
+    public String toString() {
+        return "Plant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", typeId=" + typeId +
+                ", price=" + price +
+                ", proseed=" + proseed +
+                ", growTime=" + growTime +
+                ", plantedTime=" + plantedTime +
+                '}';
     }
 }

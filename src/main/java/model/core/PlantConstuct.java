@@ -27,10 +27,17 @@ public class PlantConstuct extends Command {
         validation();
         if (!isValid) return false;
 
+        //- bablo
+        //field.pay();// тут нужно забрать бабки у игрока
+
         plant.setxPosition(x);
         plant.setyPosition(y);
 
+        Player player = field.getPlayer();
+        player.setBalance(player.getBalance() - plant.getPrice());
         field.setCell(plant, x,y); // ложим в ячейку растение
+        //dont forget about time
+
         return true;
     }
 

@@ -7,7 +7,7 @@ import model.entity.Field;
  * пока незнаю зачем, но пусть будет что-то общее для всех команд
  */
 public abstract class Command {
-    public boolean isValid;
+    public boolean isValid = true;
     protected abstract boolean run();
 
 

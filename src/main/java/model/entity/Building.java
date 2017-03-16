@@ -26,7 +26,10 @@ public class Building extends Cell{
     }
 
     public Building(int x, int y, int typeId) {
-        super();
+       this.xPosition = x;
+       this.yPosition = y;
+       this.typeId = typeId;
+        setType(CellType.Building);
     }
 
     public long getId() {

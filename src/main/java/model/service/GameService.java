@@ -1,7 +1,9 @@
 package model.service;
 
+import model.core.PlantConstuct;
 import model.dao.util.FactoryDao;
 import model.entity.Field;
+import model.entity.Plant;
 import model.entity.Player;
 
 import java.util.List;
@@ -45,6 +47,7 @@ public class GameService {
 
         Player player = playerService.getPlayerByNick(nickName);
         fieldService.addField(player);//добавить поле клиенту с ником nickName
+
     }
 
     /**
@@ -52,22 +55,18 @@ public class GameService {
      */
     public String soutFarm() {
 //        cleanConsole();
-        StringBuilder stringBuilder = new StringBuilder();
         Field field = fieldService.getFieldDao().getField();
-
         return field.getConsoleSoutField();
     }
 
     /**
      *
      */
-    public String getAvaliablePlants() {
-        //todo реализовать цепочку
-
-        return null;
+    public List<Plant> getAllPlants() {
+        return fieldService.getAllPlants();
     }
 
-    public String getAvaliableBuildings() {
+    public String getAllBuildings() {
         //todo реализовать цепочку
         return null;
     }
@@ -78,6 +77,20 @@ public class GameService {
     }
 
     public void setPlant(String plantName, String x, String y) {
+        Field field = fieldService.getField(); //получаем поле в кеше
+
+        Plant plant = fieldService.getPlantByName(plantName);//тянем растение по нику из дао(кеш/БД)
+
+        PlantConstuct constuct = new PlantConstuct(plant, field, Integer.parseInt(x), Integer.parseInt(y));
+        if (constuct.run())//если успешно прошла операция в кеше, обновляем базу
+        {
+            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
+            updatePlayerBallance(field.getPlayer());
+        }
+        else
+        {
+            System.out.println("не удалось посадить растение. setPlant");
+        }
     }
 
     public void pickupPlant(String x, String y) {
@@ -114,21 +127,23 @@ public class GameService {
     public Field getField() {
         return field;
     }
-    public void getField(Player player) {
-        fieldService.getFieldDao().getField(player)
-    }
 
     public void setField(Field field) {
         this.field = field;
     }
 
+    public void getField(Player player) {
+        fieldService.getFieldDao().getField(player);
+    }
 
     public void initial() {
-        if(player != null)
-        {
+        if (player != null) {
             field = fieldService.getFieldDao().getField(player);
         }
     }
 
-
+    public void updatePlayerBallance(Player player)
+    {
+        playerService.updatePlayerBallance(player);
+    }
 }

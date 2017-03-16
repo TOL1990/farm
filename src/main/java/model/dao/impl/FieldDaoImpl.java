@@ -41,7 +41,9 @@ public class FieldDaoImpl implements FieldDao {
 
     public Field getField() {
         //нахрена пока не понятно
-        return null;
+
+        if (fieldCash == null) System.out.println("Получить поле не получилось, оно null");
+        return fieldCash;
     }
 
     public void setField(Field fieldCash) {
@@ -52,14 +54,98 @@ public class FieldDaoImpl implements FieldDao {
 //        return fieldCash;
 //    }
     public Field getField(Player player) {
-        if (fieldCash == null)
-        //todo в этом месте кеш должен набить полностью ферму из базы id, cells
-        {
-            getFieldIdDB(player); // это обновит кеш ид fieldCash из базы
-            fieldCash.setCells(getCellsByFieldId(fieldCash.getId()));
 
-        }
+        getFieldIdDB(player); // это обновит кеш ид fieldCash из базы
+        fieldCash.setCells(getCellsByFieldId(fieldCash.getId()));
+        fieldCash.setPlayer(player);
         return fieldCash;
+    }
+
+    public List<Plant> getAllPlants() {
+        if (fieldCash.getAllPlants() == null) fieldCash.setAllPlants(getAllPlantsDB()); // тащим из базы
+        return fieldCash.getAllPlants();
+    }
+
+    public Plant getPlantByName(String name) {
+        if (fieldCash.getAllPlants() == null) getAllPlants(); //обновим кеш
+
+        for (Plant p :
+                fieldCash.getAllPlants()) {
+            if (p.getName().equals(name)) return p;
+        }
+        return null;
+    }
+
+    public void updateCell(long fieldId, int x, int y) {
+        Connection con = DaoUtils.getConnection();
+        Cell cell = fieldCash.getCell(x, y);
+
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(QueryConfig.UPDATE_CELL);
+            //todo дописать на случай обновы зданием или пустой клеткой
+//            if (cell.getType() == CellType.Empty) {
+//                statement.setDate(1, null);
+//                statement.setLong(2, );
+//            }
+//            if (cell.getType() == CellType.Building) {
+//            }
+            if (cell.getType() == CellType.Plant) {
+                Plant plant = (Plant) cell;
+
+                statement.setDate(1, plant.getPlantedTime());
+                statement.setLong(2, 2);//1.Empty 2.Plant 3.Building
+                statement.setInt(3, (int) plant.getId());
+                statement.setInt(4, x);
+                statement.setInt(5, y);
+                statement.setLong(6,fieldId);
+            }
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                DaoUtils.close(con, statement);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public List<Plant> getAllPlantsDB() {
+
+        Connection connection = DaoUtils.getConnection();
+        List<Plant> plants = new ArrayList<Plant>();
+
+
+        Statement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = connection.createStatement();
+            rs = statement.executeQuery(QueryConfig.GET_ALL_PLANTS);
+
+            while (rs.next()) {
+                long id = rs.getLong("id_plant");
+                int growTime = rs.getInt("grow_time");
+                String name = rs.getString("name");
+                long price = rs.getLong("price");
+                long proseed = rs.getLong("proseed");
+                plants.add(new Plant(id, name, price, proseed, growTime));
+            }
+        } catch (SQLException e) {
+            System.err.println("Can't get plants from DB");
+            e.printStackTrace();
+        } finally {
+            try {
+                DaoUtils.close(connection, statement, rs);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return plants;
     }
 
     private Field getFieldIdDB(Player player) {
@@ -73,8 +159,6 @@ public class FieldDaoImpl implements FieldDao {
             preparedStatement = connection.prepareStatement(QueryConfig.GET_FIELD_BY_USER_ID);
             preparedStatement.setLong(1, player.getId());
             resultSet = preparedStatement.executeQuery();
-
-            ;
             while (resultSet.next()) {
                 fieldId = resultSet.getLong("id_field"); // получаем ID фермы, заданного юзера
             }
@@ -91,7 +175,7 @@ public class FieldDaoImpl implements FieldDao {
                 e.printStackTrace();
             }
         }
-        return null;
+        return fieldCash;
     }
 
     /**
@@ -108,23 +192,24 @@ public class FieldDaoImpl implements FieldDao {
             preparedStatement = connection.prepareStatement(QueryConfig.GET_CELLS_BY_FIELD_ID);
             preparedStatement.setLong(1, id);
 
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 int x = resultSet.getInt("pos_x");
                 int y = resultSet.getInt("pos_y");
-                int typeId = resultSet.getInt("type_id"); // ид конкретного растения или здания
+                int typeId = resultSet.getInt("cell_type_id"); // ид конкретного растения или здания
                 //todo по typeId нам нужно запустить проверку которая вернет название расстения
                 //или строения
                 String typeName = resultSet.getString("name");
                 Date plantedDate = resultSet.getDate("planted");
 
-                if (typeName.equals(CellType.Empty)) {
+                if (typeName.equals(CellType.Empty.toString())) {
                     cells.add(new EmptyCell(x, y));
                 }
-                if (typeName.equals(CellType.Plant)) {// хотя на данном этапе мы можем проставить typeId цыфрами а после получения доступных строений/расстений обновить
+                if (typeName.equals(CellType.Plant.toString())) {// хотя на данном этапе мы можем проставить typeId цыфрами а после получения доступных строений/расстений обновить
                     cells.add(new Plant(x, y, typeId, plantedDate));
                 }
-                if (typeName.equals(CellType.Building)) {
-                    cells.add(new Building(x,y, typeId));
+                if (typeName.equals(CellType.Building.toString())) {
+                    cells.add(new Building(x, y, typeId));
                 }
             }
 
@@ -167,6 +252,56 @@ public class FieldDaoImpl implements FieldDao {
 
         //создать новое поле в бд для игрока с ником nickName
 
+    }
+
+//    public void commitTransaction() {
+//        //записываем новое состояние баланса
+//        updatePlayer(fieldCash.getPlayer());
+//        //меняем клетку
+//        updateCell();
+//    }
+
+//    private void updateCell() {
+//
+//        //Допиать для одной клетки изменение
+////        Connection con = DaoUtils.getConnection();
+////
+////        PreparedStatement statement = null;
+////        try{
+////            statement = con.prepareStatement(QueryConfig.UPDATE_CELL);
+////
+////            statement.setDate(1,);
+////        } catch (SQLException e) {
+////            e.printStackTrace();
+////        }
+////        finally {
+////            try {
+////                DaoUtils.close(con, statement);
+////            } catch (SQLException e) {
+////                e.printStackTrace();
+////            }
+////        }
+//    }
+
+    private void updatePlayer(Player player) {
+        Connection con = DaoUtils.getConnection();
+
+        PreparedStatement statement = null;
+        try {
+            statement = con.prepareStatement(QueryConfig.UPDATE_PLAYER_BALLANCE);
+            statement.setLong(1, player.getBalance());
+            statement.setLong(1, player.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                DaoUtils.close(con, statement);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void addEmptyCells(Field field) {

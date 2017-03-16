@@ -29,7 +29,7 @@ public class ServerThread extends Thread {
 
     private Server server;
 
-    public ServerThread(Socket socket,  List<ServerThread> connections, Server server) {
+    public ServerThread(Socket socket, List<ServerThread> connections, Server server) {
         this.socket = socket;
         this.server = server;
         this.connections = connections;
@@ -51,63 +51,58 @@ public class ServerThread extends Thread {
         try {
 
             authorisation();
-            out.println(nick + " залогинился в игру");
-            out.flush();
+            send(nick + " залогинился в игру");
+
             // Команды пользовательского ввода
 
             String msg = "";
             while (true) {
                 msg = in.readLine().toUpperCase();
                 String[] strArr = msg.split(" ");//розбиваем команду пользователя
-                // на составляющие и в зав.  от команды указывает параметры
+//                 на составляющие и в зав.  от команды указывает параметры
                 if (msg.equals("FARM STATUS")) {
                     System.out.println("msg = " + msg);
-                    out.println(gameService.soutFarm());
-                    out.flush();
-                }
-                if (msg.equals("EXIT")) {
+                    send(gameService.soutFarm());
+                } else if (msg.equals("EXIT")) {
                     break;
-                }
-                if (msg.equals("EXIT SERVER")) {
-                    //todo тушим сервер
-                }
-                if (msg.equals("GET AV Р")) {
-                    out.println(gameService.getAvaliablePlants());
-                }
-                if (msg.equals("GET AV B")) {
-                    out.println(gameService.getAvaliableBuildings());
-                }
-                if (strArr[0].equals("SET") && strArr[1].equals("PLANT")) {
+                } else if (msg.equals("EXIT SERVER")) {
+                    server.closeAll();
+                } else if (msg.equals("GET AV Р")) {
+                    send(gameService.getAllPlants().toString());
+                } else if (msg.equals("GET AV B")) {
+                    out.println(gameService.getAllBuildings());
+                } else if (strArr[0].equals("SET") && strArr[1].equals("PLANT")) {
                     String plantName = strArr[2];
                     String x = strArr[4];
                     String y = strArr[5];
                     gameService.setPlant(plantName, x, y);
-
-                }
-                if (strArr[0].equals("PICK") && strArr[1].equals("UP")) {
+//SET PLANT Арбуз TO 2 1
+                } else if (strArr[0].equals("PICK") && strArr[1].equals("UP")) {
                     String x = strArr[3];
                     String y = strArr[4];
                     gameService.pickupPlant(x, y);
-                }
-                if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
+                } else if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
                     String x = strArr[2];
                     String y = strArr[3];
                     gameService.delPlant(x, y);
-                }
-                if (strArr[0].equals("SET") && strArr[1].equals("BUILDING")) {
+                } else if (strArr[0].equals("SET") && strArr[1].equals("BUILDING")) {
                     String buildingName = strArr[2];
                     String x = strArr[4];
                     String y = strArr[5];
                     gameService.setBuilding(buildingName, x, y);
-                }
-                if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
+                } else if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
                     String x = strArr[2];
                     String y = strArr[3];
                     gameService.delBuilding(x, y);
+                } else {
+                    out.println(msg + " Данная команда не найдена. попробуйте еще");
+                    send("command:" + msg);
                 }
-                out.println(msg + " Данная команда не найдена. попробуйте еще");
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName());
             e.printStackTrace();
         } finally {
             close();
@@ -121,21 +116,18 @@ public class ServerThread extends Thread {
 
         while (true) {
             try {
-                out.println("Write a login");
-                out.flush();
+                send("Write a login");
                 nick = in.readLine();
-
-                out.println("Write a password");
-                out.flush();
+                send("Write a password");
                 String pass = in.readLine();
+
                 Player loginedPlayer = new Player(nick, pass);
 //                ArrayList<Player> players = (ArrayList<Player>) new PlayerService().getAllPlayers();
 
                 if (isLoginExist(nick, (ArrayList<Player>) players)) {
-                    if (isPasswordCorrect(loginedPlayer, (ArrayList<Player>)players)) {
+                    if (isPasswordCorrect(loginedPlayer, (ArrayList<Player>) players)) {
                         gameService.setPlayer(loginedPlayer); //назначаем игрока
                         gameService.getField(gameService.getPlayer());
-                       gameService.initial();
                         break; // If login and password correct break from authorization
                     } else {
                         out.println("Wrong password, Try again.");
@@ -196,4 +188,8 @@ public class ServerThread extends Thread {
         new PlayerService().addPlayer(nickName, password);
     }
 
+    private void send(String message) {
+        out.println(message);
+        out.flush();
+    }
 }
