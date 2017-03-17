@@ -30,31 +30,26 @@ public class PlantConstuct extends Command {
         validation();
         if (!isValid) return false;
 
-        //- bablo
-        //field.pay();// тут нужно забрать бабки у игрока
-
         plant.setxPosition(x);
         plant.setyPosition(y);
         plant.setPlantedTime(new Timestamp(System.currentTimeMillis()));
 
         Player player = field.getPlayer();
         player.setBalance(player.getBalance() - plant.getPrice());
-        field.setCell(plant, x,y); // ложим в ячейку растение
+        field.setCell(plant, x, y); // ложим в ячейку растение
 
         return true;
     }
 
-    public void validation()
-    {
-        if (field.getCell(x,y).getType() != CellType.Empty){
+    public void validation() {
+        if (field.getCell(x, y).getType() != CellType.Empty) {
             System.out.println("Ячейка не пуста. Невозможно посадить растение.");
             setValid(false);
         }
         //если такого здания нету в базе
 
         //хватает ли денег
-        if(field.getAvaliableMoney() < plant.getPrice())
-        {
+        if (field.getAvaliableMoney() < plant.getPrice()) {
             System.out.println("Нехватает денег для посадки растения");
             setValid(false);
         }

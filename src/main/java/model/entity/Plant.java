@@ -117,7 +117,9 @@ public class Plant extends Cell {
     @Override
     public String toString() {
         return "Plant{" +
-                "id=" + id +
+                "[" + this.xPosition +
+                " , " + this.yPosition +
+                "] id=" + id +
                 ", name='" + name + '\'' +
                 ", typeId=" + typeId +
                 ", price=" + price +

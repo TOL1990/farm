@@ -66,7 +66,7 @@ public class ServerThread extends Thread {
                     break;
                 } else if (msg.equals("EXIT SERVER")) {
                     server.closeAll();
-                } else if (msg.equals("GET AV Р")) {
+                } else if (msg.equals("GET AV P")) {
                     send(gameService.getAllPlants().toString());
                 } else if (msg.equals("GET AV B")) {
                     send(gameService.getAllBuildings().toString());
@@ -80,6 +80,7 @@ public class ServerThread extends Thread {
                     String x = strArr[3];
                     String y = strArr[4];
                     gameService.pickupPlant(x, y);
+// PICK UP FROM 2 1
                 } else if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
                     String x = strArr[2];
                     String y = strArr[3];
@@ -89,10 +90,12 @@ public class ServerThread extends Thread {
                     String x = strArr[4];
                     String y = strArr[5];
                     gameService.setBuilding(buildingName, x, y);
+//  SET BUILDING ТЕПЛИЦА TO 2 2
                 } else if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
                     String x = strArr[2];
                     String y = strArr[3];
                     gameService.delBuilding(x, y);
+//                    DEL BUILDING 2 2
                 } else {
                     out.println(msg + " Данная команда не найдена. попробуйте еще");
                     send("command:" + msg);

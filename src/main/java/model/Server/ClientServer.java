@@ -7,17 +7,26 @@ import model.entity.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
  * Created by Taras on 10.03.2017.
  */
 public class ClientServer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
 //        createBuilding();
 //    startgame();
-        System.out.println(new Date());
+        Timestamp nowDate = new Timestamp(System.currentTimeMillis());
+        System.out.println("now date = " + nowDate);
+        long longtime = nowDate.getTime();
+        System.out.println("longtime " + longtime);
+        Thread.sleep(3000);
+
+        System.out.println(new Timestamp(System.currentTimeMillis()).getTime() - longtime);
+
     }
 
 

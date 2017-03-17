@@ -75,6 +75,9 @@ public class Field {
 
         //вариант с флагом
 
+if(obj.getType() == CellType.Empty)
+{}
+
         //установить значение ячейки Наверно это нужно вынести в конструктор зданий
         obj.setxPosition(x);
         obj.setyPosition(y);
@@ -183,9 +186,7 @@ public class Field {
         this.id = id;
     }
 
-    public List<Cell> getCells() {
-        return cells;
-    }
+    public List<Cell> getCells() {return cells;}
 
     public void setCells(List<Cell> cells) {
         this.cells = cells;

@@ -1,5 +1,7 @@
 package model.service;
 
+import model.core.BuildingConstruct;
+import model.core.PickingPlant;
 import model.core.PlantConstuct;
 import model.dao.util.FactoryDao;
 import model.entity.Building;
@@ -63,13 +65,9 @@ public class GameService {
     /**
      *
      */
-    public List<Plant> getAllPlants() {
-        return fieldService.getAllPlants();
-    }
+    public List<Plant> getAllPlants() {return fieldService.getAllPlants();}
 
-    public List<Building> getAllBuildings() {
-        return fieldService.getAllBuildings();
-    }
+    public List<Building> getAllBuildings() {return fieldService.getAllBuildings();}
 
     private void cleanConsole() {
         for (int i = 0; i < 50; i++)
@@ -86,14 +84,24 @@ public class GameService {
         {
             fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
             updatePlayerBallance(field.getPlayer());
-        }
-        else
-        {
+        } else {
             System.out.println("не удалось посадить растение. setPlant");
         }
     }
 
     public void pickupPlant(String x, String y) {
+
+        Field field = fieldService.getField();
+
+        PickingPlant pick = new PickingPlant(field,Integer.parseInt(x), Integer.parseInt(y));
+
+        if(pick.run())
+        {
+            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
+            updatePlayerBallance(field.getPlayer());
+        }else {
+            System.out.println("не удалось собрать урожай. pickupPlant");
+        }
     }
 
     public void delPlant(String x, String y) {
@@ -103,6 +111,17 @@ public class GameService {
     }
 
     public void setBuilding(String buildingName, String x, String y) {
+        Field field = fieldService.getField();
+        Building building = fieldService.getBuildingByName(buildingName);
+
+        BuildingConstruct construct = new BuildingConstruct(building, field, Integer.parseInt(x), Integer.parseInt(y));
+        if (construct.run()) {
+            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
+            updatePlayerBallance(field.getPlayer());
+        } else {
+            System.out.println("не удалось построить здание. setBuilding");
+        }
+
     }
 
     public List<Player> getAllPlayers() {
@@ -142,8 +161,7 @@ public class GameService {
         }
     }
 
-    public void updatePlayerBallance(Player player)
-    {
+    public void updatePlayerBallance(Player player) {
         playerService.updatePlayerBallance(player);
     }
 }

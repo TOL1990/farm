@@ -3,6 +3,7 @@ package model.core;
 import model.entity.Building;
 import model.entity.CellType;
 import model.entity.Field;
+import model.entity.Player;
 
 /**
  * Created by Taras on 10.03.2017.
@@ -19,6 +20,7 @@ public class BuildingConstruct extends Command {
         this.field = field;
         this.x = x;
         this.y = y;
+        this.isValid = true;
     }
 
     public boolean run() {
@@ -26,23 +28,24 @@ public class BuildingConstruct extends Command {
         validation();
         if (!isValid) return false;
 
-            building.setxPosition(x);
-            building.setyPosition(y);
+        building.setxPosition(x);
+        building.setyPosition(y);
 
-            field.setCell(building, x, y); // ложим в ячейку здание
-            return true;
+        Player player = field.getPlayer();
+        player.setBalance(player.getBalance() - building.getPrice());
+        field.setCell(building, x, y); // ложим в ячейку здание
+        return true;
 
     }
-    public void validation()
-    {
-        if (field.getCell(x,y).getType() != CellType.Empty){
+
+    private void validation() {
+        if (field.getCell(x, y).getType() != CellType.Empty) {
             System.out.println("Ячейка не пуста. Невозможно построить здание.");
             setValid(false);
         }
         //если такого здания нету в базе
         //хватает ли денег
-        if(field.getAvaliableMoney() < building.getPrice())
-        {
+        if (field.getAvaliableMoney() < building.getPrice()) {
             System.out.println("Нехватает денег для постройки здания");
             setValid(false);
         }
