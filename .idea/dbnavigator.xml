@@ -33,7 +33,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="d9d3e2e8-55a2-46cb-b67c-12c3fad30316">
-      <console name="Connection" type="STANDARD"><![CDATA[UPDATE farmdb.cell SET planted = 'Thu Mar 16 22:38:32 EET 2017', cell_type_id = 2 WHERE  pos_x = 1 and pos_y = 1 and field_id = 21]]></console>
+      <console name="Connection" type="STANDARD"><![CDATA[SELECT id_building, building_bonuces.name AS bonus_name, buildings.name AS building_name, proseed, price, building_bonuces.time FROM farmdb.buildings, farmdb.building_bonuces WHERE buildings.bonus_id = building_bonuces.id_bonus]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">

@@ -136,10 +136,15 @@ public class FieldDaoImpl implements FieldDao {
 
             while (rs.next()) {
                 int id = rs.getInt("id_building");
-                int bonusId = rs.getInt("bonus_id");
-                String name = rs.getString("name");
+                String buildingName = rs.getString("building_name");
                 long price = rs.getLong("price");
-                buildings.add(new Building(id, name, new BuildingBonus(bonusId), price));
+
+                int proseed = rs.getInt("proseed");
+                int time = rs.getInt("time");
+                String bonusName = rs.getString("bonus_name");
+                long bonusId = rs.getLong("id_bonus");
+
+                buildings.add(new Building(id, buildingName, new BuildingBonus(bonusId, bonusName, time, proseed), price));
             }
         } catch (SQLException e) {
             System.err.println("Can't get buildings from DB");
