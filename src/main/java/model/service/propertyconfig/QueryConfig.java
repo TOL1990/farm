@@ -22,6 +22,7 @@ public class QueryConfig {
     public static String ADD_NEW_EMPTY_CELL;
     public static String UPDATE_CELL;
     public static String GET_ALL_PLANTS;
+    public static String GET_ALL_BUILDINGS;
     public static String UPDATE_PLAYER_BALLANCE;
     public static String UPDATE_ALL_CELL_IN_FIELD;
 
@@ -43,6 +44,7 @@ public class QueryConfig {
             ADD_NEW_EMPTY_CELL = properties.getProperty("ADD_NEW_EMPTY_CELL");
             UPDATE_CELL = properties.getProperty("UPDATE_CELL");
             GET_ALL_PLANTS = properties.getProperty("GET_ALL_PLANTS");
+            GET_ALL_BUILDINGS = properties.getProperty("GET_ALL_BUILDINGS");
             UPDATE_PLAYER_BALLANCE = properties.getProperty("UPDATE_PLAYER_BALLANCE");
             UPDATE_ALL_CELL_IN_FIELD = properties.getProperty("UPDATE_ALL_CELL_IN_FIELD");
 

@@ -13,15 +13,12 @@ import java.util.List;
  * Created by Taras on 13.03.2017.
  */
 public class FieldDaoImpl implements FieldDao {
-    //    GameCash gameCash = GameCash.getInstance();
 
     private Field fieldCash; //тут будет лежать поле из бд
 
     public FieldDaoImpl() {
-//        fieldCash = new Field(); // затащить всю из базы
         fieldCash = new Field();
     }
-
 
     public Field getFieldId(long id) {
         return getFieldId(new Player(id)); //это обновит кеш
@@ -61,59 +58,116 @@ public class FieldDaoImpl implements FieldDao {
         return fieldCash;
     }
 
-    public List<Plant> getAllPlants() {
-        if (fieldCash.getAllPlants() == null) fieldCash.setAllPlants(getAllPlantsDB()); // тащим из базы
-        return fieldCash.getAllPlants();
-    }
+    private Field getFieldIdDB(Player player) {
 
-    public Plant getPlantByName(String name) {
-        if (fieldCash.getAllPlants() == null) getAllPlants(); //обновим кеш
+        Connection connection = DaoUtils.getConnection();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
-        for (Plant p :
-                fieldCash.getAllPlants()) {
-            if (p.getName().equals(name)) return p;
-        }
-        return null;
-    }
-
-    public void updateCell(long fieldId, int x, int y) {
-        Connection con = DaoUtils.getConnection();
-        Cell cell = fieldCash.getCell(x, y);
-
-        PreparedStatement statement = null;
+        long fieldId = 0;
         try {
-            statement = con.prepareStatement(QueryConfig.UPDATE_CELL);
-            //todo дописать на случай обновы зданием или пустой клеткой
-//            if (cell.getType() == CellType.Empty) {
-//                statement.setDate(1, null);
-//                statement.setLong(2, );
-//            }
-//            if (cell.getType() == CellType.Building) {
-//            }
-            if (cell.getType() == CellType.Plant) {
-                Plant plant = (Plant) cell;
-
-                statement.setDate(1, plant.getPlantedTime());
-                statement.setLong(2, 2);//1.Empty 2.Plant 3.Building
-                statement.setInt(3, (int) plant.getId());
-                statement.setInt(4, x);
-                statement.setInt(5, y);
-                statement.setLong(6,fieldId);
+            preparedStatement = connection.prepareStatement(QueryConfig.GET_FIELD_BY_USER_ID);
+            preparedStatement.setLong(1, player.getId());
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                fieldId = resultSet.getLong("id_field"); // получаем ID фермы, заданного юзера
             }
+            if (fieldId == 0) System.out.println("Не получилось получить поле по ид игрока");
 
-            statement.executeUpdate();
+            fieldCash.setId(fieldId);//назначаем в кеш ид фермы
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                DaoUtils.close(con, statement);
+                DaoUtils.close(connection, preparedStatement, resultSet);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+        return fieldCash;
     }
 
+    public void addField(Player player) {
+        //todo создать новое поле и заполнить его пустыми клеточками, написать запрос
+        Connection connection = DaoUtils.getConnection();
+        PreparedStatement preparedStatement = null;
+
+        if (player == null || player.getId() == 0l) System.out.println("Не получается добавить поле по пустому юзеру");
+
+        try {
+            preparedStatement = connection.prepareStatement(QueryConfig.ADD_FIELD_BY_USER_ID);
+            preparedStatement.setLong(1, player.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+                DaoUtils.close(preparedStatement);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        getFieldId(player.getId());//обновить кеш //todo переделать по человечи
+
+        addEmptyCells(fieldCash);
+
+        //создать новое поле в бд для игрока с ником nickName
+
+    }
+
+    public List<Building> getAllBuildings() {
+        if (fieldCash.getAllBuildings() == null) fieldCash.setAllBuildings(getAllBuildingsDB()); // тащим из базы
+        return fieldCash.getAllBuildings();
+    }
+
+    public List<Building> getAllBuildingsDB() {
+
+        Connection connection = DaoUtils.getConnection();
+        List<Building> buildings = new ArrayList<Building>();
+
+
+        Statement statement = null;
+        ResultSet rs = null;
+        try {
+            statement = connection.createStatement();
+            rs = statement.executeQuery(QueryConfig.GET_ALL_BUILDINGS);
+
+            while (rs.next()) {
+                int id = rs.getInt("id_building");
+                int bonusId = rs.getInt("bonus_id");
+                String name = rs.getString("name");
+                long price = rs.getLong("price");
+                buildings.add(new Building(id, name, new BuildingBonus(bonusId), price));
+            }
+        } catch (SQLException e) {
+            System.err.println("Can't get buildings from DB");
+            e.printStackTrace();
+        } finally {
+            try {
+                DaoUtils.close(connection, statement, rs);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return buildings;
+    }
+
+    public Building getBuildingByName(String name) {
+        if (fieldCash.getAllBuildings() == null) getAllBuildings(); //обновим кеш
+
+        for (Building b :
+                fieldCash.getAllBuildings()) {
+            if (b.getName().equals(name)) return b;
+        }
+        return null;
+    }
+
+    public List<Plant> getAllPlants() {
+        if (fieldCash.getAllPlants() == null) fieldCash.setAllPlants(getAllPlantsDB()); // тащим из базы
+        return fieldCash.getAllPlants();
+    }
 
     public List<Plant> getAllPlantsDB() {
 
@@ -148,34 +202,54 @@ public class FieldDaoImpl implements FieldDao {
         return plants;
     }
 
-    private Field getFieldIdDB(Player player) {
+    public Plant getPlantByName(String name) {
+        if (fieldCash.getAllPlants() == null) getAllPlants(); //обновим кеш
 
-        Connection connection = DaoUtils.getConnection();
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        for (Plant p :
+                fieldCash.getAllPlants()) {
+            if (p.getName().equals(name)) return p;
+        }
+        return null;
+    }
 
-        long fieldId = 0;
+    public void updateCell(long fieldId, int x, int y) {
+        Connection con = DaoUtils.getConnection();
+        Cell cell = fieldCash.getCell(x, y);
+
+        PreparedStatement statement = null;
         try {
-            preparedStatement = connection.prepareStatement(QueryConfig.GET_FIELD_BY_USER_ID);
-            preparedStatement.setLong(1, player.getId());
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                fieldId = resultSet.getLong("id_field"); // получаем ID фермы, заданного юзера
+            statement = con.prepareStatement(QueryConfig.UPDATE_CELL);
+            if (cell.getType() == CellType.Empty) {
+                statement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                statement.setLong(2, 1);//1.Empty 2.Plant 3.Building
+                statement.setInt(3, 1);// type_id - неважно т.к. клетка пуста
+                //todo затестить назначение пустой клетки
             }
-            if (fieldId == 0) System.out.println("Не получилось получить поле по ид игрока");
+            if (cell.getType() == CellType.Building) {
+                //todo затестить назначение строения
 
-            fieldCash.setId(fieldId);//назначаем в кеш ид фермы
+            }
+            if (cell.getType() == CellType.Plant) {
+                Plant plant = (Plant) cell;
+                statement.setTimestamp(1, plant.getPlantedTime());
+                statement.setLong(2, 2);//1.Empty 2.Plant 3.Building
+                statement.setInt(3, (int) plant.getId());
+            }
+
+            statement.setInt(4, x);
+            statement.setInt(5, y);
+            statement.setLong(6, fieldId);
+            statement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                DaoUtils.close(connection, preparedStatement, resultSet);
+                DaoUtils.close(con, statement);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return fieldCash;
     }
 
     /**
@@ -200,7 +274,7 @@ public class FieldDaoImpl implements FieldDao {
                 //todo по typeId нам нужно запустить проверку которая вернет название расстения
                 //или строения
                 String typeName = resultSet.getString("name");
-                Date plantedDate = resultSet.getDate("planted");
+                Timestamp plantedDate = resultSet.getTimestamp("planted");
 
                 if (typeName.equals(CellType.Empty.toString())) {
                     cells.add(new EmptyCell(x, y));
@@ -225,36 +299,9 @@ public class FieldDaoImpl implements FieldDao {
         return cells;
     }
 
-    public void addField(Player player) {
-        //todo создать новое поле и заполнить его пустыми клеточками, написать запрос
-        Connection connection = DaoUtils.getConnection();
-        PreparedStatement preparedStatement = null;
 
-        if (player == null || player.getId() == 0l) System.out.println("Не получается добавить поле по пустому юзеру");
-
-        try {
-            preparedStatement = connection.prepareStatement(QueryConfig.ADD_FIELD_BY_USER_ID);
-            preparedStatement.setLong(1, player.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-                DaoUtils.close(preparedStatement);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        getFieldId(player.getId());//обновить кеш //todo переделать по человечи
-
-        addEmptyCells(fieldCash);
-
-        //создать новое поле в бд для игрока с ником nickName
-
+    public void commitTransaction() {
     }
-
-//    public void commitTransaction() {
 //        //записываем новое состояние баланса
 //        updatePlayer(fieldCash.getPlayer());
 //        //меняем клетку

@@ -5,6 +5,9 @@ import model.entity.Field;
 import model.entity.Plant;
 import model.entity.Player;
 
+import java.sql.Timestamp;
+
+
 /**
  * Created by Taras on 10.03.2017.
  */
@@ -32,11 +35,11 @@ public class PlantConstuct extends Command {
 
         plant.setxPosition(x);
         plant.setyPosition(y);
+        plant.setPlantedTime(new Timestamp(System.currentTimeMillis()));
 
         Player player = field.getPlayer();
         player.setBalance(player.getBalance() - plant.getPrice());
         field.setCell(plant, x,y); // ложим в ячейку растение
-        //dont forget about time
 
         return true;
     }

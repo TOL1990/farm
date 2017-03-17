@@ -1,6 +1,5 @@
 package model.Server;
 
-import model.entity.Field;
 import model.entity.Player;
 import model.service.GameService;
 import model.service.PlayerService;
@@ -23,8 +22,7 @@ public class ServerThread extends Thread {
     private PrintWriter out;
     private Socket socket;
     private String nick = "";
-    private Player player;
-    private Field field;
+    private boolean isAutorised;
     private GameService gameService;
 
     private Server server;
@@ -36,7 +34,7 @@ public class ServerThread extends Thread {
 
         gameService = new GameService();
         players = gameService.getAllPlayers();   //поднимаем из базы лист игроков
-
+        isAutorised = false;
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.out = new PrintWriter(socket.getOutputStream());
@@ -50,9 +48,10 @@ public class ServerThread extends Thread {
     public void run() {
         try {
 
-            authorisation();
-            send(nick + " залогинился в игру");
-
+            if (!isAutorised) {
+                authorisation();
+                send(nick + " залогинился в игру");
+            }
             // Команды пользовательского ввода
 
             String msg = "";
@@ -70,7 +69,7 @@ public class ServerThread extends Thread {
                 } else if (msg.equals("GET AV Р")) {
                     send(gameService.getAllPlants().toString());
                 } else if (msg.equals("GET AV B")) {
-                    out.println(gameService.getAllBuildings());
+                    send(gameService.getAllBuildings().toString());
                 } else if (strArr[0].equals("SET") && strArr[1].equals("PLANT")) {
                     String plantName = strArr[2];
                     String x = strArr[4];
@@ -128,6 +127,7 @@ public class ServerThread extends Thread {
                     if (isPasswordCorrect(loginedPlayer, (ArrayList<Player>) players)) {
                         gameService.setPlayer(loginedPlayer); //назначаем игрока
                         gameService.getField(gameService.getPlayer());
+                        isAutorised = true;
                         break; // If login and password correct break from authorization
                     } else {
                         out.println("Wrong password, Try again.");

@@ -2,6 +2,7 @@ package model.service;
 
 import model.core.PlantConstuct;
 import model.dao.util.FactoryDao;
+import model.entity.Building;
 import model.entity.Field;
 import model.entity.Plant;
 import model.entity.Player;
@@ -66,9 +67,8 @@ public class GameService {
         return fieldService.getAllPlants();
     }
 
-    public String getAllBuildings() {
-        //todo реализовать цепочку
-        return null;
+    public List<Building> getAllBuildings() {
+        return fieldService.getAllBuildings();
     }
 
     private void cleanConsole() {

@@ -2,6 +2,7 @@ package model.service;
 
 import model.dao.FieldDao;
 import model.dao.util.FactoryDao;
+import model.entity.Building;
 import model.entity.Field;
 import model.entity.Plant;
 import model.entity.Player;
@@ -37,15 +38,18 @@ public class FieldService {
         return fieldDao.getField();
     }
 
-    public List<Plant> getAllPlants() {
-        return fieldDao.getAllPlants();
-    }
+    public List<Plant> getAllPlants() {return fieldDao.getAllPlants();}
 
-    public Plant getPlantByName(String name) { return fieldDao.getPlantByName(name);
-    }
+    public Plant getPlantByName(String name) { return fieldDao.getPlantByName(name);}
 
 
     public void updateFieldCell(long fieldId, int x, int y) {
         fieldDao.updateCell(fieldId, x, y);
+    }
+
+    public List<Building> getAllBuildings() {return fieldDao.getAllBuildings();}
+
+    public Building getBuildingByName(String name) {
+        return fieldDao.getBuildingByName(name);
     }
 }

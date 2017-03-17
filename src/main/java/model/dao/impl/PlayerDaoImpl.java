@@ -138,7 +138,7 @@ public class PlayerDaoImpl implements PlayerDao {
         try {
             statement = con.prepareStatement(QueryConfig.UPDATE_PLAYER_BALLANCE);
             statement.setLong(1, player.getBalance());
-            statement.setLong(1, player.getId());
+            statement.setLong(2, player.getId());
             statement.executeUpdate();
 
         } catch (SQLException e) {

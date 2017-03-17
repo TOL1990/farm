@@ -8,10 +8,9 @@ import model.core.BuildingConfig;
 public class Building extends Cell{
     private long id;
     private String name;
-    private int typeId;
+//    private int typeId;
     private BuildingBonus bonus;
     private long price;
-    private byte increase;
 
     public Building() {
         setType(CellType.Building);
@@ -22,14 +21,30 @@ public class Building extends Cell{
         this.name = config.name;
         this.bonus = config.bonus;
         this.price = config.price;
-        this.increase = config.increase;
     }
 
-    public Building(int x, int y, int typeId) {
+    public Building(int x, int y, int id) {
        this.xPosition = x;
        this.yPosition = y;
-       this.typeId = typeId;
+       this.id = id;
         setType(CellType.Building);
+    }
+
+    /**
+     * конструктор нужен для создания листа всех доступных строений
+     * @param id
+     * @param name
+     * @param bonus
+     * @param price
+     */
+    public Building(long id, String name, BuildingBonus bonus, long price) {
+        this.id = id;
+        this.name = name;
+        this.bonus = bonus;
+        this.price = price;
+
+        setType(CellType.Building);
+        //todo докидать сюда инит бонусов
     }
 
     public long getId() {
@@ -64,15 +79,45 @@ public class Building extends Cell{
         this.price = price;
     }
 
-    public byte getIncrease() {
-        return increase;
+
+//    public int getTypeId() {return typeId;}
+//
+//    public void setTypeId(int typeId) {this.typeId = typeId;}
+
+
+    /**
+     * Для равности не сравнивается класс с бонусами
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Building building = (Building) o;
+
+        if (id != building.id) return false;
+//        if (typeId != building.typeId) return false;
+        if (price != building.price) return false;
+        return name != null ? name.equals(building.name) : building.name == null;
+    }
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+//        result = 31 * result + typeId;
+        result = 31 * result + (int) (price ^ (price >>> 32));
+
+        return result;
     }
 
-    public void setIncrease(byte increase) {
-        this.increase = increase;
+    @Override
+    public String toString() {
+        return "Building{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+//                ", typeId=" + typeId +
+                ", bonus=" + bonus +
+                ", price=" + price +
+                '}';
     }
-
-    public int getTypeId() {return typeId;}
-
-    public void setTypeId(int typeId) {this.typeId = typeId;}
 }

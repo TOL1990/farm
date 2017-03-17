@@ -7,6 +7,7 @@ import model.entity.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 /**
  * Created by Taras on 10.03.2017.
@@ -16,7 +17,7 @@ public class ClientServer {
 
 //        createBuilding();
 //    startgame();
-        EmptyCell e = new EmptyCell(1,2);
+        System.out.println(new Date());
     }
 
 

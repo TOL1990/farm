@@ -1,9 +1,6 @@
 package model.dao;
 
-import model.entity.Cell;
-import model.entity.Field;
-import model.entity.Plant;
-import model.entity.Player;
+import model.entity.*;
 
 import java.util.List;
 
@@ -26,4 +23,8 @@ public interface FieldDao {
     Plant getPlantByName(String name);
 
     void updateCell(long fieldId, int x, int y);
+
+    List<Building> getAllBuildings();
+
+    Building getBuildingByName(String name);
 }
