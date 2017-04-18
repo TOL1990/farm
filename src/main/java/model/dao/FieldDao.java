@@ -27,4 +27,6 @@ public interface FieldDao {
     List<Building> getAllBuildings();
 
     Building getBuildingByName(String name);
+
+    void setEmptyPlant(Field field, int x, int y);
 }

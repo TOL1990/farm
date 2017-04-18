@@ -52,4 +52,8 @@ public class FieldService {
     public Building getBuildingByName(String name) {
         return fieldDao.getBuildingByName(name);
     }
+
+    public void setEmptyCell(Field field, int x, int y) {
+        fieldDao.setEmptyPlant(field, x, y);
+    }
 }

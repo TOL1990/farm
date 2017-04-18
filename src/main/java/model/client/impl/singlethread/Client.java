@@ -1,4 +1,4 @@
-package model.client;
+package model.client.impl.singlethread;
 
 import model.service.propertyconfig.ConnectingConfig;
 

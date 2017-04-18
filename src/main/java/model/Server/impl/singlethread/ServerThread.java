@@ -1,4 +1,4 @@
-package model.Server;
+package model.Server.impl.singlethread;
 
 import model.entity.Player;
 import model.service.GameService;
@@ -60,7 +60,6 @@ public class ServerThread extends Thread {
                 String[] strArr = msg.split(" ");//розбиваем команду пользователя
 //                 на составляющие и в зав.  от команды указывает параметры
                 if (msg.equals("FARM STATUS")) {
-                    System.out.println("msg = " + msg);
                     send(gameService.soutFarm());
                 } else if (msg.equals("EXIT")) {
                     break;
@@ -91,7 +90,7 @@ public class ServerThread extends Thread {
                     String y = strArr[5];
                     gameService.setBuilding(buildingName, x, y);
 //  SET BUILDING ТЕПЛИЦА TO 2 2
-                } else if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
+                } else if (strArr[0].equals("DEL") && strArr[1].equals("BUILDING")) {
                     String x = strArr[2];
                     String y = strArr[3];
                     gameService.delBuilding(x, y);

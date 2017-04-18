@@ -61,24 +61,6 @@ public class Field {
      */
     public void setCell(Cell obj, int x, int y) {
 
-
-        ///вариант с instanceOf
-//        if (obj instanceof Building) {
-//            cells.set(getIndexInList(x, y), obj);
-//        }
-//        if (obj instanceof Plant) {
-//            new Plant();
-//        }
-//        if (obj instanceof Building) {
-//            new EmptyCell(x, y);
-//        }
-
-        //вариант с флагом
-
-if(obj.getType() == CellType.Empty)
-{}
-
-        //установить значение ячейки Наверно это нужно вынести в конструктор зданий
         obj.setxPosition(x);
         obj.setyPosition(y);
 

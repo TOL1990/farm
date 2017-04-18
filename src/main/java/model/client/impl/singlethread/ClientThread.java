@@ -1,4 +1,4 @@
-package model.client;
+package model.client.impl.singlethread;
 
 import java.io.BufferedReader;
 import java.io.IOException;

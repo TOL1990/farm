@@ -105,9 +105,13 @@ public class GameService {
     }
 
     public void delPlant(String x, String y) {
+        Field field = fieldService.getField();
+        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y) );
     }
 
     public void delBuilding(String x, String y) {
+        Field field = fieldService.getField();
+        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y) );
     }
 
     public void setBuilding(String buildingName, String x, String y) {

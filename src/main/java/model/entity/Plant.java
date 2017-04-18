@@ -9,17 +9,16 @@ import java.sql.Timestamp;
 public class Plant extends Cell {
     private long id;
     private String name;
-    private int typeId; // это нужно для того чтобы по нему сравнивать из лейвой сущности // todo перепроверить это
     private long price;
     private long proseed; //выручка
     private int growTime;
     private Timestamp plantedTime;
 
 
-    public Plant(int xPosition, int yPosition, int typeId, Timestamp plantedTime) {
+    public Plant(int xPosition, int yPosition, int id, Timestamp plantedTime) {
+        this.id = (long) id;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
-        this.typeId = typeId;
         this.plantedTime = plantedTime;
         this.setType(CellType.Plant);
     }
@@ -30,6 +29,18 @@ public class Plant extends Cell {
         this.price = price;
         this.proseed = proseed;
         this.growTime = growTime;
+        this.setType(CellType.Plant);
+    }
+
+    public Plant(long id, String name, long price, long proseed, int growTime, Timestamp plantedTime, int x, int y) {
+        this.xPosition = x;
+        this.yPosition = y;
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.proseed = proseed;
+        this.growTime = growTime;
+        this.plantedTime = plantedTime;
         this.setType(CellType.Plant);
     }
 
@@ -73,14 +84,6 @@ public class Plant extends Cell {
         this.growTime = growTime;
     }
 
-    public int getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
-    }
-
     public Timestamp getPlantedTime() {return plantedTime;}
 
     public void setPlantedTime(Timestamp plantedTime) {this.plantedTime = plantedTime;}
@@ -96,7 +99,6 @@ public class Plant extends Cell {
         Plant plant = (Plant) o;
 
         if (id != plant.id) return false;
-        if (typeId != plant.typeId) return false;
         if (price != plant.price) return false;
         if (proseed != plant.proseed) return false;
         if (growTime != plant.growTime) return false;
@@ -107,7 +109,6 @@ public class Plant extends Cell {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + typeId;
         result = 31 * result + (int) (price ^ (price >>> 32));
         result = 31 * result + (int) (proseed ^ (proseed >>> 32));
         result = 31 * result + growTime;
@@ -121,7 +122,6 @@ public class Plant extends Cell {
                 " , " + this.yPosition +
                 "] id=" + id +
                 ", name='" + name + '\'' +
-                ", typeId=" + typeId +
                 ", price=" + price +
                 ", proseed=" + proseed +
                 ", growTime=" + growTime +

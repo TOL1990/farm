@@ -17,9 +17,6 @@ public class PickingPlant extends Command {
     private int x;
     private int y;
 
-    private long proseed;
-
-
     public PickingPlant(Field field, int x, int y) {
         this.field = field;
         this.x = x;
@@ -41,8 +38,6 @@ public class PickingPlant extends Command {
         field.setCell(new EmptyCell(x,y), x, y); // делаем ячейку пустой в кеше поля
         return true;
     }
-
-
     private void validation() {
 
         if (field.getCell(x, y).getType() != CellType.Plant) {
@@ -58,7 +53,7 @@ public class PickingPlant extends Command {
         List<Building> buildings = field.getAllBuildings();
 
         initBonuces(cells); //присвоить бонусы если есть
-
+//todo проверить где назначаются бонусыЫ
 ////проверяем выросло ли растение
         if (!isAlreadyGrownUp()) setValid(false);
     }
@@ -85,7 +80,6 @@ public class PickingPlant extends Command {
 
     /**
      * метод проверяет существует ли ячейка по указанному индексу и если да то добавляет ее в лист
-     *
      * @param cells
      * @return лист соседних ячеек
      */
@@ -150,11 +144,9 @@ public class PickingPlant extends Command {
         long growingTime = (long) plant.getGrowTime() * oneMin;   //здесь присвоим из переданного растения, или снова стучать в базу
 
         long bonusTime = (growingTime * timeBonus) / 100;
-
         long currenTime = new Timestamp(System.currentTimeMillis()).getTime();
 
         if ((plantedTime + (growingTime - bonusTime)) < currenTime) return true;
-
         else return false;
     }
 }

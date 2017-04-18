@@ -18,6 +18,11 @@ public class FieldDaoImpl implements FieldDao {
 
     public FieldDaoImpl() {
         fieldCash = new Field();
+
+        //Обновляем листы доступных растений и строений из бд. Или здесь же добавиьт из вне
+        fieldCash.setAllPlants(getAllPlantsDB());
+        fieldCash.setAllBuildings(getAllBuildingsDB());
+
     }
 
     public Field getFieldId(long id) {
@@ -29,7 +34,6 @@ public class FieldDaoImpl implements FieldDao {
      */
     public Field getFieldId(Player player) {
 
-        //todo затестить
         if (fieldCash.getId() == 0L) {
             getFieldIdDB(player);// обновляем кеш
         }
@@ -38,7 +42,6 @@ public class FieldDaoImpl implements FieldDao {
 
     public Field getField() {
         //нахрена пока не понятно
-
         if (fieldCash == null) System.out.println("Получить поле не получилось, оно null");
         return fieldCash;
     }
@@ -47,14 +50,12 @@ public class FieldDaoImpl implements FieldDao {
         this.fieldCash = fieldCash;
     }
 
-    //    public Field getField() {
-//        return fieldCash;
-//    }
     public Field getField(Player player) {
 
         getFieldIdDB(player); // это обновит кеш ид fieldCash из базы
         fieldCash.setCells(getCellsByFieldId(fieldCash.getId()));
         fieldCash.setPlayer(player);
+
         return fieldCash;
     }
 
@@ -225,14 +226,16 @@ public class FieldDaoImpl implements FieldDao {
         try {
             statement = con.prepareStatement(QueryConfig.UPDATE_CELL);
             if (cell.getType() == CellType.Empty) {
+                EmptyCell empty = (EmptyCell) cell;
                 statement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
                 statement.setLong(2, 1);//1.Empty 2.Plant 3.Building
                 statement.setInt(3, 1);// type_id - неважно т.к. клетка пуста
-                //todo затестить назначение пустой клетки
             }
             if (cell.getType() == CellType.Building) {
-                //todo затестить назначение строения
-
+                Building building = (Building) cell;
+                statement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                statement.setLong(2, 3);//1.Empty 2.Plant 3.Building
+                statement.setInt(3, (int) building.getId());
             }
             if (cell.getType() == CellType.Plant) {
                 Plant plant = (Plant) cell;
@@ -275,19 +278,23 @@ public class FieldDaoImpl implements FieldDao {
             while (resultSet.next()) {
                 int x = resultSet.getInt("pos_x");
                 int y = resultSet.getInt("pos_y");
-                int typeId = resultSet.getInt("cell_type_id"); // ид конкретного растения или здания
-                //todo по typeId нам нужно запустить проверку которая вернет название расстения
-                //или строения
+                int typeId = resultSet.getInt("type_id"); // ид конкретного растения или здания
+
                 String typeName = resultSet.getString("name");
                 Timestamp plantedDate = resultSet.getTimestamp("planted");
 
                 if (typeName.equals(CellType.Empty.toString())) {
                     cells.add(new EmptyCell(x, y));
                 }
-                if (typeName.equals(CellType.Plant.toString())) {// хотя на данном этапе мы можем проставить typeId цыфрами а после получения доступных строений/расстений обновить
-                    cells.add(new Plant(x, y, typeId, plantedDate));
+                if (typeName.equals(CellType.Plant.toString())) {
+                            Plant plantInfo = getPlantFromCash(typeId);
+                    Plant plant = new Plant((long)typeId, plantInfo.getName(), plantInfo.getPrice(), plantInfo.getProseed(), plantInfo.getGrowTime(), plantedDate, x , y);
+
+                    cells.add(plant);
                 }
                 if (typeName.equals(CellType.Building.toString())) {
+                    Building buildInfo = getBuildingFromCash(typeId); // todo по строению не собирает инфу из кеша
+
                     cells.add(new Building(x, y, typeId));
                 }
             }
@@ -304,36 +311,28 @@ public class FieldDaoImpl implements FieldDao {
         return cells;
     }
 
-
-    public void commitTransaction() {
+    private Plant getPlantFromCash(int typeId) {
+        List<Plant> allPlants = fieldCash.getAllPlants();
+        for (Plant p :
+                allPlants) {
+            if (p.getId() == (long)typeId) return p;
+        }
+        return null;
     }
-//        //записываем новое состояние баланса
-//        updatePlayer(fieldCash.getPlayer());
-//        //меняем клетку
-//        updateCell();
-//    }
 
-//    private void updateCell() {
-//
-//        //Допиать для одной клетки изменение
-////        Connection con = DaoUtils.getConnection();
-////
-////        PreparedStatement statement = null;
-////        try{
-////            statement = con.prepareStatement(QueryConfig.UPDATE_CELL);
-////
-////            statement.setDate(1,);
-////        } catch (SQLException e) {
-////            e.printStackTrace();
-////        }
-////        finally {
-////            try {
-////                DaoUtils.close(con, statement);
-////            } catch (SQLException e) {
-////                e.printStackTrace();
-////            }
-////        }
-//    }
+    /**
+     * По ид строения возвращаем из кеша инфу о нем
+     * @param typeId
+     * @return
+     */
+    private Building getBuildingFromCash(int typeId) {
+        List<Building> allBuildings = fieldCash.getAllBuildings();
+        for (Building b :
+                allBuildings) {
+            if (b.getId() == (long)typeId) return b;
+        }
+        return null;
+    }
 
     private void updatePlayer(Player player) {
         Connection con = DaoUtils.getConnection();
@@ -355,7 +354,12 @@ public class FieldDaoImpl implements FieldDao {
             }
         }
     }
+    public void setEmptyPlant(Field field, int x, int y) {
 
+        fieldCash.setCell(new EmptyCell(x, y), x, y); //ложим в кеш пустое поле
+
+        updateCell(fieldCash.getId(), x, y);
+    }
     public void addEmptyCells(Field field) {
         if (field == null) System.out.println("Boroda. addEmptyCells" +
                 " - не получается  добавить клеточки в поле. поле пустое");
@@ -367,7 +371,7 @@ public class FieldDaoImpl implements FieldDao {
 
         for (int i = 1; i < 8 + 1; i++) {
             for (int j = 1; j < 8 + 1; j++) {
-                addEmptyCell(j, i, id); //засадим пустыми клетками //todo посмотреть правильно ли выводится х, у
+                addEmptyCell(j, i, id); //засадим пустыми клетками
             }
         }
     }

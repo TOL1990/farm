@@ -13,8 +13,8 @@ public class FieldTest {
     @Test
     public void createEmptyCellsTest()
     {
-        Field field = new Field();
-        field.createEmptyCells();
+//        Field field = new Field();
+//        field.createEmptyCells();
 //        assertNotNull(field.cells);
 //        assertEquals(field.cells.size(), MAX_CELLS_IN_FIELD);
     }

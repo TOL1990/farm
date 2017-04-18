@@ -23,13 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="d9d3e2e8-55a2-46cb-b67c-12c3fad30316">
-        <schema name="farmdb" object-types="column, constraint, function, index, procedure, table, dataset trigger, view" />
-        <schema name="mysql" object-types="function, table, view" />
-        <schema name="performance_schema" object-types="table, view" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="d9d3e2e8-55a2-46cb-b67c-12c3fad30316">
