@@ -148,6 +148,10 @@ public class GameService {
     }
 
     public Field getField() {
+        if(field == null && player.getNick() != null)
+        {
+           this.field = getField(player);
+        }
         return field;
     }
 
@@ -155,8 +159,9 @@ public class GameService {
         this.field = field;
     }
 
-    public void getField(Player player) {
-        fieldService.getFieldDao().getField(player);
+    public Field getField(Player player) {
+        field = fieldService.getFieldDao().getField(player);
+        return field;
     }
 
     public void initial() {

@@ -19,7 +19,8 @@ public enum AuthorizationBuffer implements MYAuthorizationIF
     @Override
     public MYClientIF login(MYLoginIF myLoginIF)
     {
-        String deviceInfo = myLoginIF.getParams()[0];
+
+        String deviceInfo = myLoginIF.getParams()[0];//// todo gameservis login
         MYClientIF clientIF = UserManager.INSTANCE.getUserByDeviceInfo(deviceInfo);
         if (clientIF != null)
         {

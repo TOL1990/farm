@@ -21,6 +21,7 @@ public class Main
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             MYLoggerFactory.get().error(e.getMessage(), e);
         }
     }

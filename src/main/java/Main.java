@@ -1,6 +1,8 @@
 import com.aad.myutil.server.MYServer;
 import model.Server.impl.singlethread.Server;
 import model.client.impl.singlethread.Client;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,10 +13,18 @@ import java.io.InputStreamReader;
  */
 public class Main {
     public static void main(String[] args) {
-       // com.fenix.main.Main.main();
-        model.Server.connection.src.main.java.com.fenix.main.Main.main(args); // создадим конекшн
+        // com.fenix.main.Main.main();
+       // model.Server.connection.src.main.java.com.fenix.main.Main.main(args); // создадим конекшн
+        serverConncetion(args);
+      //  runInPool();
+     //   runInSingleThreads();
     }
 
+    public static void serverConncetion(String[] args)
+    {
+        model.Server.connection.src.main.java.com.fenix.main.Main.main(args); // создадим конекшн
+       new model.Server.impl.pool.Server();
+    }
     public static void runInPool() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 

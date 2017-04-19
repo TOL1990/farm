@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Taras on 09.03.2017.
  */
-public class Field {
+public class    Field {
     private final int CELL_LIMIT = 64;
     private final int HORIZONTAL_CELL = 8;
     private final int VERTICAL_CELL = 8;
