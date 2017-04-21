@@ -39,14 +39,12 @@ public class PickingPlant extends Command {
         return true;
     }
     private void validation() {
-
         if (field.getCell(x, y).getType() != CellType.Plant) {
             System.out.println("В ячейке не расстение.");
             setValid(false);
         } else {
             plant = (Plant) field.getCell(x, y);
         }
-
 
         List<Cell> cells = field.getCells();
         List<Plant> plants = field.getAllPlants();
@@ -148,5 +146,13 @@ public class PickingPlant extends Command {
 
         if ((plantedTime + (growingTime - bonusTime)) < currenTime) return true;
         else return false;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
     }
 }

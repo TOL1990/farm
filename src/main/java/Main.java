@@ -17,7 +17,7 @@ public class Main {
        // model.Server.connection.src.main.java.com.fenix.main.Main.main(args); // создадим конекшн
         serverConncetion(args);
       //  runInPool();
-     //   runInSingleThreads();
+     // runInSingleThreads();
     }
 
     public static void serverConncetion(String[] args)

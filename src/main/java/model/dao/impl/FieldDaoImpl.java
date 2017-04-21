@@ -55,7 +55,8 @@ public class FieldDaoImpl implements FieldDao {
         getFieldIdDB(player); // это обновит кеш ид fieldCash из базы
         fieldCash.setCells(getCellsByFieldId(fieldCash.getId()));
         fieldCash.setPlayer(player);
-
+        getAllBuildings();////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        getAllPlants();
         return fieldCash;
     }
 
@@ -287,15 +288,14 @@ public class FieldDaoImpl implements FieldDao {
                     cells.add(new EmptyCell(x, y));
                 }
                 if (typeName.equals(CellType.Plant.toString())) {
-                            Plant plantInfo = getPlantFromCash(typeId);
-                    Plant plant = new Plant((long)typeId, plantInfo.getName(), plantInfo.getPrice(), plantInfo.getProseed(), plantInfo.getGrowTime(), plantedDate, x , y);
-
+                    Plant plantInfo = getPlantFromCash(typeId);
+                    Plant plant = new Plant((long) typeId, plantInfo.getName(), plantInfo.getPrice(), plantInfo.getProseed(), plantInfo.getGrowTime(), plantedDate, x, y);
                     cells.add(plant);
                 }
                 if (typeName.equals(CellType.Building.toString())) {
-                    Building buildInfo = getBuildingFromCash(typeId); // todo по строению не собирает инфу из кеша
-
-                    cells.add(new Building(x, y, typeId));
+                    Building buildInfo = getBuildingFromCash(typeId);
+                    Building building = new Building((long) typeId, buildInfo.getName(), buildInfo.getBonus(), buildInfo.getPrice(), x, y);
+                    cells.add(building);
                 }
             }
 
@@ -308,6 +308,7 @@ public class FieldDaoImpl implements FieldDao {
                 e.printStackTrace();
             }
         }
+        initBonuces(cells);
         return cells;
     }
 
@@ -315,13 +316,14 @@ public class FieldDaoImpl implements FieldDao {
         List<Plant> allPlants = fieldCash.getAllPlants();
         for (Plant p :
                 allPlants) {
-            if (p.getId() == (long)typeId) return p;
+            if (p.getId() == (long) typeId) return p;
         }
         return null;
     }
 
     /**
      * По ид строения возвращаем из кеша инфу о нем
+     *
      * @param typeId
      * @return
      */
@@ -329,7 +331,7 @@ public class FieldDaoImpl implements FieldDao {
         List<Building> allBuildings = fieldCash.getAllBuildings();
         for (Building b :
                 allBuildings) {
-            if (b.getId() == (long)typeId) return b;
+            if (b.getId() == (long) typeId) return b;
         }
         return null;
     }
@@ -354,12 +356,14 @@ public class FieldDaoImpl implements FieldDao {
             }
         }
     }
+
     public void setEmptyPlant(Field field, int x, int y) {
 
         fieldCash.setCell(new EmptyCell(x, y), x, y); //ложим в кеш пустое поле
 
         updateCell(fieldCash.getId(), x, y);
     }
+
     public void addEmptyCells(Field field) {
         if (field == null) System.out.println("Boroda. addEmptyCells" +
                 " - не получается  добавить клеточки в поле. поле пустое");
@@ -403,6 +407,112 @@ public class FieldDaoImpl implements FieldDao {
 
 
         return stringBuilder.toString();
+    }
+
+    private void initBonuces(List<Cell> cells) {
+
+        for (Cell cell :
+                cells) {
+            long timeBonus = 0; // бонус к созреваниб
+            long proseedBonus = 0;//бонус к урожаю
+            if(cell.getType() == CellType.Plant) { // если ячейка растение
+
+                List<Cell> neighborCells = checkNearCellsForBonus(cells, cell.getxPosition(), cell.getyPosition());//делаем лист ее соседей
+                if(neighborCells.size() >0){
+                for (int i = 0; i< neighborCells.size(); i++) {
+                    if (neighborCells.get(i).getType() == CellType.Building) {
+                        Building building = (Building) neighborCells.get(i); // кастонули ячейку к зданию чтобы получить бонус
+
+                        long time = building.getBonus().getTime();
+                        long proseed = building.getBonus().getProseed();
+
+                        if (time > timeBonus) timeBonus = time;
+                        if (proseed > proseedBonus) proseedBonus = proseed;
+                    }
+                }
+            }
+                Plant cellPlant = (Plant) cell;
+                cellPlant.setProseed(cellPlant.getProseed() + cellPlant.getProseed()*proseedBonus);
+        //todo нужно добаивть подсчет времени коректный. Тут тип заглушка.
+                 cellPlant.setGrowTime((int) (cellPlant.getGrowTime() - cellPlant.getGrowTime() * timeBonus));
+            }
+        }
+    }
+
+    /**
+     * метод проверяет существует ли ячейка по указанному индексу и если да то добавляет ее в лист
+     * @param cells
+     * @return лист соседних ячеек
+     */
+    private List<Cell> checkNearCellsForBonus(List<Cell> cells, int x, int y) {
+        List<Cell> cellList = new ArrayList<Cell>();
+        //проверяем на есть ли ячейка и
+        try {
+           // int index = getIndexInList(x - 1, y);
+            Cell cell = getCellInList(cells, x - 1, y);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }//игнорим ошибку. Если клеточка не может быть х-1, у. просто не добавим в лист
+
+        try {
+          //  int index = getIndexInList(x, y - 1);
+            Cell cell =getCellInList(cells, x, y - 1);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }
+
+        try {
+           // int index = getIndexInList(x + 1, y);
+            Cell cell = getCellInList(cells, x + 1, y);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }
+
+        try {
+        //    int index = getIndexInList(x, y + 1);
+            Cell cell = getCellInList(cells, x, y + 1);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }
+
+        try {
+       //     int index = getIndexInList(x - 1, y - 1);
+            Cell cell = getCellInList(cells, x - 1, y - 1);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }
+
+        try {
+        //    int index = getIndexInList(x + 1, y + 1);
+            Cell cell = getCellInList(cells, x + 1, y + 1);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }
+
+        try {
+           // int index = getIndexInList(x - 1, y + 1);
+            Cell cell = getCellInList(cells, x - 1, y + 1);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }
+
+        try {
+          //  int index = getIndexInList(x + 1, y - 1);
+            Cell cell = getCellInList(cells, x + 1, y - 1);
+            if(cell != null)cellList.add(cell);
+        } catch (Exception e) {
+        }
+
+        return cellList;
+    }
+    private int getIndexInList(int x, int y) {return ((x - 1)*8 + y )-1;}
+    private Cell getCellInList(List<Cell> cells, int x, int y) {
+        for (Cell c:
+             cells) {
+            if(c.getxPosition() == x && c.getyPosition() == y)
+                return c;
+        }
+        return null;
     }
 
 

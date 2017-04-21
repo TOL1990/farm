@@ -29,6 +29,15 @@ public class Building extends Cell{
        this.id = id;
         setType(CellType.Building);
     }
+    public Building(long id, String name,  BuildingBonus bonus, long price, int x, int y) {
+        this.xPosition = x;
+        this.yPosition = y;
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.bonus = bonus;
+        setType(CellType.Building);
+    }
 
     /**
      * конструктор нужен для создания листа всех доступных строений
@@ -44,7 +53,6 @@ public class Building extends Cell{
         this.price = price;
 
         setType(CellType.Building);
-        //todo докидать сюда инит бонусов
     }
 
     public long getId() {
@@ -79,10 +87,6 @@ public class Building extends Cell{
         this.price = price;
     }
 
-
-//    public int getTypeId() {return typeId;}
-//
-//    public void setTypeId(int typeId) {this.typeId = typeId;}
 
 
     /**
