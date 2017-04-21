@@ -11,7 +11,7 @@ public class Plant extends Cell {
     private String name;
     private long price;
     private long proseed; //выручка
-    private int growTime;
+    private long growTime;
     private Timestamp plantedTime;
 
 
@@ -23,7 +23,7 @@ public class Plant extends Cell {
         this.setType(CellType.Plant);
     }
 
-    public  Plant(long id, String name, long price, long proseed, int growTime) {
+    public  Plant(long id, String name, long price, long proseed, long growTime) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -32,7 +32,7 @@ public class Plant extends Cell {
         this.setType(CellType.Plant);
     }
 
-    public Plant(long id, String name, long price, long proseed, int growTime, Timestamp plantedTime, int x, int y) {
+    public Plant(long id, String name, long price, long proseed, long growTime, Timestamp plantedTime, int x, int y) {
         this.xPosition = x;
         this.yPosition = y;
         this.id = id;
@@ -76,11 +76,11 @@ public class Plant extends Cell {
         this.proseed = proseed;
     }
 
-    public int getGrowTime() {
+    public long getGrowTime() {
         return growTime;
     }
 
-    public void setGrowTime(int growTime) {
+    public void setGrowTime(long growTime) {
         this.growTime = growTime;
     }
 
@@ -88,9 +88,6 @@ public class Plant extends Cell {
 
     public void setPlantedTime(Timestamp plantedTime) {this.plantedTime = plantedTime;}
 
-    /**
-     * Для сравнивания не учитывается время посадки
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,18 +99,25 @@ public class Plant extends Cell {
         if (price != plant.price) return false;
         if (proseed != plant.proseed) return false;
         if (growTime != plant.growTime) return false;
-        return name != null ? name.equals(plant.name) : plant.name == null;
+        if (!name.equals(plant.name)) return false;
+        return plantedTime.equals(plant.plantedTime);
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + name.hashCode();
         result = 31 * result + (int) (price ^ (price >>> 32));
         result = 31 * result + (int) (proseed ^ (proseed >>> 32));
-        result = 31 * result + growTime;
+        result = 31 * result + (int) (growTime ^ (growTime >>> 32));
+        result = 31 * result + plantedTime.hashCode();
         return result;
     }
+
+    /**
+     * Для сравнивания не учитывается время посадки
+     */
+
 
     @Override
     public String toString() {

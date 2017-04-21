@@ -136,10 +136,10 @@ public class PickingPlant extends Command {
     }
 
     private boolean isAlreadyGrownUp() {
-        long oneMin = 60000;
+        long oneSec = 1000;
         long plantedTime = plant.getPlantedTime().getTime();
 
-        long growingTime = (long) plant.getGrowTime() * oneMin;   //здесь присвоим из переданного растения, или снова стучать в базу
+        long growingTime = plant.getGrowTime() * oneSec;   //здесь присвоим из переданного растения, или снова стучать в базу
 
         long bonusTime = (growingTime * timeBonus) / 100;
         long currenTime = new Timestamp(System.currentTimeMillis()).getTime();

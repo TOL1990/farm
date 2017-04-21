@@ -180,7 +180,7 @@ public class LoginBuffer extends AbstractBuffer<LOGIN_COMMAND> {
                 tempobj.planted = plantTemp.getPlantedTime().toString();
                 tempobj.name = plantTemp.getName();
                 tempobj.proseed = plantTemp.getProseed();
-                tempobj.time = plantTemp.getGrowTime();
+                tempobj.growTime = plantTemp.getGrowTime();
             }
             if (tempobj.typeName.equals("Building")) {
                 Building buildingTemp = (Building) cell;
@@ -207,7 +207,7 @@ public class LoginBuffer extends AbstractBuffer<LOGIN_COMMAND> {
             jsonObject.put("proseedBonus", cell.proseedBonus);
             jsonObject.put("timeBonus", cell.timeBonus);
             jsonObject.put("proseed", cell.proseed);
-            jsonObject.put("time", cell.time);
+            jsonObject.put("growTime", cell.growTime);
             jsonList.add(jsonObject);
         }
         return jsonList.toString();
