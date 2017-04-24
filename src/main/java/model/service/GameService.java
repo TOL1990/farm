@@ -89,7 +89,7 @@ public class GameService {
         }
     }
 
-    public void pickupPlant(String x, String y) {
+    public String pickupPlant(String x, String y) {
 
         Field field = fieldService.getField();
 
@@ -99,8 +99,10 @@ public class GameService {
         {
             fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
             updatePlayerBallance(field.getPlayer());
+            return "";
         }else {
             System.out.println("не удалось собрать урожай. pickupPlant");
+            return "не удалось собрать урожай. pickupPlant";
         }
     }
 

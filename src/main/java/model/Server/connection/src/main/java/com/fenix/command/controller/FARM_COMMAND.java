@@ -3,7 +3,7 @@ package model.Server.connection.src.main.java.com.fenix.command.controller;
 import com.aad.myutil.server.client.MYCommandKeyIF;
 
 public enum FARM_COMMAND implements MYCommandKeyIF<Integer> {
-    UNKNOW(-1), LOGIN(1), REGISTRATION(2), DEVICE_INFO(3), QUIT(4), LOGIN_FAIL(5), LOGIN_SUCCESS(6), FARM_INFO(7);
+    UNKNOW(-1),  FARM_STATUS(1), GET_AVAILABLE_BUILDINGS(2), GET_AVAILABLE_PLANTS(3), PICK_UP_PLANT(11), PLANT_NOT_GROWN(12);
 
     private Integer key;
 

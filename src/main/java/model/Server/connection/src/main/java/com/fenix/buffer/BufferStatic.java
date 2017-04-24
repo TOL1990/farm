@@ -11,5 +11,6 @@ public class BufferStatic
     public static void initBuffers()
     {
         CommandExecutor.INSTANCE.addCommands(COMMAND_FAMILY.LOGIN, new LoginBuffer());
+        CommandExecutor.INSTANCE.addCommands(COMMAND_FAMILY.FARM, new FarmBuffer());
     }
 }
