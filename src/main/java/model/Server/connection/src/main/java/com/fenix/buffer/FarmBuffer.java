@@ -57,6 +57,16 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
                     deletePlant(userId, json);
                     break;
                 }
+                case SET_BUILDING:
+                {
+                    setUpBuilding(userId, json);
+                    break;
+                }
+                case DELETE_BUILDING:
+                {
+                    deleteBuilding(userId, json);
+                    break;
+                }
 
             }
         } catch (Exception e) {
@@ -72,6 +82,13 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         gameService.delPlant(x, y);
         updateFarm(gameService, userId);
     }
+    private void deleteBuilding(long userId, JSONObject json) {
+        GameService gameService = GameManager.INSTANCE.getGameService(userId);
+        String x = json.get("x").toString();
+        String y = json.get("y").toString();
+        gameService.delBuilding(x, y);
+        updateFarm(gameService, userId);
+    }
 
     private void setUpPlant(long userId, JSONObject json) {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
@@ -79,6 +96,15 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         String x = json.get("x").toString();
         String y = json.get("y").toString();
         gameService.setPlant(plantName, x, y);
+        updateFarm(gameService, userId);
+    }
+
+    private void setUpBuilding(long userId, JSONObject json) {
+        GameService gameService = GameManager.INSTANCE.getGameService(userId);
+        String buildingName = json.get("name").toString();
+        String x = json.get("x").toString();
+        String y = json.get("y").toString();
+        gameService.setBuilding(buildingName, x, y);
         updateFarm(gameService, userId);
     }
 

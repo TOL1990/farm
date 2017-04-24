@@ -166,7 +166,7 @@ public class FieldDaoImpl implements FieldDao {
 
         for (Building b :
                 fieldCash.getAllBuildings()) {
-            if (b.getName().equals(name)) return b;
+            if (b.getName().equals(name.toLowerCase())) return b;
         }
         return null;
     }
