@@ -35,15 +35,6 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         try {
             JSONObject json = (JSONObject) o;
             switch (command) {
-//                case DEVICE_INFO: {
-//                    getDeviceInfo(userId, json);
-//                    break;
-//                }
-//                case OTVETKA: {
-//                    //otvetkaMeth(userId, json);
-//                    getFarm(userId);
-//                    break;
-//                }
                 case FARM_STATUS: {
                     farmStatus(userId);
                     break;
@@ -56,12 +47,27 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
                     pickUpPlant(userId, json);
                     break;
                 }
+                case SET_PLANT:
+                {
+                    setUpPlant(userId, json);
+                    break;
+                }
 
             }
         } catch (Exception e) {
             MYLoggerFactory.get().error(e.getMessage(), e);
             e.printStackTrace();
         }
+    }
+
+    private void setUpPlant(long userId, JSONObject json) {
+        GameService gameService = GameManager.INSTANCE.getGameService(userId);
+        String plantName = json.get("name").toString();
+        String x = json.get("x").toString();
+        String y = json.get("y").toString();
+        gameService.setPlant(plantName, x, y);
+        updateFarm(gameService, userId);
+
     }
 
     private void otvetkaMeth(long userId, JSONObject json) {
@@ -164,18 +170,15 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
     private void pickUpPlant(long userId, JSONObject json) {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         String answer = gameService.pickupPlant(json.get("x").toString(), json.get("y").toString()); //вернет "" если все ок
-        JSONObject response = new JSONObject();
+
         if (answer.equals("")) {
-            List<TransferCellInfo> cells = farmToTransferList(gameService.getField(gameService.getPlayer()));//тут тащим из базы
-            String responseMsg = celltoJSONArray(cells);
-            response.put(KEYS.MODEL_DATA.getKey(), responseMsg);
-            sendData(userId, FARM_COMMAND.FARM_STATUS, response);
+            updateFarm(gameService, userId);
         } else {
+            JSONObject response = new JSONObject();
             response.put(KEYS.MODEL_DATA.getKey(), answer);
             sendData(userId, FARM_COMMAND.PICK_UP_PLANT, response); //здесь я возвращая сообщение об ошибке.
             //возможно мне лучше сделать доп маркер/команду для ошибок
         }
-
     }
 
     private void getAvaliablePlants(long userId) {
@@ -213,7 +216,14 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         }
         return resultList;
     }
-
+    private void updateFarm(GameService gameService, long userId)
+    {
+        JSONObject response = new JSONObject();
+        List<TransferCellInfo> cells = farmToTransferList(gameService.getField(gameService.getPlayer()));//тут тащим из базы
+        String responseMsg = celltoJSONArray(cells);
+        response.put(KEYS.MODEL_DATA.getKey(), responseMsg);
+        sendData(userId, FARM_COMMAND.FARM_STATUS, response);
+    }
     private String celltoJSONArray(List<TransferCellInfo> cells) {
         JSONArray jsonList = new JSONArray();
 

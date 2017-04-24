@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Taras on 09.03.2017.
  */
-public class    Field {
+public class Field {
     private final int CELL_LIMIT = 64;
     private final int HORIZONTAL_CELL = 8;
     private final int VERTICAL_CELL = 8;
@@ -60,18 +60,12 @@ public class    Field {
      * @param y- номер клетки по верикали
      */
     public void setCell(Cell obj, int x, int y) {
-
         obj.setxPosition(x);
         obj.setyPosition(y);
-
-        cells.set(getIndexInList(x, y), obj);
-    }
-
-    /**
-     * @return позицию файла в листе
-     */
-    private int getIndexInList(int x, int y) {
-        return ((x - 1) + 8 * (y - 1));//индексы с 0 начинаются
+        for (int i = 0; i < cells.size(); i++) {
+            if (cells.get(i).getxPosition() == x && cells.get(i).getyPosition() == y)
+                cells.set(i, obj);
+        }
     }
 
     public void consoleSoutField() {
@@ -117,7 +111,6 @@ public class    Field {
 
         builder.append("id = " + id);
         builder.append("\n");
-
 
 
         for (int i = 0; i < 8; i++) {
@@ -168,7 +161,9 @@ public class    Field {
         this.id = id;
     }
 
-    public List<Cell> getCells() {return cells;}
+    public List<Cell> getCells() {
+        return cells;
+    }
 
     public void setCells(List<Cell> cells) {
         this.cells = cells;
