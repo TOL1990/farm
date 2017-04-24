@@ -52,12 +52,25 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
                     setUpPlant(userId, json);
                     break;
                 }
+                case DELETE_PLANT:
+                {
+                    deletePlant(userId, json);
+                    break;
+                }
 
             }
         } catch (Exception e) {
             MYLoggerFactory.get().error(e.getMessage(), e);
             e.printStackTrace();
         }
+    }
+
+    private void deletePlant(long userId, JSONObject json) {
+        GameService gameService = GameManager.INSTANCE.getGameService(userId);
+        String x = json.get("x").toString();
+        String y = json.get("y").toString();
+        gameService.delPlant(x, y);
+        updateFarm(gameService, userId);
     }
 
     private void setUpPlant(long userId, JSONObject json) {
@@ -67,7 +80,6 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         String y = json.get("y").toString();
         gameService.setPlant(plantName, x, y);
         updateFarm(gameService, userId);
-
     }
 
     private void otvetkaMeth(long userId, JSONObject json) {

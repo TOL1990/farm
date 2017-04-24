@@ -4,7 +4,7 @@ import com.aad.myutil.server.client.MYCommandKeyIF;
 
 public enum FARM_COMMAND implements MYCommandKeyIF<Integer> {
     UNKNOW(-1),  FARM_STATUS(1), GET_AVAILABLE_BUILDINGS(2), GET_AVAILABLE_PLANTS(3), PICK_UP_PLANT(4),
-    PLANT_NOT_GROWN(5), SET_PLANT(6);
+    PLANT_NOT_GROWN(5), SET_PLANT(6), DELETE_PLANT(7), SET_BUILDING(8), DELETE_BUILDING(9);
 
     private Integer key;
 
