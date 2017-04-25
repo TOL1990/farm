@@ -47,7 +47,7 @@ public class Field {
     public Cell getCell(int xPos, int yPos) {
         for (Cell c :
                 cells) {
-            if (c.getxPosition() == xPos && c.getyPosition() == yPos) return c;
+            if (c.getXPosition() == xPos && c.getYPosition() == yPos) return c;
         }
         System.out.println("Не найдена ячейка x = " + xPos + ", y = " + yPos);
         return null; // нету такой
@@ -60,10 +60,10 @@ public class Field {
      * @param y- номер клетки по верикали
      */
     public void setCell(Cell obj, int x, int y) {
-        obj.setxPosition(x);
-        obj.setyPosition(y);
+        obj.setXPosition(x);
+        obj.setYPosition(y);
         for (int i = 0; i < cells.size(); i++) {
-            if (cells.get(i).getxPosition() == x && cells.get(i).getyPosition() == y)
+            if (cells.get(i).getXPosition() == x && cells.get(i).getYPosition() == y)
                 cells.set(i, obj);
         }
     }

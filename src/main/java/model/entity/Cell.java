@@ -8,19 +8,19 @@ public abstract class Cell {
     protected int yPosition;
     protected  CellType type;
 
-    public int getxPosition() {
+    public int getXPosition() {
         return xPosition;
     }
 
-    public void setxPosition(int xPosition) {
+    public void setXPosition(int xPosition) {
         this.xPosition = xPosition;
     }
 
-    public int getyPosition() {
+    public int getYPosition() {
         return yPosition;
     }
 
-    public void setyPosition(int yPosition) {
+    public void setYPosition(int yPosition) {
         this.yPosition = yPosition;
     }
 

@@ -28,8 +28,8 @@ public class BuildingConstruct extends Command {
         validation();
         if (!isValid) return false;
 
-        building.setxPosition(x);
-        building.setyPosition(y);
+        building.setXPosition(x);
+        building.setYPosition(y);
 
         Player player = field.getPlayer();
         player.setBalance(player.getBalance() - building.getPrice());

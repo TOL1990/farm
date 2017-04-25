@@ -30,8 +30,8 @@ public class PlantConstuct extends Command {
         validation();
         if (!isValid) return false;
 
-        plant.setxPosition(x);
-        plant.setyPosition(y);
+        plant.setXPosition(x);
+        plant.setYPosition(y);
         plant.setPlantedTime(new Timestamp(System.currentTimeMillis()));
 
         Player player = field.getPlayer();

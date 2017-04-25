@@ -71,10 +71,8 @@ public class LoginBuffer extends AbstractBuffer<LOGIN_COMMAND> {
 
 //       private void otvetkaMeth(long userId, JSONObject json) {
 //        //    sendData(userId, LOGIN_COMMAND.LOGIN_SUCCESS, json);
-//
-//        String msg = JSONHelper.getString(json.get(KEYS.MODEL_DATA.getKey()));
-///*
-//        System.out.println("OTVETKA USER IDDDDDDDDDDDDDDD = " + userId);
+////        String msg = JSONHelper.getString(json.get(KEYS.MODEL_DATA.getKey()));
+///       System.out.println("OTVETKA USER IDDDDDDDDDDDDDDD = " + userId);
 //        msg += "11111 ";
 //        JSONObject response = new JSONObject();
 //        response.put(KEYS.MODEL_DATA.getKey(), msg);

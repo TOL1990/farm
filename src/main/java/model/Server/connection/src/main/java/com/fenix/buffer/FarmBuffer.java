@@ -1,11 +1,9 @@
 package model.Server.connection.src.main.java.com.fenix.buffer;
 
 import com.aad.myutil.logger.MYLoggerFactory;
-import com.aad.myutil.server.MYServer;
 import model.Server.GameManager;
 import model.Server.connection.src.main.java.com.fenix.command.controller.COMMAND_FAMILY;
 import model.Server.connection.src.main.java.com.fenix.command.controller.FARM_COMMAND;
-import model.Server.connection.src.main.java.com.fenix.command.controller.LOGIN_COMMAND;
 import model.Server.connection.src.main.java.com.fenix.util.JSONHelper;
 import model.Server.connection.src.main.java.com.fenix.util.KEYS;
 import model.Server.connection.src.main.java.com.fenix.util.TransferCellInfo;
@@ -47,23 +45,19 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
                     pickUpPlant(userId, json);
                     break;
                 }
-                case SET_PLANT:
-                {
+                case SET_PLANT: {
                     setUpPlant(userId, json);
                     break;
                 }
-                case DELETE_PLANT:
-                {
+                case DELETE_PLANT: {
                     deletePlant(userId, json);
                     break;
                 }
-                case SET_BUILDING:
-                {
+                case SET_BUILDING: {
                     setUpBuilding(userId, json);
                     break;
                 }
-                case DELETE_BUILDING:
-                {
+                case DELETE_BUILDING: {
                     deleteBuilding(userId, json);
                     break;
                 }
@@ -82,6 +76,7 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         gameService.delPlant(x, y);
         updateFarm(gameService, userId);
     }
+
     private void deleteBuilding(long userId, JSONObject json) {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         String x = json.get("x").toString();
@@ -171,6 +166,7 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         int commandId = (Integer) o;
         return FARM_COMMAND.valueOf(commandId);
     }
+
     private void farmStatus(long userId) {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         gameService.setPlayer(new Player("ca", "123")); //забиваем игрока из базы руками
@@ -181,6 +177,7 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), responseMsg);  // makeRandomJSONField());    //responseMsg);
         sendData(userId, FARM_COMMAND.FARM_STATUS, response);
+
     }
 
     private void getFarm(long userId) {
@@ -232,8 +229,8 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         for (Cell cell :
                 field.getCells()) {
             tempobj = new TransferCellInfo();
-            tempobj.x = cell.getxPosition();
-            tempobj.y = cell.getyPosition();
+            tempobj.x = cell.getXPosition();
+            tempobj.y = cell.getYPosition();
             tempobj.typeName = cell.getType().name();
             if (tempobj.typeName.equals("Empty")) {
             }
@@ -254,14 +251,16 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         }
         return resultList;
     }
-    private void updateFarm(GameService gameService, long userId)
-    {
+
+    private void updateFarm(GameService gameService, long userId) {
         JSONObject response = new JSONObject();
         List<TransferCellInfo> cells = farmToTransferList(gameService.getField(gameService.getPlayer()));//тут тащим из базы
         String responseMsg = celltoJSONArray(cells);
         response.put(KEYS.MODEL_DATA.getKey(), responseMsg);
         sendData(userId, FARM_COMMAND.FARM_STATUS, response);
+        sendBalance(gameService, userId);
     }
+
     private String celltoJSONArray(List<TransferCellInfo> cells) {
         JSONArray jsonList = new JSONArray();
 
@@ -340,5 +339,11 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
             }
         }
         return jsonList.toString();
+    }
+
+    private void sendBalance(GameService gameService, long userId) {
+        JSONObject response = new JSONObject();
+        response.put(KEYS.MODEL_DATA.getKey(), gameService.getPlayer().getBalance());
+        sendData(userId, FARM_COMMAND.MONEY_BALANCE, response);
     }
 }
