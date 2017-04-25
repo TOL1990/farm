@@ -90,8 +90,11 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         String plantName = json.get("name").toString();
         String x = json.get("x").toString();
         String y = json.get("y").toString();
-        gameService.setPlant(plantName, x, y);
+       String answer =  gameService.setPlant(plantName, x, y);
+       if(answer.equals(""))
         updateFarm(gameService, userId);
+       else
+           sendError(answer,userId);
     }
 
     private void setUpBuilding(long userId, JSONObject json) {
@@ -99,8 +102,11 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         String buildingName = json.get("name").toString();
         String x = json.get("x").toString();
         String y = json.get("y").toString();
-        gameService.setBuilding(buildingName, x, y);
-        updateFarm(gameService, userId);
+        String answer = gameService.setBuilding(buildingName, x, y);
+        if(answer.equals(""))
+            updateFarm(gameService, userId);
+        else
+            sendError(answer, userId);
     }
 
     private void otvetkaMeth(long userId, JSONObject json) {
@@ -206,10 +212,7 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         if (answer.equals("")) {
             updateFarm(gameService, userId);
         } else {
-            JSONObject response = new JSONObject();
-            response.put(KEYS.MODEL_DATA.getKey(), answer);
-            sendData(userId, FARM_COMMAND.PICK_UP_PLANT, response); //здесь я возвращая сообщение об ошибке.
-            //возможно мне лучше сделать доп маркер/команду для ошибок
+            sendError(answer, userId);
         }
     }
 
@@ -342,5 +345,10 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), gameService.getPlayer().getBalance());
         sendData(userId, FARM_COMMAND.MONEY_BALANCE, response);
+    }
+    private void sendError(String errorMessage, long userId) {
+        JSONObject response = new JSONObject();
+        response.put(KEYS.MODEL_DATA.getKey(), errorMessage);
+        sendData(userId, FARM_COMMAND.FARM_ERROR, response);
     }
 }

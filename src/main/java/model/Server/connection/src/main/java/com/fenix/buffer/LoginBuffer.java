@@ -118,5 +118,10 @@ public class LoginBuffer extends AbstractBuffer<LOGIN_COMMAND> {
         int commandId = (Integer) o;
         return LOGIN_COMMAND.valueOf(commandId);
     }
+    private void sendError(String errorMessage, long userId) {
+        JSONObject response = new JSONObject();
+        response.put(KEYS.MODEL_DATA.getKey(), errorMessage);
+        sendData(userId, LOGIN_COMMAND.LOGIN_ERROR, response);
+    }
 
 }

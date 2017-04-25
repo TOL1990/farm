@@ -4,6 +4,7 @@ import model.entity.CellType;
 import model.entity.Field;
 import model.entity.Plant;
 import model.entity.Player;
+import model.service.propertyconfig.ErrorConfig;
 
 import java.sql.Timestamp;
 
@@ -23,6 +24,7 @@ public class PlantConstuct extends Command {
         this.field = field;
         this.x = x;
         this.y = y;
+        error = "";
     }
 
     public boolean run() {
@@ -43,14 +45,16 @@ public class PlantConstuct extends Command {
 
     public void validation() {
         if (field.getCell(x, y).getType() != CellType.Empty) {
-            System.out.println("Ячейка не пуста. Невозможно посадить растение.");
+            error = ErrorConfig.CELL_NOT_EMPTY_CANT_PLANT;
+            System.out.println(error);
             setValid(false);
         }
         //если такого здания нету в базе
 
         //хватает ли денег
         if (field.getAvaliableMoney() < plant.getPrice()) {
-            System.out.println("Нехватает денег для посадки растения");
+            error = ErrorConfig.NOT_ENOUGH_MONEY;
+            System.out.println(error);
             setValid(false);
         }
     }

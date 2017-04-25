@@ -74,18 +74,18 @@ public class GameService {
             System.out.println();
     }
 
-    public void setPlant(String plantName, String x, String y) {
+    public String setPlant(String plantName, String x, String y) {
         Field field = fieldService.getField(); //получаем поле в кеше
 
         Plant plant = fieldService.getPlantByName(plantName);//тянем растение по нику из дао(кеш/БД)
 
-        PlantConstuct constuct = new PlantConstuct(plant, field, Integer.parseInt(x), Integer.parseInt(y));
-        if (constuct.run())//если успешно прошла операция в кеше, обновляем базу
+        PlantConstuct construct = new PlantConstuct(plant, field, Integer.parseInt(x), Integer.parseInt(y));
+        if (construct.run())//если успешно прошла операция в кеше, обновляем базу
         {
             fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
-            updatePlayerBallance(field.getPlayer());
+            return "";
         } else {
-            System.out.println("не удалось посадить растение. setPlant");
+            return construct.getError();
         }
     }
 
@@ -116,7 +116,7 @@ public class GameService {
         fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y) );
     }
 
-    public void setBuilding(String buildingName, String x, String y) {
+    public String setBuilding(String buildingName, String x, String y) {
         Field field = fieldService.getField();
         Building building = fieldService.getBuildingByName(buildingName);
 
@@ -124,8 +124,9 @@ public class GameService {
         if (construct.run()) {
             fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
             updatePlayerBallance(field.getPlayer());
+            return "";
         } else {
-            System.out.println("не удалось построить здание. setBuilding");
+           return construct.getError();
         }
 
     }
