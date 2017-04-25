@@ -431,7 +431,7 @@ public class FieldDaoImpl implements FieldDao {
                 Plant cellPlant = (Plant) currentCell;
                 cellPlant.setProseed(cellPlant.getProseed() + cellPlant.getProseed() * proceedBonus);
                 //todo нужно добаивть подсчет времени коректный. Тут тип заглушка.
-                cellPlant.setGrowTime((int) (cellPlant.getGrowTime() - cellPlant.getGrowTime() * timeBonus));
+                cellPlant.setGrowTime((int) (cellPlant.getGrowTime() - cellPlant.getGrowTime() * timeBonus/100));
             }
         }
     }

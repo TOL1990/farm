@@ -118,9 +118,6 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         getFarm(userId);
     }
 
-    private void getDeviceInfo(long userId, JSONObject json) {
-
-    }
 
 //    private void loginEvent() {
 //        MYServer.getServerEvents().addListener(MYServer.MYSERVER_EVENTS.LISTENER_LOGIN, params ->
@@ -169,7 +166,7 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
 
     private void farmStatus(long userId) {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
-        gameService.setPlayer(new Player("ca", "123")); //забиваем игрока из базы руками
+       // gameService.setPlayer(); //забиваем игрока из базы руками
         List<TransferCellInfo> cells = farmToTransferList(gameService.getField(gameService.getPlayer()));//тут тащим из базы
         // List<TransferCellInfo> cells = makeRandomField();
         String responseMsg = celltoJSONArray(cells);

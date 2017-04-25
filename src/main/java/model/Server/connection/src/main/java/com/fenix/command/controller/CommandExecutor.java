@@ -16,35 +16,29 @@ import java.util.Map;
 /**
  * Created by Andrew.
  */
-public enum CommandExecutor implements MYCommandParserIF
-{
+public enum CommandExecutor implements MYCommandParserIF {
     INSTANCE;
 
     private Map<Enum, MYCommandIF> commands;
 
-    CommandExecutor()
-    {
+    CommandExecutor() {
         commands = new HashMap<>();
     }
 
     @Override
-    public void addCommands(Enum anEnum, MYCommandIF myCommandIF)
-    {
+    public void addCommands(Enum anEnum, MYCommandIF myCommandIF) {
         commands.put(anEnum, myCommandIF);
     }
 
     @Override
-    public Map<Enum, MYCommandIF> getCommandExecutors()
-    {
+    public Map<Enum, MYCommandIF> getCommandExecutors() {
         return commands;
     }
 
     @Override
-    public Map.Entry<Enum[], Object> parseCommands(byte[] bytes)
-    {
+    public Map.Entry<Enum[], Object> parseCommands(byte[] bytes) {
         JSONObject json = JSONHelper.bytesToJSON(bytes);
-        if (json != null)
-        {
+        if (json != null) {
             int commandFamilyId = Integer.valueOf(json.get(KEYS.COMMAND_FAMILY.getKey()).toString());
             Enum commandFamily = COMMAND_FAMILY.valueOf(commandFamilyId);
 
@@ -67,8 +61,7 @@ public enum CommandExecutor implements MYCommandParserIF
     }
 
     @Override
-    public byte[] parseMessage(MYCommandKeyIF var1, MYCommandKeyIF var2, Object o)
-    {
+    public byte[] parseMessage(MYCommandKeyIF var1, MYCommandKeyIF var2, Object o) {
         JSONObject json = new JSONObject();
         json.put(KEYS.COMMAND_FAMILY.getKey(), var1.getKey());
         json.put(KEYS.COMMAND.getKey(), var2.getKey());
@@ -77,8 +70,7 @@ public enum CommandExecutor implements MYCommandParserIF
     }
 
     @Override
-    public byte[] getAutorityCommand()
-    {
+    public byte[] getAutorityCommand() {
         JSONObject json = new JSONObject();
         json.put(KEYS.COMMAND_FAMILY.getKey(), COMMAND_FAMILY.LOGIN.getKey());
         json.put(KEYS.COMMAND.getKey(), LOGIN_COMMAND.DEVICE_INFO.getKey());
@@ -89,8 +81,7 @@ public enum CommandExecutor implements MYCommandParserIF
     }
 
     @Override
-    public byte[] getFailCommand(MYLoginIF myLoginIF)
-    {
+    public byte[] getFailCommand(MYLoginIF myLoginIF) {
         JSONObject json = new JSONObject();
         json.put(KEYS.COMMAND_FAMILY.getKey(), COMMAND_FAMILY.LOGIN.getKey());
         Integer commandId = Integer.valueOf(myLoginIF.getParams()[0]);
@@ -104,15 +95,16 @@ public enum CommandExecutor implements MYCommandParserIF
     }
 
     @Override
-    public MYLoginIF parseAuthorityInfo(byte[] bytes)
-    {
+    public MYLoginIF parseAuthorityInfo(byte[] bytes) {
         JSONObject json = JSONHelper.bytesToJSON(bytes);
         JSONObject data = (JSONObject) json.get(KEYS.DATA.getKey());
         JSONArray arr = (JSONArray) data.get(KEYS.MODEL_DATA.getKey());
-        String deviceInfo = JSONHelper.getString(arr.get(0));
+        String login = JSONHelper.getString(arr.get(0));
+        String pass = JSONHelper.getString(arr.get(1));
+//        String deviceInfo = JSONHelper.getString(arr.get(0));
 
         String[] params = new String[]{
-                deviceInfo
+                login, pass
         };
 
         System.out.println("Authority params = " + params);

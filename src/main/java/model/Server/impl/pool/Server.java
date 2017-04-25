@@ -242,7 +242,6 @@ public class Server {
             }
             return false;
         }
-
         private boolean isLoginExist(String nickName, ArrayList<Player> players) {
             for (Player pl :
                     players) {
@@ -250,7 +249,5 @@ public class Server {
             }
             return false;
         }
-
-
     }
 }

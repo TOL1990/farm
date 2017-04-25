@@ -1,15 +1,18 @@
 package model.entity;
 
+import com.aad.myutil.server.client.MYClientIF;
+
 import java.math.BigDecimal;
 
 /**
  * Created by Taras on 09.03.2017.
  */
-public class Player {
+public class Player implements MYClientIF{
     private long id;
     private String nick;
     private String password;
     private long  balance;
+    private boolean online;
 
     public Player(long id, String nick, String password, long balance) {
         this.id = id;
@@ -36,6 +39,18 @@ public class Player {
     public long getId() {
         return id;
     }
+
+    @Override
+    public void setOnline(boolean online)
+    {
+        this.online = online;
+    }
+
+    @Override
+    public boolean isOnline() {return online;}
+
+    @Override
+    public String getName() {return nick;}
 
     public void setId(long id) {
         this.id = id;

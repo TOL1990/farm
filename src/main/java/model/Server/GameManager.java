@@ -20,15 +20,19 @@ public enum GameManager {
     public GameService getGameService(long userId) {
         GameService gameService = gameServices.get(userId);
         if (gameService == null) {
-            gameService = addGameservice(userId);
+            gameService = addGameService(userId);
         }
         return gameService;
     }
 
-    private GameService addGameservice(long userId) {
+    private GameService addGameService(long userId) {
         GameService gameService = new GameService();
         gameServices.put(userId, gameService);
 
         return gameService;
+    }
+
+    public void addGameService(long userId,GameService gameService) {
+        gameServices.put(userId, gameService);
     }
 }
