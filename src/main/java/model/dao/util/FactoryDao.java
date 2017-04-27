@@ -1,7 +1,10 @@
 package model.dao.util;
 
+import com.sun.javafx.geom.Area;
+import model.dao.AreaDao;
 import model.dao.FieldDao;
 import model.dao.PlayerDao;
+import model.dao.impl.AreaDaoImpl;
 import model.dao.impl.FieldDaoImpl;
 import model.dao.impl.PlayerDaoImpl;
 
@@ -15,7 +18,7 @@ public class FactoryDao {
 //    private static FieldDao fieldDao = null;
     private PlayerDao playerDao = null;
     private FieldDao fieldDao = null;
-
+    private AreaDao areaDao = null;
     //    public FieldDao getFieldDao() {
 //        if (fieldDao == null) {
 //            fieldDao = new FieldDaoImpl();
@@ -47,4 +50,8 @@ public class FactoryDao {
         return playerDao;
     }
 
+    public AreaDao getAreaDao() {
+        areaDao = new AreaDaoImpl();
+        return areaDao;
+    }
 }

@@ -4,10 +4,8 @@ import model.core.BuildingConstruct;
 import model.core.PickingPlant;
 import model.core.PlantConstuct;
 import model.dao.util.FactoryDao;
-import model.entity.Building;
-import model.entity.Field;
-import model.entity.Plant;
-import model.entity.Player;
+import model.entity.*;
+import model.service.propertyconfig.AreaService;
 
 import java.util.List;
 
@@ -21,16 +19,19 @@ public class GameService {
     //мы будем обращаться к этим полям, а они будут перезаписываться сервисами
     private Player player;
     private Field field;
+    private Area area;
 
 
     //Слои для работы с дао
     private PlayerService playerService;
     private FieldService fieldService;
+    private AreaService areaService;
 
 
     public GameService() {
         playerService = new PlayerService();
         fieldService = new FieldService();
+        areaService = new AreaService();
     }
 
     public GameService(Player player) {
@@ -62,16 +63,13 @@ public class GameService {
         return field.getConsoleSoutField();
     }
 
-    /**
-     *
-     */
-    public List<Plant> getAllPlants() {return fieldService.getAllPlants();}
 
-    public List<Building> getAllBuildings() {return fieldService.getAllBuildings();}
+    public List<Plant> getAllPlants() {
+        return fieldService.getAllPlants();
+    }
 
-    private void cleanConsole() {
-        for (int i = 0; i < 50; i++)
-            System.out.println();
+    public List<Building> getAllBuildings() {
+        return fieldService.getAllBuildings();
     }
 
     public String setPlant(String plantName, String x, String y) {
@@ -93,14 +91,13 @@ public class GameService {
 
         Field field = fieldService.getField();
 
-        PickingPlant pick = new PickingPlant(field,Integer.parseInt(x), Integer.parseInt(y));
+        PickingPlant pick = new PickingPlant(field, Integer.parseInt(x), Integer.parseInt(y));
 
-        if(pick.run())
-        {
+        if (pick.run()) {
             fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
             updatePlayerBallance(field.getPlayer());
             return "";
-        }else {
+        } else {
             System.out.println("не удалось собрать урожай. pickupPlant");
             return "не удалось собрать урожай. pickupPlant";
         }
@@ -108,12 +105,12 @@ public class GameService {
 
     public void delPlant(String x, String y) {
         Field field = fieldService.getField();
-        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y) );
+        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public void delBuilding(String x, String y) {
         Field field = fieldService.getField();
-        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y) );
+        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public String setBuilding(String buildingName, String x, String y) {
@@ -126,7 +123,7 @@ public class GameService {
             updatePlayerBallance(field.getPlayer());
             return "";
         } else {
-           return construct.getError();
+            return construct.getError();
         }
 
     }
@@ -140,10 +137,8 @@ public class GameService {
     }
 
     public void setPlayer(Player player) {
-
         if (player.getId() == 0 && player.getNick() != null && player.getNick() != "")
             setPlayerByNick(player.getNick());
-
     }
 
     public void setPlayerByNick(String nick) {
@@ -151,9 +146,8 @@ public class GameService {
     }
 
     public Field getField() {
-        if(field == null && player.getNick() != null)
-        {
-           this.field = getField(player);
+        if (field == null && player.getNick() != null) {
+            this.field = getField(player);
         }
         return field;
     }
@@ -176,4 +170,18 @@ public class GameService {
     public void updatePlayerBallance(Player player) {
         playerService.updatePlayerBallance(player);
     }
+
+    public Area getArea() {
+        if (area == null && field != null)
+           area = getArea(field);
+        return area;
+    }
+
+    private Area getArea(Field field) {
+        if(field == null)
+            getField();
+        area = areaService.getArea(field);
+        return area;
+    }
+
 }

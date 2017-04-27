@@ -445,14 +445,12 @@ public class FieldDaoImpl implements FieldDao {
         List<Cell> cellList = new ArrayList<Cell>();
         //проверяем на есть ли ячейка и
         try {
-            // int index = getIndexInList(x - 1, y);
             Cell cell = getCellInList(cells, x - 1, y);
             if (cell != null) cellList.add(cell);
         } catch (Exception e) {
         }//игнорим ошибку. Если клеточка не может быть х-1, у. просто не добавим в лист
 
         try {
-            //  int index = getIndexInList(x, y - 1);
             Cell cell = getCellInList(cells, x, y - 1);
             if (cell != null) cellList.add(cell);
         } catch (Exception e) {
@@ -466,35 +464,30 @@ public class FieldDaoImpl implements FieldDao {
         }
 
         try {
-            //    int index = getIndexInList(x, y + 1);
             Cell cell = getCellInList(cells, x, y + 1);
             if (cell != null) cellList.add(cell);
         } catch (Exception e) {
         }
 
         try {
-            //     int index = getIndexInList(x - 1, y - 1);
             Cell cell = getCellInList(cells, x - 1, y - 1);
             if (cell != null) cellList.add(cell);
         } catch (Exception e) {
         }
 
         try {
-            //    int index = getIndexInList(x + 1, y + 1);
             Cell cell = getCellInList(cells, x + 1, y + 1);
             if (cell != null) cellList.add(cell);
         } catch (Exception e) {
         }
 
         try {
-            // int index = getIndexInList(x - 1, y + 1);
             Cell cell = getCellInList(cells, x - 1, y + 1);
             if (cell != null) cellList.add(cell);
         } catch (Exception e) {
         }
 
         try {
-            //  int index = getIndexInList(x + 1, y - 1);
             Cell cell = getCellInList(cells, x + 1, y - 1);
             if (cell != null) cellList.add(cell);
         } catch (Exception e) {

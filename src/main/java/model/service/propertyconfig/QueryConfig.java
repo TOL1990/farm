@@ -25,6 +25,10 @@ public class QueryConfig {
     public static String GET_ALL_BUILDINGS;
     public static String UPDATE_PLAYER_BALLANCE;
     public static String UPDATE_ALL_CELL_IN_FIELD;
+    public static String GET_AREA_CELL_BY_FIELD_ID;
+    public static String GET_CELLS_BY_AREA_ID;
+    public static String GET_AREA_BY_ID;
+    public static String GET_ALL_AREAS;
 
 
     static {
@@ -47,9 +51,10 @@ public class QueryConfig {
             GET_ALL_BUILDINGS = properties.getProperty("GET_ALL_BUILDINGS");
             UPDATE_PLAYER_BALLANCE = properties.getProperty("UPDATE_PLAYER_BALLANCE");
             UPDATE_ALL_CELL_IN_FIELD = properties.getProperty("UPDATE_ALL_CELL_IN_FIELD");
-
-
-
+            GET_AREA_CELL_BY_FIELD_ID = properties.getProperty("GET_AREA_CELL_BY_FIELD_ID");
+            GET_CELLS_BY_AREA_ID = properties.getProperty("GET_CELLS_BY_AREA_ID");
+            GET_AREA_BY_ID = properties.getProperty("GET_AREA_BY_ID");
+            GET_ALL_AREAS = properties.getProperty("GET_ALL_AREAS");
 
         } catch (FileNotFoundException ex) {
             System.err.println("Properties config file not found");

@@ -49,7 +49,6 @@ public enum UserManager
         {
             user = getUser(userId);
         }
-
         return user;
     }
 

@@ -7,6 +7,7 @@ import model.Server.GameManager;
 import model.Server.connection.src.main.java.com.fenix.user.model.User;
 import model.entity.Player;
 import model.service.GameService;
+import model.service.propertyconfig.LoginErrorConfig;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ public enum AuthorizationBuffer implements MYAuthorizationIF {
                 clientIF = gs.getPlayer();
                 GameManager.INSTANCE.addGameService(userId, gs);
             } else {
+                myLoginIF.getParams()[0] = LoginErrorConfig.WRONG_LOGIN_AND_PASSWORD;
                 // out.println("Wrong password, Try again."); //заслать неверный пароль
             }
         }
