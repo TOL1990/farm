@@ -19,7 +19,7 @@ public class GameService {
     //мы будем обращаться к этим полям, а они будут перезаписываться сервисами
     private Player player;
     private Field field;
-    private Area area;
+    private Area homeArea;
 
 
     //Слои для работы с дао
@@ -62,7 +62,6 @@ public class GameService {
         Field field = fieldService.getFieldDao().getField();
         return field.getConsoleSoutField();
     }
-
 
     public List<Plant> getAllPlants() {
         return fieldService.getAllPlants();
@@ -172,16 +171,22 @@ public class GameService {
     }
 
     public Area getArea() {
-        if (area == null && field != null)
-           area = getArea(field);
-        return area;
+        if (homeArea == null && field != null)
+           homeArea = getArea(field);
+        return homeArea;
     }
 
     private Area getArea(Field field) {
         if(field == null)
             getField();
-        area = areaService.getArea(field);
-        return area;
+        homeArea = areaService.getArea(field);
+        return homeArea;
     }
+
+    //можно получить область либо по ид либо по координатам на карте мира
+    public Area getArea(Area area){
+        return areaService.getArea(area);
+    }
+
 
 }

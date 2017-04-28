@@ -12,5 +12,6 @@ public class BufferStatic
     {
         CommandExecutor.INSTANCE.addCommands(COMMAND_FAMILY.LOGIN, new LoginBuffer());
         CommandExecutor.INSTANCE.addCommands(COMMAND_FAMILY.FARM, new FarmBuffer());
+        CommandExecutor.INSTANCE.addCommands(COMMAND_FAMILY.WORLD, new WorldBuffer());
     }
 }

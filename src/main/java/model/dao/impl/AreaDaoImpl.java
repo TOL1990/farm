@@ -27,10 +27,7 @@ public class AreaDaoImpl implements AreaDao {
 
     @Override
     public List<Area> getAllAreas() {
-        if (areaCashList.size() < 1) {
-            areaCashList = getAllAreaDB();
-            insertAreaCellsDB(areaCashList);
-        }
+        checkAndInitCash();
         return areaCashList;
     }
 
@@ -73,8 +70,14 @@ public class AreaDaoImpl implements AreaDao {
 
     @Override
     public AreaCell getAreaCellById(long cellId) {
-//        return null;
-        throw new NotImplementedException();
+
+        for (Area area : areaCashList) {
+            for (AreaCell targetCell :
+                    area.getCells()) {
+                if (targetCell.getId() == cellId) return targetCell;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -184,12 +187,15 @@ public class AreaDaoImpl implements AreaDao {
 
     @Override
     public Area getAreaByCoordinates(int x, int y) {
-        throw new NotImplementedException();
-        // return null;
+        for (Area targetArea : areaCashList) {
+            if (targetArea.getX() == x && targetArea.getY() == y) return targetArea;
+        }
+        return null;
     }
 
     @Override
     public Area getAreaByFieldId(long fieldId) {
+        checkAndInitCash();
         for (Area searchArea :
                 areaCashList) {
             for (AreaCell areaCell :
@@ -197,15 +203,19 @@ public class AreaDaoImpl implements AreaDao {
                 if (areaCell.getField().getId() == fieldId) return searchArea;
             }
         }
-        // areaCashList.add(getAreaByFieldIdDB(fieldId));
         return null;
+    }
+
+    private void checkAndInitCash() {
+        if (areaCashList.size() < 1) {
+            areaCashList = getAllAreaDB();
+            insertAreaCellsDB(areaCashList);
+        }
     }
 
     @Override
     public AreaCell getAreaCellByFieldId(long fielId) {
-        if (areaCashList.size() < 1) //знчит еще никто не тягал
-            return getAreaCellByFieldIdDB(fielId);
-        else
+       checkAndInitCash();
             for (Area area :
                     areaCashList) {
                 for (AreaCell cell :
@@ -214,6 +224,11 @@ public class AreaDaoImpl implements AreaDao {
                 }
             }
         return null;
+    }
+
+    @Override
+    public void updateAreaCell(Area area, AreaCell cell) {
+     throw new NotImplementedException();
     }
 
     private AreaCell getAreaCellByFieldIdDB(long fieldId) {

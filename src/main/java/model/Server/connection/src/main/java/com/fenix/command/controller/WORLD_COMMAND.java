@@ -3,14 +3,14 @@ package model.Server.connection.src.main.java.com.fenix.command.controller;
 import com.aad.myutil.server.client.MYCommandKeyIF;
 
 /**
- * Created by Andrew.
+ * Created by Taras on 28.04.2017.
  */
-public enum COMMAND_FAMILY implements MYCommandKeyIF<Integer>
-{
-    TEST(1), LOGIN(2), FARM(3), WORLD(4);
+public enum WORLD_COMMAND implements MYCommandKeyIF<Integer> {
+    UNKNOW(-1), GET_AREA(1);
+
     private Integer key;
 
-    COMMAND_FAMILY(Integer key)
+    WORLD_COMMAND(Integer key)
     {
         this.key = key;
     }
@@ -21,11 +21,11 @@ public enum COMMAND_FAMILY implements MYCommandKeyIF<Integer>
         return key;
     }
 
-    public static COMMAND_FAMILY valueOf(int key)
+    public static WORLD_COMMAND valueOf(int key)
     {
-        for (COMMAND_FAMILY e : COMMAND_FAMILY.values())
+        for (WORLD_COMMAND e : WORLD_COMMAND.values())
         {
-            if (e.key.intValue() == key)
+            if (e.key == key)
             {
                 return e;
             }
