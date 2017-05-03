@@ -62,10 +62,6 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
                     deleteBuilding(userId, json);
                     break;
                 }
-                case GET_AREA: {
-                    getArea(userId, json);
-                    break;
-                }
             }
         } catch (Exception e) {
             MYLoggerFactory.get().error(e.getMessage(), e);
@@ -73,42 +69,7 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND> {
         }
     }
 
-/////////////////
-private void getArea(long userId, JSONObject json) {
-    GameService gameService = GameManager.INSTANCE.getGameService(userId);
-    int x = Integer.parseInt(json.get("x").toString());
-    int y = Integer.parseInt(json.get("y").toString());
-    gameService.getArea(new Area(x, y));
-    JSONObject response = new JSONObject();
-    String msg =  getRandomAreaCells();
-    response.put(KEYS.MODEL_DATA.getKey(),msg);
-    sendData(userId, FARM_COMMAND.GET_AREA, response);
-    System.out.println("SEND to client" + msg);
-}
-    private String getRandomAreaCells() {
-        String json= "";
-        Random random = new Random();
 
-        JSONArray jsonList = new JSONArray();
-        for (int i = 1; i < 6; i++) {
-            for (int j = 1; j < 6; j++) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("x", i);
-                jsonObject.put("y", j);
-                if(random.nextInt(2) == 0)
-                    jsonObject.put("typeName", "Farm");
-                else
-                    jsonObject.put("typeName", "Empty");
-
-                jsonObject.put("areaId", 1);
-                jsonList.add(jsonObject);
-            }
-        }
-
-        return jsonList.toString();
-    }
-
-    /////////////
     private void deletePlant(long userId, JSONObject json) {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         String x = json.get("x").toString();

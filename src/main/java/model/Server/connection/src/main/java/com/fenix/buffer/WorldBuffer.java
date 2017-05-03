@@ -72,6 +72,8 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
                     jsonObject.put("typeName", "Empty");
 
                 jsonObject.put("areaId", 1);
+                jsonObject.put("areaX", 1);
+                jsonObject.put("areaY", 1);
                 jsonList.add(jsonObject);
             }
         }
