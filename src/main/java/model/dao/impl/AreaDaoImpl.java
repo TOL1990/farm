@@ -216,11 +216,11 @@ public class AreaDaoImpl implements AreaDao {
     @Override
     public AreaCell getAreaCellByFieldId(long fielId) {
        checkAndInitCash();
-            for (Area area :
-                    areaCashList) {
-                for (AreaCell cell :
-                        area.getCells()) {
-                    if (cell.getField().getId() == fielId) return cell;
+            for (Area area : areaCashList)
+            {
+                for (AreaCell cell : area.getCells())
+                {
+                    if (cell.getField() != null && cell.getField().getId() == fielId) return cell;
                 }
             }
         return null;

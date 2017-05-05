@@ -6,7 +6,7 @@ import com.aad.myutil.server.client.MYCommandKeyIF;
  * Created by Taras on 28.04.2017.
  */
 public enum WORLD_COMMAND implements MYCommandKeyIF<Integer> {
-    UNKNOW(-1), GET_AREA(1);
+    UNKNOW(-1), GET_AREA(1), GET_HOME_AREA(2);
 
     private Integer key;
 
