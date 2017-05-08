@@ -20,6 +20,7 @@ public class AreaDaoImpl implements AreaDao {
     Field myField;
     List<Area> areaCashList; //здесь будет храниться кеш для областей. Если кактой инфы нет, она добавится из базы
 
+
     public AreaDaoImpl() {
         this.areaCashList = new ArrayList<>();
     }
@@ -55,7 +56,7 @@ public class AreaDaoImpl implements AreaDao {
                 areas.add(new Area(id, x, y));
             }
         } catch (SQLException e) {
-            System.err.println("Can't getting areas from DB");
+            System.err.println("Can't get areas from DB");
             e.printStackTrace();
         } finally {
             try {
