@@ -7,11 +7,12 @@ import java.util.List;
 /**
  * Created by Taras on 09.03.2017.
  */
-public interface PlayerDao {
+public interface PlayerDao
+{
     //    public Player findById(Long id);
-     List<Player> getAllPlayers();
+    List<Player> getAllPlayers();
 
-     void addPlayer(Player player);
+    void addPlayer(Player player);
 
     Player getPlayerByNick(String nick);
 

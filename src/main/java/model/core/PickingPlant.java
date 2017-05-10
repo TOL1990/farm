@@ -9,7 +9,8 @@ import java.util.List;
 /**
  * Created by Taras on 17.03.2017.
  */
-public class PickingPlant extends Command {
+public class PickingPlant extends Command
+{
     private Plant plant;
     private Field field;
     private long timeBonus = 0; // бонус к созреваниб
@@ -17,32 +18,42 @@ public class PickingPlant extends Command {
     private int x;
     private int y;
 
-    public PickingPlant(Field field, int x, int y) {
+    public PickingPlant(Field field, int x, int y)
+    {
         this.field = field;
         this.x = x;
         this.y = y;
-        this.isValid = true;
+        setValid(true);
 
     }
 
-    public boolean run() {
-
+    public boolean run()
+    {
+        boolean run = false;
         validation();
-        if (!isValid) return false;
 
-        long earning = plant.getProseed() + (plant.getProseed() * proseedBonus / 100);
+        if (isValid())
+        {
+            long earning = plant.getProseed() + (plant.getProseed() * proseedBonus / 100);
 
-        Player player = field.getPlayer();
-        player.setBalance(player.getBalance() + earning);
+            Player player = field.getPlayer();
+            player.setBalance(player.getBalance() + earning);
 
-        field.setCell(new EmptyCell(x,y), x, y); // делаем ячейку пустой в кеше поля
-        return true;
+            field.setCell(new EmptyCell(x, y), x, y); // делаем ячейку пустой в кеше поля
+            run = true;
+        }
+        return run;
     }
-    private void validation() {
-        if (field.getCell(x, y).getType() != CellType.Plant) {
+
+    private void validation()
+    {
+        if (field.getCell(x, y).getType() != CELL_TYPE.PLANT)
+        {
             System.out.println("В ячейке не расстение.");
             setValid(false);
-        } else {
+        }
+        else
+        {
             plant = (Plant) field.getCell(x, y);
         }
 
@@ -53,89 +64,128 @@ public class PickingPlant extends Command {
         initBonuces(cells); //присвоить бонусы если есть
 //todo проверить где назначаются бонусыЫ
 ////проверяем выросло ли растение
-        if (!isAlreadyGrownUp()) setValid(false);
+        if (!isAlreadyGrownUp())
+        {
+            setValid(false);
+        }
     }
 
-    private int getIndexInList(int x, int y) {
+    private int getIndexInList(int x, int y)
+    {
         return ((x - 1) + 8 * (y - 1));
     }
 
-    private void initBonuces(List<Cell> cells) {
+    private void initBonuces(List<Cell> cells)
+    {
         List<Cell> neighborCells = checkNearCellsForBonus(cells);
-        for (Cell c :
-                neighborCells) {
-            if (c.getType() == CellType.Building) {
+        for (Cell c : neighborCells)
+        {
+            if (c.getType() == CELL_TYPE.BUILDING)
+            {
                 Building building = (Building) c; // кастонули ячейку к зданию чтобы получить бонус
 
                 long time = building.getBonus().getTime();
                 long proseed = building.getBonus().getProseed();
 
-                if (time > timeBonus) timeBonus = time;
-                if (proseed > proseedBonus) proseedBonus = proseed;
+                if (time > timeBonus)
+                {
+                    timeBonus = time;
+                }
+                if (proseed > proseedBonus)
+                {
+                    proseedBonus = proseed;
+                }
             }
         }
     }
 
     /**
      * метод проверяет существует ли ячейка по указанному индексу и если да то добавляет ее в лист
+     *
      * @param cells
      * @return лист соседних ячеек
      */
-    private List<Cell> checkNearCellsForBonus(List<Cell> cells) {
+    private List<Cell> checkNearCellsForBonus(List<Cell> cells)
+    {
         List<Cell> cellList = new ArrayList<Cell>();
         //проверяем на есть ли ячейка и
-        try {
+        try
+        {
             int index = getIndexInList(x - 1, y);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }//игнорим ошибку. Если клеточка не может быть х-1, у. просто не добавим в лист
 
-        try {
+        try
+        {
             int index = getIndexInList(x, y - 1);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
 
-        try {
+        try
+        {
             int index = getIndexInList(x + 1, y);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
 
-        try {
+        try
+        {
             int index = getIndexInList(x, y + 1);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
 
-        try {
+        try
+        {
             int index = getIndexInList(x - 1, y - 1);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
 
-        try {
+        try
+        {
             int index = getIndexInList(x + 1, y + 1);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
 
-        try {
+        try
+        {
             int index = getIndexInList(x - 1, y + 1);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
 
-        try {
+        try
+        {
             int index = getIndexInList(x + 1, y - 1);
             cellList.add(cells.get(index));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
 
         return cellList;
     }
 
-    private boolean isAlreadyGrownUp() {
+    private boolean isAlreadyGrownUp()
+    {
         long oneSec = 1000;
         long plantedTime = plant.getPlantedTime().getTime();
 
@@ -144,15 +194,23 @@ public class PickingPlant extends Command {
         long bonusTime = (growingTime * timeBonus) / 100;
         long currenTime = new Timestamp(System.currentTimeMillis()).getTime();
 
-        if ((plantedTime + (growingTime - bonusTime)) < currenTime) return true;
-        else return false;
+        if ((plantedTime + (growingTime - bonusTime)) < currenTime)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    public Field getField() {
+    public Field getField()
+    {
         return field;
     }
 
-    public void setField(Field field) {
+    public void setField(Field field)
+    {
         this.field = field;
     }
 }

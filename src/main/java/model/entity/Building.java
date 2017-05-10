@@ -13,7 +13,7 @@ public class Building extends Cell{
     private long price;
 
     public Building() {
-        setType(CellType.Building);
+        setType(CELL_TYPE.BUILDING);
     }
 
     public Building(BuildingConfig config) {
@@ -27,7 +27,7 @@ public class Building extends Cell{
        this.xPosition = x;
        this.yPosition = y;
        this.id = id;
-        setType(CellType.Building);
+        setType(CELL_TYPE.BUILDING);
     }
     public Building(long id, String name,  BuildingBonus bonus, long price, int x, int y) {
         this.xPosition = x;
@@ -36,7 +36,7 @@ public class Building extends Cell{
         this.name = name;
         this.price = price;
         this.bonus = bonus;
-        setType(CellType.Building);
+        setType(CELL_TYPE.BUILDING);
     }
 
     /**
@@ -52,7 +52,7 @@ public class Building extends Cell{
         this.bonus = bonus;
         this.price = price;
 
-        setType(CellType.Building);
+        setType(CELL_TYPE.BUILDING);
     }
 
     public long getId() {

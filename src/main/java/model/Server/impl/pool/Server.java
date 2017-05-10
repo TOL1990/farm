@@ -133,32 +133,32 @@ public class Server {
                     send(gameService.getAllPlants().toString());
                 } else if (msg.equals("GET AV B")) {
                     send(gameService.getAllBuildings().toString());
-                } else if (strArr[0].equals("SET") && strArr[1].equals("PLANT")) {
+                } else if (strArr[0].equals("SET") && strArr[1].equals("Plant")) {
                     String plantName = strArr[2];
                     String x = strArr[4];
                     String y = strArr[5];
                     gameService.setPlant(plantName, x, y);
-//SET PLANT Арбуз TO 2 1
+//SET Plant Арбуз TO 2 1
                 } else if (strArr[0].equals("PICK") && strArr[1].equals("UP")) {
                     String x = strArr[3];
                     String y = strArr[4];
                     gameService.pickupPlant(x, y);
 // PICK UP FROM 2 1
-                } else if (strArr[0].equals("DEL") && strArr[1].equals("PLANT")) {
+                } else if (strArr[0].equals("DEL") && strArr[1].equals("Plant")) {
                     String x = strArr[2];
                     String y = strArr[3];
                     gameService.delPlant(x, y);
-                } else if (strArr[0].equals("SET") && strArr[1].equals("BUILDING")) {
+                } else if (strArr[0].equals("SET") && strArr[1].equals("Building")) {
                     String buildingName = strArr[2];
                     String x = strArr[4];
                     String y = strArr[5];
                     gameService.setBuilding(buildingName, x, y);
-//  SET BUILDING ТЕПЛИЦА TO 2 2
-                } else if (strArr[0].equals("DEL") && strArr[1].equals("BUILDING")) {
+//  SET Building ТЕПЛИЦА TO 2 2
+                } else if (strArr[0].equals("DEL") && strArr[1].equals("Building")) {
                     String x = strArr[2];
                     String y = strArr[3];
                     gameService.delBuilding(x, y);
-//                    DEL BUILDING 2 2
+//                    DEL Building 2 2
                 } else {
                     out.println(msg + " Данная команда не найдена. попробуйте еще");
                     send("command:" + msg);

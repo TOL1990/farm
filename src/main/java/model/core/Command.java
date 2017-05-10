@@ -6,17 +6,17 @@ package model.core;
  */
 public abstract class Command {
     protected String error;
-    public boolean isValid = true;
+    private boolean valid = true;
     protected abstract boolean run();
 
 
 
     public boolean isValid() {
-        return isValid;
+        return valid;
     }
 
     public void setValid(boolean valid) {
-        isValid = valid;
+        this.valid = valid;
     }
 
     public String getError() {

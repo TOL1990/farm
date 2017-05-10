@@ -16,45 +16,59 @@ import java.util.List;
 /**
  * Created by Andrew.
  */
-public enum AuthorizationBuffer implements MYAuthorizationIF {
+public enum AuthorizationBuffer implements MYAuthorizationIF
+{
     INSTACE;
 
     @Override
-    public MYClientIF login(MYLoginIF myLoginIF) {
+    public MYClientIF login(MYLoginIF myLoginIF)
+    {
         String nickName = myLoginIF.getParams()[0];
         String pass = myLoginIF.getParams()[1];
 
         GameService gs = new GameService();
-        List<Player> players = gs.getAllPlayers();
+        Player findPlayer = gs.getPlayerByNick(nickName);
 
         Player loginPlayer = new Player(nickName, pass);
 
         long userId = -1;
         MYClientIF clientIF = null;
-        if (isLoginExist(nickName, (ArrayList<Player>) players)) {
-            if (isPasswordCorrect(loginPlayer, (ArrayList<Player>) players)) {
+        if (findPlayer != null)
+        {
+            if (isPasswordCorrect(loginPlayer, findPlayer))
+            {
                 gs.setPlayer(loginPlayer); //назначаем игрока
                 gs.getField(gs.getPlayer());
                 userId = gs.getPlayer().getId();
                 clientIF = gs.getPlayer();
                 GameManager.INSTANCE.addGameService(userId, gs);
-            } else {
+            }
+            else
+            {
                 myLoginIF.getParams()[0] = LoginErrorConfig.WRONG_LOGIN_AND_PASSWORD;
                 // out.println("Wrong password, Try again."); //заслать неверный пароль
             }
         }
-        if (clientIF != null) {
+        if (clientIF != null)
+        {
             clientIF.setOnline(true);
         }
         return clientIF;
     }
 
     @Override
-    public MYClientIF registration(MYLoginIF myLoginIF) {
+    public MYClientIF registration(MYLoginIF myLoginIF)
+    {
         String nickName = myLoginIF.getParams()[0];
         String pass = myLoginIF.getParams()[1];
 
         GameService gs = new GameService();
+        Player findPlayer = gs.getPlayerByNick(nickName);
+        if(findPlayer!=null)
+        {
+            System.out.println("Ииди нахуй, такой пиздюк уже есть");
+            return null;
+        }
         gs.addNewPlayer(nickName, pass);
 
         long userId = -1;
@@ -66,53 +80,48 @@ public enum AuthorizationBuffer implements MYAuthorizationIF {
         clientIF = gs.getPlayer();
         GameManager.INSTANCE.addGameService(userId, gs);
 
-        if (clientIF != null) {
+        if (clientIF != null)
+        {
             clientIF.setOnline(true);
         }
         return clientIF;
     }
 
     @Override
-    public void loggon(long userId) {
+    public void loggon(long userId)
+    {
         MYClientIF clientIF = UserManager.INSTANCE.getUser(userId);
-        if (clientIF != null) {
+        if (clientIF != null)
+        {
             clientIF.setOnline(false);
         }
     }
 
     @Override //не переопределен
-    public List<Long> getClientsAll(boolean onlyOnline) {
+    public List<Long> getClientsAll(boolean onlyOnline)
+    {
         List<Long> userIds = new ArrayList<>();
         List<User> allUsers = UserManager.INSTANCE.getAllUsers();
         Iterator<User> iter = allUsers.iterator();
         User user;
-        while (iter.hasNext()) {
+        while (iter.hasNext())
+        {
             user = iter.next();
-            if ((onlyOnline && user.isOnline()) || !onlyOnline) {
+            if ((onlyOnline && user.isOnline()) || !onlyOnline)
+            {
                 userIds.add(user.getId());
             }
         }
         return userIds;
     }
 
-    private boolean isPasswordCorrect(Player loginedPlayer, ArrayList<Player> players) {
-        for (Player pl :
-                players) {
-            if (pl.getNick().equals(loginedPlayer.getNick())) {
-                if (pl.getPassword().equals(loginedPlayer.getPassword())) return true;
-                else return false;
-            }
+    private boolean isPasswordCorrect(Player loginingPlayer, Player findPlayer)
+    {
+        if (loginingPlayer.getPassword().equals(findPlayer.getPassword()))
+        {
+            return true;
         }
         return false;
     }
-
-    private boolean isLoginExist(String nickName, ArrayList<Player> players) {
-        for (Player pl :
-                players) {
-            if (pl.getNick().equals(nickName)) return true;
-        }
-        return false;
-    }
-
 
 }

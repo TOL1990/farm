@@ -59,7 +59,7 @@ public class Field {
      * @param x  - номер клетки по горизонтали
      * @param y- номер клетки по верикали
      */
-    public void setCell(Cell obj, int x, int y) {
+    public void     setCell(Cell obj, int x, int y) {
         obj.setXPosition(x);
         obj.setYPosition(y);
         for (int i = 0; i < cells.size(); i++) {

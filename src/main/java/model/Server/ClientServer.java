@@ -105,7 +105,7 @@ public class ClientServer {
             {
 
             }
-            if(strArr[0].equals("SET") && strArr[1].equals("PLANT"))
+            if(strArr[0].equals("SET") && strArr[1].equals("Plant"))
             {
                 String plantName = strArr[2];
                 String x = strArr[4];
@@ -118,12 +118,12 @@ public class ClientServer {
                 String x = strArr[3];
                 String y = strArr[4];
             }
-            if(strArr[0].equals("DEL")  && strArr[1].equals("PLANT"))
+            if(strArr[0].equals("DEL")  && strArr[1].equals("Plant"))
             {
                 String x = strArr[2];
                 String y = strArr[3];
             }
-            if(strArr[0].equals("SET") && strArr[1].equals("BUILDING"))
+            if(strArr[0].equals("SET") && strArr[1].equals("Building"))
             {
                 String buildName = strArr[2];
                 String x = strArr[4];
@@ -131,7 +131,7 @@ public class ClientServer {
 
 
             }
-            if(strArr[0].equals("DEL")  && strArr[1].equals("PLANT"))
+            if(strArr[0].equals("DEL")  && strArr[1].equals("Plant"))
             {
                 String x = strArr[2];
                 String y = strArr[3];
@@ -167,7 +167,7 @@ public class ClientServer {
         {
 
         }
-        if(strArr[0].equals("SET") && strArr[1].equals("PLANT"))
+        if(strArr[0].equals("SET") && strArr[1].equals("Plant"))
         {
             String plantName = strArr[2];
             String x = strArr[4];
@@ -180,19 +180,19 @@ public class ClientServer {
             String x = strArr[3];
             String y = strArr[4];
         }
-        if(strArr[0].equals("DEL")  && strArr[1].equals("PLANT"))
+        if(strArr[0].equals("DEL")  && strArr[1].equals("Plant"))
         {
             String x = strArr[2];
             String y = strArr[3];
         }
-        if(strArr[0].equals("SET") && strArr[1].equals("BUILDING"))
+        if(strArr[0].equals("SET") && strArr[1].equals("Building"))
         {
             String buildName = strArr[2];
             String x = strArr[4];
             String y = strArr[5];
 
         }
-        if(strArr[0].equals("DEL")  && strArr[1].equals("PLANT"))
+        if(strArr[0].equals("DEL")  && strArr[1].equals("Plant"))
         {
             String x = strArr[2];
             String y = strArr[3];

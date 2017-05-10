@@ -3,10 +3,8 @@ package model.Server.connection.src.main.java.com.fenix.buffer;
 import com.aad.myutil.logger.MYLoggerFactory;
 import model.Server.GameManager;
 import model.Server.connection.src.main.java.com.fenix.command.controller.COMMAND_FAMILY;
-import model.Server.connection.src.main.java.com.fenix.command.controller.FARM_COMMAND;
 import model.Server.connection.src.main.java.com.fenix.command.controller.WORLD_COMMAND;
 import model.Server.connection.src.main.java.com.fenix.util.KEYS;
-import model.Server.connection.src.main.java.com.fenix.util.TransferCellInfo;
 import model.entity.Area;
 import model.entity.AreaCell;
 import model.service.GameService;
@@ -18,37 +16,48 @@ import java.util.Random;
 /**
  * Created by Taras on 28.04.2017.
  */
-public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
-    public WorldBuffer() {
+public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND>
+{
+    public WorldBuffer()
+    {
         super(COMMAND_FAMILY.WORLD);
     }
 
     @Override
-    public void executeCommand(long userId, WORLD_COMMAND command, Object o) {
-        try {
+    public void executeCommand(long userId, WORLD_COMMAND command, Object o)
+    {
+        try
+        {
             JSONObject json = (JSONObject) o;
-            switch (command) {
-                case GET_AREA: {
+            switch (command)
+            {
+                case GET_AREA:
+                {
                     getArea(userId, json);
                     break;
                 }
-                case GET_HOME_AREA: {
+                case GET_HOME_AREA:
+                {
                     getHomeArea(userId);
                     break;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             MYLoggerFactory.get().error(e.getMessage(), e);
             e.printStackTrace();
         }
     }
 
-    private void getArea(long userId, JSONObject json) {
+    private void getArea(long userId, JSONObject json)
+    {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         int x = Integer.parseInt(json.get("x").toString());
         int y = Integer.parseInt(json.get("y").toString());
         Area area = gameService.getArea(new Area(x, y));
         String msg = getJSONStringArea(area);
+
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), msg);
         sendData(userId, WORLD_COMMAND.GET_AREA, response);
@@ -56,12 +65,14 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
     }
 
     @Override
-    public WORLD_COMMAND getCommand(Object o) {
+    public WORLD_COMMAND getCommand(Object o)
+    {
         int commandId = (Integer) o;
         return WORLD_COMMAND.valueOf(commandId);
     }
 
-    private String getRandomAreaCells() {
+    private String getRandomAreaCells()
+    {
         String json = "";
         Random random = new Random();
         JSONObject jsonTransfer = new JSONObject();
@@ -69,15 +80,21 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
         jsonTransfer.put("areaX", 1);
         jsonTransfer.put("areaY", 1);
         JSONArray jsonList = new JSONArray();
-        for (int i = 1; i < 6; i++) {
-            for (int j = 1; j < 6; j++) {
+        for (int i = 1; i < 6; i++)
+        {
+            for (int j = 1; j < 6; j++)
+            {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("x", i);
                 jsonObject.put("y", j);
                 if (random.nextInt(2) == 0)
+                {
                     jsonObject.put("typeName", "Farm");
+                }
                 else
+                {
                     jsonObject.put("typeName", "Empty");
+                }
 
                 jsonList.add(jsonObject);
             }
@@ -87,20 +104,24 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
         return jsonTransfer.toString();
     }
 
-    private void getHomeArea(long userId) {
+    private void getHomeArea(long userId)
+    {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         Area homeArea = gameService.getArea(); // достанет по ид поля
         String msg = getJSONStringArea(homeArea);
+
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), msg);
         sendData(userId, WORLD_COMMAND.GET_HOME_AREA, response);
         sendHomeNeighbors(userId, homeArea.getX(), homeArea.getY());
     }
 
-    private void getArea(long userId, int x, int y) {
+    private void getArea(long userId, int x, int y)
+    {
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         Area area = gameService.getArea(new Area(x, y));
-        if (area != null) {
+        if (area != null)
+        {
             JSONObject response = new JSONObject();
             // String msg = getRandomAreaCells();
             String msg = getJSONStringArea(area);
@@ -110,7 +131,18 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
         }
     }
 
-    private void sendHomeNeighbors(long userId, int homeX, int homeY) {
+    private void sendHomeNeighbors(long userId, int homeX, int homeY)
+    {
+        for (int i = homeX - 1; i < homeX + 2; i++)
+        {
+            for (int j = homeY - 1; j < homeY + 2; j++)
+            {
+                if (i != homeX && j != homeY)
+                {
+                    getArea(userId, i, j);
+                }
+            }
+        }
         getArea(userId, homeX, homeY - 1);
         getArea(userId, homeX, homeY + 1);
         getArea(userId, homeX + 1, homeY + 1);
@@ -121,7 +153,8 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
         getArea(userId, homeX - 1, homeY - 1);
     }
 
-    private String getJSONStringArea(Area area) {
+    private String getJSONStringArea(Area area)
+    {
         JSONObject jsonTransfer = new JSONObject();
 
         jsonTransfer.put("areaId", area.getId());
@@ -130,8 +163,8 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND> {
         jsonTransfer.put("areaX", area.getX());
         jsonTransfer.put("areaY", area.getY());
         JSONArray jsonList = new JSONArray();
-        for (AreaCell cell :
-                area.getCells()) {
+        for (AreaCell cell : area.getCells())
+        {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("x", cell.getX());
             jsonObject.put("y", cell.getY());

@@ -6,7 +6,7 @@ package model.entity;
 public abstract class Cell {
     protected int xPosition;
     protected int yPosition;
-    protected  CellType type;
+    protected CELL_TYPE type;
 
     public int getXPosition() {
         return xPosition;
@@ -24,11 +24,11 @@ public abstract class Cell {
         this.yPosition = yPosition;
     }
 
-    public CellType getType() {
+    public CELL_TYPE getType() {
         return type;
     }
 
-    public void setType(CellType type) {
+    public void setType(CELL_TYPE type) {
         this.type = type;
     }
 

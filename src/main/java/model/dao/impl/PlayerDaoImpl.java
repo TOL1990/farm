@@ -8,163 +8,200 @@ import model.service.propertyconfig.QueryConfig;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Taras on 09.03.2017.
  */
-public class PlayerDaoImpl implements PlayerDao {
+public class PlayerDaoImpl implements PlayerDao
+{
     private static long PLAYERS_STARTING_MONEY = 1000;
     // private static List<Player> playersList;
-    private List<Player> playersCash;
+    private Map<Long, Player> players;
+    private Map<String, Long> playersBylogin;
 
-    public PlayerDaoImpl() {
-        getAllPlayers();
+    public PlayerDaoImpl()
+    {
+        players = new ConcurrentHashMap<>();
+        playersBylogin = new ConcurrentHashMap<>();
+        loadPlayers();
     }
 
-    public List<Player> getAllPlayers() {
-        if (playersCash == null) {
-            playersCash = getAllPlayersFromDB();
-            return playersCash;
-        } else
-            return playersCash;
+    public List<Player> getAllPlayers()
+    {
+        return new ArrayList<>(players.values());
     }
 
-    private List<Player> getAllPlayersFromDB() {
+    private void loadPlayers()
+    {
 
         Connection connection = DaoUtils.getConnection();
-        List<Player> players = new ArrayList<Player>();
-
 
         Statement statement = null;
         ResultSet rs = null;
-        try {
+        try
+        {
             statement = connection.createStatement();
             rs = statement.executeQuery(QueryConfig.GET_ALL_PLAYERS);
 
-            while (rs.next()) {
+            while (rs.next())
+            {
                 long id = rs.getLong("id_player");
                 String nick = rs.getString("nick_name");
                 String password = rs.getString("password");
                 long balance = (long) rs.getInt("ballance");
-                players.add(new Player(id, nick, password, balance));
+
+                players.put(id, new Player(id, nick, password, balance));
+                playersBylogin.put(nick, id);
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             System.err.println("Can't getting players from DB");
             e.printStackTrace();
-        } finally {
-            try {
+        }
+        finally
+        {
+            try
+            {
                 DaoUtils.close(connection, statement, rs);
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 e.printStackTrace();
             }
         }
-        return players;
     }
 
     //todo может и не нужен этот метод
 //    public List<Player> getAllPlayers() {
 //        if (playersList == null) {
-//            playersList = getAllPlayersFromDB();
+//            playersList = loadPlayers();
 //            return playersList;
 //        } else
 //            return playersList;
 //    }
 
-    public void addPlayer(Player player) {
-        Connection connection = DaoUtils.getConnection();
-        PreparedStatement statement = null;
-        try {
-            statement = connection.prepareStatement(QueryConfig.ADD_PLAYER);
+    public void addPlayer(Player player)
+    {
+        player.setBalance(PLAYERS_STARTING_MONEY);
+        long id = addPlayerDB(player);
+        if (id >= 0)
+        {
+            player.setId(id);
 
-            statement.setString(1, player.getNick());
-            statement.setString(2, player.getPassword());
-            statement.setLong(3, PLAYERS_STARTING_MONEY);
-            statement.executeUpdate();
-            updatePlayersCash();
-        } catch (SQLException e) {
+            players.put(id, player);
+            playersBylogin.put(player.getNick(), id);
+        }
+    }
+
+    public long addPlayerDB(Player player)
+    {
+        long ret_key = -1;
+        Connection conn = DaoUtils.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try
+        {
+            ps = conn.prepareStatement(QueryConfig.ADD_PLAYER);
+
+            ps.setString(1, player.getNick());
+            ps.setString(2, player.getPassword());
+            ps.setLong(3, player.getBalance());
+            ps.executeUpdate();
+            rs = ps.getGeneratedKeys();
+            if (rs.next())
+            {
+                ret_key = rs.getLong(1);
+            }
+        }
+        catch (SQLException e)
+        {
             e.printStackTrace();
-        } finally {
-            try {
-                DaoUtils.close(statement);
-            } catch (SQLException e) {
+        }
+        finally
+        {
+            try
+            {
+                DaoUtils.close(conn, ps, rs);
+            }
+            catch (SQLException e)
+            {
                 e.printStackTrace();
             }
         }
+
+        return ret_key;
     }
 
 
     /**
      * @return игрока по нику из кеша. Если кеш пустой из БД и обновляет кеш
      */
-    public Player getPlayerByNick(String nick) {
-
-        if (playersCash != null) {
-            for (Player p :
-                    playersCash) {
-                if (p.getNick().equals(nick)) return p;
-            }
-            System.err.println("getPlayerByNick - ник в кеше не найден");
-            return null; // не нашел игрока с таким ником
-        } else {
-            return getPlayerByNickDB(nick); //тащим юзера из БД
+    public Player getPlayerByNick(String nick)
+    {
+        Player player = null;
+        Long playerId = playersBylogin.get(nick);
+        if (playerId != null)
+        {
+            player = players.get(playerId);
         }
 
+        return player;
     }
 
-    public Player getPlayerById(long id) {
-        if (playersCash != null) {
-            for (Player p :
-                    playersCash) {
-                if (p.getId() == id) return p;
-            }
-
-            updatePlayersCash();// если не нашли в кеше - обновим его и поищщем еще раз
-            for (Player p :
-                    playersCash) {
-                if (p.getId() == id) return p;
-            }
-
-        } else {
-            System.err.println("getPlayerById - id в кеше не найден");
-            return null; // не нашел игрока с таким id
-        }
-        return null;
+    public Player getPlayerById(long id)
+    {
+        return players.get(id);
     }
 
-    public void updatePlayerBallance(Player player) {
+    public void updatePlayerBallance(Player player)
+    {
         Connection con = DaoUtils.getConnection();
 
         PreparedStatement statement = null;
-        try {
+        try
+        {
             statement = con.prepareStatement(QueryConfig.UPDATE_PLAYER_BALLANCE);
             statement.setLong(1, player.getBalance());
             statement.setLong(2, player.getId());
             statement.executeUpdate();
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             e.printStackTrace();
-        } finally {
-            try {
+        }
+        finally
+        {
+            try
+            {
                 DaoUtils.close(con, statement);
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
 
-    public Player getPlayerByNickDB(String nick) {
+    public Player getPlayerByNickDB(String nick)
+    {
         Connection connection = DaoUtils.getConnection();
         Player player = null;
 
         PreparedStatement preparedStatement = null;
-        try {
+        try
+        {
             preparedStatement = connection.prepareStatement(QueryConfig.GET_PLAYER_BY_NICK);
             preparedStatement.setString(1, nick);
 
             ResultSet rs = preparedStatement.executeQuery();
 
-            while (rs.next()) {
+            while (rs.next())
+            {
                 long id = rs.getLong("id_player");
                 String nickName = rs.getString("nick_name");
                 String password = rs.getString("password");
@@ -174,20 +211,23 @@ public class PlayerDaoImpl implements PlayerDao {
             }
             DaoUtils.close(connection, preparedStatement, rs);
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             System.err.println("Can't GET_PLAYER_BY_NICK from DB");
             e.printStackTrace();
-        } finally {
-            try {
+        }
+        finally
+        {
+            try
+            {
                 DaoUtils.close(preparedStatement);
-            } catch (SQLException e) {
+            }
+            catch (SQLException e)
+            {
                 e.printStackTrace();
             }
         }
         return player;
     }
-
-    public void updatePlayersCash() {
-        playersCash = getAllPlayersFromDB();
-    } // переписать
 }
