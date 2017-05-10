@@ -2,8 +2,6 @@ package model.entity;
 
 
 import java.sql.Timestamp;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Taras on 09.03.2017.
@@ -16,31 +14,31 @@ public class Plant extends Cell
     private long proseed; //выручка
     private long growTime;
     private Timestamp plantedTime;
-    private Map<Integer, Map<Integer, Object>> field = new ConcurrentHashMap<>();
-
-    public Object getObject(int x, int y)
-    {
-        Object obj = null;
-        Map<Integer, Object> mapY = field.get(x);
-        if (mapY != null && !mapY.isEmpty())
-        {
-            obj = mapY.get(y);
-        }
-        return obj;
-    }
-
-    public void addObject(int x, int y, Object obj)
-    {
-        Map<Integer, Object> mapY = field.get(x);
-
-        if (mapY == null)
-        {
-            mapY = new ConcurrentHashMap<>();
-            field.put(x, mapY);
-        }
-
-        mapY.put(y, obj);
-    }
+//    private Map<Integer, Map<Integer, Object>> field = new ConcurrentHashMap<>();
+//
+//    public Object getObject(int x, int y)
+//    {
+//        Object obj = null;
+//        Map<Integer, Object> mapY = field.get(x);
+//        if (mapY != null && !mapY.isEmpty())
+//        {
+//            obj = mapY.get(y);
+//        }
+//        return obj;
+//    }
+//
+//    public void addObject(int x, int y, Object obj)
+//    {
+//        Map<Integer, Object> mapY = field.get(x);
+//
+//        if (mapY == null)
+//        {
+//            mapY = new ConcurrentHashMap<>();
+//            field.put(x, mapY);
+//        }
+//
+//        mapY.put(y, obj);
+//    }
 
 
     public Plant(int xPosition, int yPosition, int id, Timestamp plantedTime)
