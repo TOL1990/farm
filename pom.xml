@@ -71,7 +71,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.fenix.main.Main</mainClass>
+                            <!--<mainClass>com.fenix.main.Main</mainClass>-->
+                            <mainClass>Main</mainClass>-->
                             <!--<packageName>com.fenix.unity</packageName>-->
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>

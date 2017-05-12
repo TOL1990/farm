@@ -1,12 +1,5 @@
 package core;
 
-import model.core.BuildingConstruct;
-import model.entity.Building;
-import model.entity.Cell;
-import model.entity.Field;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 /**
  * Created by Taras on 10.03.2017.
  */
