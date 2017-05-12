@@ -1,7 +1,7 @@
 package com.test.core.command;
 
 import com.test.field.entity.*;
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

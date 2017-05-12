@@ -8,7 +8,7 @@ import com.test.field.entity.Building;
 import com.test.field.entity.Cell;
 import com.test.field.entity.Field;
 import com.test.field.entity.Plant;
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 import com.test.util.JSONHelper;
 import com.test.util.KEYS;
 import com.test.util.TransferCellInfo;

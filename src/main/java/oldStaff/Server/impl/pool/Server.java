@@ -1,6 +1,6 @@
 package oldStaff.Server.impl.pool;
 
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 import com.test.util.propertyconfig.ConnectingConfig;
 import oldStaff.service.GameService;
 
@@ -197,7 +197,7 @@ public class Server {
         }
 
         /**
-         * method login user. If login isn't exist we create new user.
+         * method login player. If login isn't exist we create new player.
          */
         private boolean authorisation() {
 

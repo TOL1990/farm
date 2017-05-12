@@ -8,8 +8,8 @@ import com.test.field.controller.FieldService;
 import com.test.field.entity.Building;
 import com.test.field.entity.Field;
 import com.test.field.entity.Plant;
-import com.test.user.conlroller.PlayerService;
-import com.test.user.entity.Player;
+import com.test.player.conlroller.PlayerService;
+import com.test.player.entity.Player;
 import com.test.util.FactoryDao;
 import com.test.util.propertyconfig.AreaService;
 

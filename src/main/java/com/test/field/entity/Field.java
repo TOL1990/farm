@@ -1,7 +1,7 @@
 package com.test.field.entity;
 
 
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 
 import java.util.List;
 import java.util.Map;

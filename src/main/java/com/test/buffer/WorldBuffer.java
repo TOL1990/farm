@@ -11,6 +11,7 @@ import oldStaff.service.GameService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -166,13 +167,19 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND>
         jsonTransfer.put("areaX", area.getX());
         jsonTransfer.put("areaY", area.getY());
         JSONArray jsonList = new JSONArray();
-        for (AreaCell cell : area.getCells())
+
+        for (Map.Entry<Integer, Map<Integer, AreaCell>> entryRows : (area.getCells().entrySet()))
         {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("x", cell.getX());
-            jsonObject.put("y", cell.getY());
-            jsonObject.put("typeName", cell.getType().toString());
-            jsonList.add(jsonObject);
+            for (Map.Entry<Integer, AreaCell> entry : entryRows.getValue().entrySet())
+            {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("x", entry.getValue().getX());
+                jsonObject.put("y", entry.getValue().getY());
+                jsonObject.put("typeName", entry.getValue().getType().toString());
+                jsonList.add(jsonObject);
+
+                
+            }
         }
         jsonTransfer.put("cells", jsonList);
 

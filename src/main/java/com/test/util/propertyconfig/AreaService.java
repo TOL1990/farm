@@ -35,9 +35,6 @@ public class AreaService {
             return null;
     }
 
-    public List<Area> getAllAreas() {
-        return areaDao.getAllAreas();
-    }
 
     public List<Area> getNeighborAreas(Area centralArea) {
         int x = centralArea.getX();

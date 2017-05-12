@@ -3,7 +3,7 @@ package com.test.core.command;
 import com.test.field.entity.Building;
 import com.test.field.entity.CELL_TYPE;
 import com.test.field.entity.Field;
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 import com.test.util.propertyconfig.ErrorConfig;
 
 /**

@@ -1,7 +1,7 @@
 package oldStaff.Server.impl.singlethread;
 
-import com.test.user.conlroller.PlayerService;
-import com.test.user.entity.Player;
+import com.test.player.conlroller.PlayerService;
+import com.test.player.entity.Player;
 import oldStaff.service.GameService;
 
 import java.io.BufferedReader;
@@ -111,7 +111,7 @@ public class ServerThread extends Thread {
     }
 
     /**
-     * method login user. If login isn't exist we create new user.
+     * method login player. If login isn't exist we create new player.
      */
     private boolean authorisation() {
 
@@ -184,7 +184,7 @@ public class ServerThread extends Thread {
     }
 
     /**
-     * Add new user to DB
+     * Add new player to DB
      */
     public void addNewUser(String nickName, String password) {
         new PlayerService().addPlayer(nickName, password);

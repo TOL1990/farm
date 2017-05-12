@@ -11,7 +11,7 @@ public class AreaCell
     private long id;
     private int x;
     private int y;
-    private AreaType type;
+    private AREA_TYPE type;
     private int areaId;
     private Area area;
     private Field field;
@@ -20,7 +20,7 @@ public class AreaCell
     {
     }
 
-    public AreaCell(long id, int x, int y, AreaType type, Area area)
+    public AreaCell(long id, int x, int y, AREA_TYPE type, Area area)
     {
         this.id = id;
         this.x = x;
@@ -29,7 +29,7 @@ public class AreaCell
         this.area = area;
     }
 
-    public AreaCell(long id, int x, int y, AreaType type, Area area, Field field)
+    public AreaCell(long id, int x, int y, AREA_TYPE type, Area area, Field field)
     {
         this.id = id;
         this.x = x;
@@ -69,12 +69,12 @@ public class AreaCell
         this.y = y;
     }
 
-    public AreaType getType()
+    public AREA_TYPE getType()
     {
         return type;
     }
 
-    public void setType(AreaType type)
+    public void setType(AREA_TYPE type)
     {
         this.type = type;
     }

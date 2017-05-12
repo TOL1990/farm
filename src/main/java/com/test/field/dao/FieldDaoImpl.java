@@ -1,7 +1,7 @@
 package com.test.field.dao;
 
 import com.test.field.entity.*;
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 import com.test.util.DaoUtils;
 import com.test.util.propertyconfig.QueryConfig;
 
@@ -54,6 +54,13 @@ public class FieldDaoImpl implements FieldDao
             System.out.println("Получить поле не получилось, оно null");
         }
         return fieldCash;
+    }
+
+    @Override
+    public Field getFieldById(long fieldId)
+    {
+        
+        return null;
     }
 
     public void setField(Field fieldCash)

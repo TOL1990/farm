@@ -4,7 +4,7 @@ import com.test.field.entity.Building;
 import com.test.field.entity.Cell;
 import com.test.field.entity.Field;
 import com.test.field.entity.Plant;
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ public interface FieldDao {
 
     Field getFieldId(Player player);
     Field getField();
-
+    Field getFieldById(long fieldId);
     Map<Integer, Map<Integer, Cell>> getCellsByFieldId(long id);
 
     void addField(Player player);
@@ -34,4 +34,5 @@ public interface FieldDao {
     Building getBuildingByName(String name);
 
     void setEmptyPlant(Field field, int x, int y);
+    
 }

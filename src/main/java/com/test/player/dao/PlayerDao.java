@@ -1,7 +1,7 @@
-package com.test.user.dao;
+package com.test.player.dao;
 
 
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 
 import java.util.List;
 

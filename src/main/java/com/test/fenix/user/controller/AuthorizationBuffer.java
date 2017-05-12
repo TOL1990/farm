@@ -6,7 +6,8 @@ import com.aad.myutil.server.client.MYClientIF;
 import com.aad.myutil.server.client.MYLoginIF;
 import com.test.GameManager;
 import com.test.fenix.user.model.User;
-import com.test.user.entity.Player;
+import com.test.player.conlroller.PlayerManager;
+import com.test.player.entity.Player;
 import com.test.util.propertyconfig.LoginErrorConfig;
 import oldStaff.service.GameService;
 
@@ -30,8 +31,9 @@ public enum AuthorizationBuffer implements MYAuthorizationIF
             String nickName = myLoginIF.getParams()[0];
             String pass = myLoginIF.getParams()[1];
 
-            GameService gs = new GameService();
-            Player findPlayer = gs.getPlayerByNick(nickName);
+           // GameService gs = new GameService();
+           // PlayerManager manager = PlayerManager.INSTANCE.getPlayerByNick(nickName);
+            Player findPlayer= PlayerManager.INSTANCE.getPlayerByNick(nickName);
 
             Player loginPlayer = new Player(nickName, pass);
 
@@ -40,11 +42,11 @@ public enum AuthorizationBuffer implements MYAuthorizationIF
             {
                 if (isPasswordCorrect(loginPlayer, findPlayer))
                 {
-                    gs.setPlayer(loginPlayer); //назначаем игрока
-                    gs.getField(gs.getPlayer());
-                    userId = gs.getPlayer().getId();
-                    clientIF = gs.getPlayer();
-                    GameManager.INSTANCE.addGameService(userId, gs);
+                    PlayerManager.INSTANCE.addPlayer(findPlayer.getId(), findPlayer);
+                    
+                    //todo заинитить fieldManager 
+                  //  gs.getField(gs.getPlayer());
+                    clientIF = findPlayer;
                 }
                 else
                 {
@@ -73,22 +75,24 @@ public enum AuthorizationBuffer implements MYAuthorizationIF
             String nickName = myLoginIF.getParams()[0];
             String pass = myLoginIF.getParams()[1];
 
-            GameService gs = new GameService();
-            Player findPlayer = gs.getPlayerByNick(nickName);
+          //  GameService gs = new GameService();
+            Player findPlayer = PlayerManager.INSTANCE.getPlayerByNick(nickName);
             if (findPlayer != null)
             {
                 System.out.println("Ииди нахуй, такой пиздюк уже есть");
                 return null;
             }
-            gs.addNewPlayer(nickName, pass);
+            PlayerManager.INSTANCE.addPlayer(nickName, pass);
 
             long userId = -1;
 
-            gs.setPlayer(new Player(nickName, pass)); //назначаем игрока
-            gs.getField(gs.getPlayer());
-            userId = gs.getPlayer().getId();
-            clientIF = gs.getPlayer();
-            GameManager.INSTANCE.addGameService(userId, gs);
+            
+           // gs.setPlayer(new Player(nickName, pass)); //назначаем игрока
+            //todo заинитить fieldManager 
+          //  gs.getField(gs.getPlayer());
+        
+        // Не нужно т.к. этот функционал выполняется в 
+        //    PlayerManager.INSTANCE.addPlayer(findPlayer.getId(), findPlayer);
 
             if (clientIF != null)
             {

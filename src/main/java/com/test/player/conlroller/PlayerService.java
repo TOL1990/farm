@@ -1,7 +1,7 @@
-package com.test.user.conlroller;
+package com.test.player.conlroller;
 
-import com.test.user.dao.PlayerDao;
-import com.test.user.entity.Player;
+import com.test.player.dao.PlayerDao;
+import com.test.player.entity.Player;
 import com.test.util.FactoryDao;
 
 import java.util.List;

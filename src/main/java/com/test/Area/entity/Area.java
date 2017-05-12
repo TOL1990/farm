@@ -1,7 +1,7 @@
 package com.test.Area.entity;
 
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Taras on 26.04.2017.
@@ -13,11 +13,12 @@ public class Area
     private int x;
     private int y;
 
-    private List<AreaCell> cells;
-    private Map<Integer, Map<Integer, AreaCell>> cells2;
+  //  private List<AreaCell> cells;
+    private Map<Integer, Map<Integer, AreaCell>> cells;
 
     public Area()
     {
+        cells = new ConcurrentHashMap<>();
     }
 
     public Area(long id)
@@ -38,7 +39,7 @@ public class Area
         this.y = y;
     }
 
-    public Area(long id, int x, int y, List<AreaCell> cells)
+    public Area(long id, int x, int y, Map<Integer, Map<Integer, AreaCell>> cells)
     {
         this.id = id;
         this.x = x;
@@ -76,16 +77,37 @@ public class Area
         this.y = y;
     }
 
-    public List<AreaCell> getCells()
+    public Map<Integer, Map<Integer, AreaCell>> getCells()
     {
         return cells;
     }
 
-    public void setCells(List<AreaCell> cells)
+    public void setCells(Map<Integer, Map<Integer, AreaCell>> cells)
     {
         this.cells = cells;
     }
+    public AreaCell getCell(int x, int y)
+    {
+        AreaCell cell = null;
+        Map<Integer, AreaCell> mapY = cells.get(x);
+        if (mapY != null && !mapY.isEmpty())
+        {
+            cell = mapY.get(y);
+        }
+        return cell;
+    }
+    public void setCell(AreaCell obj, int x, int y)
+    {
+        Map<Integer, AreaCell> mapY = cells.get(x);
 
+        if (mapY == null)
+        {
+            mapY = new ConcurrentHashMap<>();
+            cells.put(x, mapY);
+        }
+
+        mapY.put(y, obj);
+    }
     @Override
     public String toString()
     {

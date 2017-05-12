@@ -4,8 +4,8 @@ import com.test.Area.dao.AreaDao;
 import com.test.Area.dao.AreaDaoImpl;
 import com.test.field.dao.FieldDao;
 import com.test.field.dao.FieldDaoImpl;
-import com.test.user.dao.PlayerDao;
-import com.test.user.dao.PlayerDaoImpl;
+import com.test.player.dao.PlayerDao;
+import com.test.player.dao.PlayerDaoImpl;
 
 /**
  * Created by Taras on 09.03.2017.

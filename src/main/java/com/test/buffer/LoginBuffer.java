@@ -27,7 +27,6 @@ public class LoginBuffer extends AbstractBuffer<LOGIN_COMMAND> {
                     getDeviceInfo(userId, json);
                     break;
                 }
-
 //                case OTVETKA: {
 //                    //otvetkaMeth(userId, json);
 //                  //  getFarm(userId);
@@ -53,9 +52,7 @@ public class LoginBuffer extends AbstractBuffer<LOGIN_COMMAND> {
         }
     }
 
-    private void getDeviceInfo(long userId, JSONObject json) {
-
-    }
+    private void getDeviceInfo(long userId, JSONObject json) {}
 
     private void loginEvent() {
         MYServer.getServerEvents().addListener(MYServer.MYSERVER_EVENTS.LISTENER_LOGIN, params ->

@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 /**
  * Created by Andrew.
  */
-public abstract class AbstractBuffer<T extends Enum<T> & MYCommandKeyIF> implements MYCommandIF<T>
+public abstract class   AbstractBuffer<T extends Enum<T> & MYCommandKeyIF> implements MYCommandIF<T>
 {
     private COMMAND_FAMILY commandFamily;
 

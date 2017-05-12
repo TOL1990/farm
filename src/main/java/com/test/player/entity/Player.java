@@ -1,4 +1,4 @@
-package com.test.user.entity;
+package com.test.player.entity;
 
 import com.aad.myutil.server.client.MYClientIF;
 

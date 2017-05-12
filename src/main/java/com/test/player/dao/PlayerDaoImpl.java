@@ -1,6 +1,6 @@
-package com.test.user.dao;
+package com.test.player.dao;
 
-import com.test.user.entity.Player;
+import com.test.player.entity.Player;
 import com.test.util.DaoUtils;
 import com.test.util.propertyconfig.QueryConfig;
 
@@ -11,19 +11,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by Taras on 09.03.2017.
+ * Created by Taras 
  */
 public class PlayerDaoImpl implements PlayerDao
 {
     private static long PLAYERS_STARTING_MONEY = 1000;
-    // private static List<Player> playersList;
     private Map<Long, Player> players;
-    private Map<String, Long> playersBylogin;
+    private Map<String, Long> playersByLogin;
 
     public PlayerDaoImpl()
     {
         players = new ConcurrentHashMap<>();
-        playersBylogin = new ConcurrentHashMap<>();
+        playersByLogin = new ConcurrentHashMap<>();
         loadPlayers();
     }
 
@@ -51,7 +50,7 @@ public class PlayerDaoImpl implements PlayerDao
                 long balance = (long) rs.getInt("ballance");
 
                 players.put(id, new Player(id, nick, password, balance));
-                playersBylogin.put(nick, id);
+                playersByLogin.put(nick, id);
             }
         }
         catch (SQLException e)
@@ -72,14 +71,6 @@ public class PlayerDaoImpl implements PlayerDao
         }
     }
 
-    //todo может и не нужен этот метод
-//    public List<Player> getAllPlayers() {
-//        if (playersList == null) {
-//            playersList = loadPlayers();
-//            return playersList;
-//        } else
-//            return playersList;
-//    }
 
     public void addPlayer(Player player)
     {
@@ -90,7 +81,7 @@ public class PlayerDaoImpl implements PlayerDao
             player.setId(id);
 
             players.put(id, player);
-            playersBylogin.put(player.getNick(), id);
+            playersByLogin.put(player.getNick(), id);
         }
     }
 
@@ -140,7 +131,7 @@ public class PlayerDaoImpl implements PlayerDao
     public Player getPlayerByNick(String nick)
     {
         Player player = null;
-        Long playerId = playersBylogin.get(nick);
+        Long playerId = playersByLogin.get(nick);
         if (playerId != null)
         {
             player = players.get(playerId);
