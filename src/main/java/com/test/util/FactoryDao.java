@@ -3,7 +3,7 @@ package com.test.util;
 import com.test.Area.dao.AreaDao;
 import com.test.Area.dao.AreaDaoImpl;
 import com.test.field.dao.FieldDao;
-import com.test.field.dao.FieldDaoImpl;
+import com.test.field.dao.FieldDaoMapCashImpl;
 import com.test.player.dao.PlayerDao;
 import com.test.player.dao.PlayerDaoImpl;
 
@@ -44,7 +44,7 @@ public class FactoryDao
 
     public FieldDao getFieldDao()
     {
-        fieldDao = new FieldDaoImpl();
+        fieldDao = new FieldDaoMapCashImpl();
         return fieldDao;
     }
 

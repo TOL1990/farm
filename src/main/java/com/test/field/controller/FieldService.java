@@ -1,5 +1,6 @@
 package com.test.field.controller;
 
+import com.test.core.ConstCollections;
 import com.test.field.dao.FieldDao;
 import com.test.field.entity.Building;
 import com.test.field.entity.Field;
@@ -38,7 +39,7 @@ public class FieldService {
         return fieldDao.getField();
     }
 
-    public List<Plant> getAllPlants() {return fieldDao.getAllPlants();}
+    public List<Plant> getAllPlants() {return ConstCollections.avaliablePlants;}
 
     public Plant getPlantByName(String name) { return fieldDao.getPlantByName(name);}
 
@@ -47,7 +48,7 @@ public class FieldService {
         fieldDao.updateCell(fieldId, x, y);
     }
 
-    public List<Building> getAllBuildings() {return fieldDao.getAllBuildings();}
+    public List<Building> getAllBuildings() {return ConstCollections.avaliableBuildings;}
 
     public Building getBuildingByName(String name) {
         return fieldDao.getBuildingByName(name);

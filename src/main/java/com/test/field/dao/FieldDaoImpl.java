@@ -13,9 +13,11 @@ import java.util.Map;
 /**
  * Created by Taras on 13.03.2017.
  */
-public class FieldDaoImpl implements FieldDao
+public class FieldDaoImpl //implements FieldDao
 {
-
+    private Map<Long, Field> fields;//<field Id, Field>
+    private Map<Long, Long> fieldByUserId;//<UserId, FieldId>
+    
     private Field fieldCash; //тут будет лежать поле из бд
 
     public FieldDaoImpl()
@@ -56,7 +58,6 @@ public class FieldDaoImpl implements FieldDao
         return fieldCash;
     }
 
-    @Override
     public Field getFieldById(long fieldId)
     {
         
@@ -70,7 +71,6 @@ public class FieldDaoImpl implements FieldDao
 
     public Field getField(Player player)
     {
-
         getFieldIdDB(player); // это обновит кеш ид fieldCash из базы
         fieldCash.setCells(getCellsByFieldId(fieldCash.getId()));
         fieldCash.setPlayer(player);
@@ -246,44 +246,44 @@ public class FieldDaoImpl implements FieldDao
 
     public List<Plant> getAllPlantsDB()
     {
-
-        Connection connection = DaoUtils.getConnection();
+//
+//        Connection connection = DaoUtils.getConnection();
         List<Plant> plants = new ArrayList<Plant>();
-
-
-        Statement statement = null;
-        ResultSet rs = null;
-        try
-        {
-            statement = connection.createStatement();
-            rs = statement.executeQuery(QueryConfig.GET_ALL_PLANTS);
-
-            while (rs.next())
-            {
-                long id = rs.getLong("id_plant");
-                int growTime = rs.getInt("grow_time");
-                String name = rs.getString("name");
-                long price = rs.getLong("price");
-                long proseed = rs.getLong("proseed");
-                plants.add(new Plant(id, name, price, proseed, growTime));
-            }
-        }
-        catch (SQLException e)
-        {
-            System.err.println("Can't get plants from DB");
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                DaoUtils.close(connection, statement, rs);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-        }
+//
+//
+//        Statement statement = null;
+//        ResultSet rs = null;
+//        try
+//        {
+//            statement = connection.createStatement();
+//            rs = statement.executeQuery(QueryConfig.GET_ALL_PLANTS);
+//
+//            while (rs.next())
+//            {
+//                long id = rs.getLong("id_plant");
+//                int growTime = rs.getInt("grow_time");
+//                String name = rs.getString("name");
+//                long price = rs.getLong("price");
+//                long proseed = rs.getLong("proseed");
+//                plants.add(new Plant(id, name, price, proseed, growTime));
+//            }
+//        }
+//        catch (SQLException e)
+//        {
+//            System.err.println("Can't get plants from DB");
+//            e.printStackTrace();
+//        }
+//        finally
+//        {
+//            try
+//            {
+//                DaoUtils.close(connection, statement, rs);
+//            }
+//            catch (SQLException e)
+//            {
+//                e.printStackTrace();
+//            }
+//        }
         return plants;
     }
 
@@ -450,7 +450,7 @@ public class FieldDaoImpl implements FieldDao
             }
         }
      //   initBonuces(field); //todo починить бонусы
-        
+
         return field.getCells();
     }
 

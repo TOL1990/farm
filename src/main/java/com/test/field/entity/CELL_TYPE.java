@@ -5,7 +5,7 @@ package com.test.field.entity;
  */
 public enum CELL_TYPE
 {
-    ERROR(-1, "Error"), EMPTY(1, "EMPTY"), PLANT(2, "Plant"), BUILDING(3, "Building");
+    ERROR(-1, "Error"), EMPTY(1, "Empty"), PLANT(2, "Plant"), BUILDING(3, "Building");
     private int id;
     private String desc;
 

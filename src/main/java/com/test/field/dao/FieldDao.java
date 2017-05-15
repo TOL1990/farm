@@ -6,7 +6,6 @@ import com.test.field.entity.Field;
 import com.test.field.entity.Plant;
 import com.test.player.entity.Player;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,14 +22,10 @@ public interface FieldDao {
 
     Field getField(Player player);
 
-    List<Plant> getAllPlants();
-
     Plant getPlantByName(String name);
 
     void updateCell(long fieldId, int x, int y);
-
-    List<Building> getAllBuildings();
-
+    void updateCell(long fieldId, Cell cell);
     Building getBuildingByName(String name);
 
     void setEmptyPlant(Field field, int x, int y);

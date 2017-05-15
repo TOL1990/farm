@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Taras on 09.03.2017.
  */
-public class Field
+public class    Field
 {
 
     private final int HORIZONTAL_CELL = 8;
