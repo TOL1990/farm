@@ -93,7 +93,7 @@ public class PlayerDaoImpl implements PlayerDao
         ResultSet rs = null;
         try
         {
-            ps = conn.prepareStatement(QueryConfig.ADD_PLAYER);
+            ps = conn.prepareStatement(QueryConfig.ADD_PLAYER, PreparedStatement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, player.getNick());
             ps.setString(2, player.getPassword());

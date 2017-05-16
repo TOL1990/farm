@@ -154,7 +154,7 @@ public class FieldDaoImpl //implements FieldDao
                 e.printStackTrace();
             }
         }
-        getFieldId(player.getId());//обновить кеш //todo переделать по человечи
+        getFieldId(player.getId());//обновить кеш 
 
         addEmptyCells(fieldCash);
 

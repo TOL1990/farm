@@ -37,6 +37,10 @@ public enum FieldManager
         Field field = getFieldByUserId(playerId);
         fieldDao.updateCell(field.getId(), cell);
     }
+    public void addField(long playerId)
+    {
+        fieldDao.addField(playerId);
+    }
 
     // Реализация когда кеш лежит в менеджере
 //    INSTANCE;

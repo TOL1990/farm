@@ -1,11 +1,8 @@
 package oldStaff.service;
 
 import com.test.Area.entity.Area;
-import com.test.core.command.PickingPlant;
 import com.test.field.controller.FieldService;
-import com.test.field.entity.Building;
 import com.test.field.entity.Field;
-import com.test.field.entity.Plant;
 import com.test.player.conlroller.PlayerService;
 import com.test.player.entity.Player;
 import com.test.util.FactoryDao;
@@ -56,32 +53,22 @@ public class GameService
 
     public void addNewPlayer(String nickName, String password)
     {
-        playerService.addPlayer(nickName, password);
-
-        Player player = playerService.getPlayerByNick(nickName);
-        fieldService.addField(player);//добавить поле клиенту с ником nickName
+//        playerService.addPlayer(nickName, password);
+//
+//        Player player = playerService.getPlayerByNick(nickName);
+//        fieldService.addField(player);//добавить поле клиенту с ником nickName
 
     }
 
-    /**
-     * вывести ферму на екран
-     */
-    public String soutFarm()
-    {
-//        cleanConsole();
-        Field field = fieldService.getFieldDao().getField();
-        return field.getConsoleSoutField();
-    }
+//    public List<Plant> getAllPlants()
+//    {
+//        return fieldService.getAllPlants();
+//    }
 
-    public List<Plant> getAllPlants()
-    {
-        return fieldService.getAllPlants();
-    }
-
-    public List<Building> getAllBuildings()
-    {
-        return fieldService.getAllBuildings();
-    }
+//    public List<Building> getAllBuildings()
+//    {
+//        return fieldService.getAllBuildings();
+//    }
 
     public String setPlant(String plantName, String x, String y)
     {
@@ -105,33 +92,34 @@ public class GameService
     public String pickupPlant(String x, String y)
     {
 
-        Field field = fieldService.getField();
-
-        PickingPlant pick = new PickingPlant(field, Integer.parseInt(x), Integer.parseInt(y));
-
-        if (pick.run())
-        {
-            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
-            updatePlayerBallance(field.getPlayer());
-            return "";
-        }
-        else
-        {
-            System.out.println("не удалось собрать урожай. pickupPlant");
-            return "не удалось собрать урожай. pickupPlant";
-        }
+//        Field field = fieldService.getField();
+//
+//        PickingPlant pick = new PickingPlant(field, Integer.parseInt(x), Integer.parseInt(y));
+//
+//        if (pick.run())
+//        {
+//            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
+//            updatePlayerBallance(field.getPlayer());
+//            return "";
+//        }
+//        else
+//        {
+//            System.out.println("не удалось собрать урожай. pickupPlant");
+//            return "не удалось собрать урожай. pickupPlant";
+//        }
+        return  null;
     }
 
     public void delPlant(String x, String y)
     {
-        Field field = fieldService.getField();
-        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y));
+//        Field field = fieldService.getField();
+//        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public void delBuilding(String x, String y)
     {
-        Field field = fieldService.getField();
-        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y));
+//        Field field = fieldService.getField();
+//        fieldService.setEmptyCell(field, Integer.parseInt(x), Integer.parseInt(y));
     }
 
     public String setBuilding(String buildingName, String x, String y)
@@ -192,16 +180,16 @@ return null;
 
     public Field getField(Player player)
     {
-        field = fieldService.getFieldDao().getField(player);
+//        field = fieldService.getFieldDao().getField(player);
         return field;
     }
 
     public void initial()
     {
-        if (player != null)
-        {
-            field = fieldService.getFieldDao().getField(player);
-        }
+//        if (player != null)
+//        {
+//            field = fieldService.getFieldDao().getField(player);
+//        }
     }
 
     public void updatePlayerBallance(Player player)

@@ -60,15 +60,15 @@ public class ServerThread extends Thread {
                 String[] strArr = msg.split(" ");//розбиваем команду пользователя
 //                 на составляющие и в зав.  от команды указывает параметры
                 if (msg.equals("FARM STATUS")) {
-                    send(gameService.soutFarm());
+//                    send(gameService.soutFarm());
                 } else if (msg.equals("EXIT")) {
                     break;
                 } else if (msg.equals("EXIT SERVER")) {
                     server.closeAll();
                 } else if (msg.equals("GET AV P")) {
-                    send(gameService.getAllPlants().toString());
+//                    send(gameService.getAllPlants().toString());
                 } else if (msg.equals("GET AV B")) {
-                    send(gameService.getAllBuildings().toString());
+//                    send(gameService.getAllBuildings().toString());
                 } else if (strArr[0].equals("SET") && strArr[1].equals("Plant")) {
                     String plantName = strArr[2];
                     String x = strArr[4];

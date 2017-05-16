@@ -335,24 +335,104 @@ public class FieldDaoMapCashImpl implements FieldDao
         return null;
     }
 
-
     @Override
-    public void addField(Player player)
+    public void addField(Long playerId)
     {
+        Field field = addFieldDB(playerId);
+        if (field.getId() >= 0)
+        {
+            fields.put(field.getId(), field);
+            fieldByUserId.put(playerId, field.getId());
+        }
+    }
+    
+    public Field addFieldDB(Long playerId)
+    {
+        Field newField = new Field();
+        long retKey = -1; // будем в него ловить сгенеренный базой ИД после добавления поля
+        Connection connection = DaoUtils.getConnection();
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
 
+        if (playerId == null)
+        {
+            System.out.println("Не получается добавить поле по пустому юзеру");
+        }
+
+        try
+        {
+            preparedStatement = connection.prepareStatement(QueryConfig.ADD_FIELD_BY_USER_ID, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setLong(1, playerId);
+            preparedStatement.executeUpdate();
+            rs = preparedStatement.getGeneratedKeys();
+            if (rs.next())
+            {
+                retKey = rs.getLong(1);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                connection.close();
+                DaoUtils.close(preparedStatement);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        newField.setId(retKey);
+        newField.setPlayer(new Player(playerId));
+        newField.setCells(addEmptyCells(newField.getId()));
+            return newField;
     }
 
-
-    @Override
-    public Plant getPlantByName(String name)
+    private Map<Integer,Map<Integer,Cell>> addEmptyCells(long fieldId)
     {
-        return null;
+        Field fildCellcontainer = new Field();
+        for (int x = 1; x < 8 + 1; x++)
+        {
+            for (int y = 1; y < 8 + 1; y++)
+            {
+               fildCellcontainer.setCell(addEmptyCell(y, x, fieldId),x,y); //засадим пустыми клетками
+            }
+        }
+        return fildCellcontainer.getCells();
     }
-
-    @Override
-    public void updateCell(long fieldId, int x, int y)
+    private Cell addEmptyCell(int x, int y, long fieldId)
     {
-
+        Connection connection = DaoUtils.getConnection();
+        PreparedStatement preparedStatement = null;
+        try
+        {
+            preparedStatement = connection.prepareStatement(QueryConfig.ADD_NEW_EMPTY_CELL);
+            preparedStatement.setInt(1, x);
+            preparedStatement.setInt(2, y);
+            preparedStatement.setLong(3, fieldId);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                connection.close();
+                DaoUtils.close(preparedStatement);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return new EmptyCell(x,y);
     }
 
     @Override
@@ -364,17 +444,6 @@ public class FieldDaoMapCashImpl implements FieldDao
         updateCellDB(fieldId, cell);
     }
 
-    @Override
-    public Building getBuildingByName(String name)
-    {
-        return null;
-    }
-
-    @Override
-    public void setEmptyPlant(Field field, int x, int y)
-    {
-
-    }
     
     private void updateCellDB(long fieldId, Cell cell)
     {
