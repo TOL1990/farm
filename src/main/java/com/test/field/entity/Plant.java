@@ -12,7 +12,18 @@ public class Plant extends Cell
     private long proseed; //выручка
     private long growTime;
     private long plantedTime;
-//    private Map<Integer, Map<Integer, Object>> field = new ConcurrentHashMap<>();
+
+    public Plant(Plant copyPlant)
+    {
+        this.id = copyPlant.getId();
+        this.name = copyPlant.getName();
+        this.price = copyPlant.getPrice();
+        this.proseed = copyPlant.getProseed();
+        this.growTime = copyPlant.getGrowTime();
+        this.plantedTime = copyPlant.getPlantedTime();
+    }
+
+    //    private Map<Integer, Map<Integer, Object>> field = new ConcurrentHashMap<>();
 //
 //    public Object getObject(int x, int y)
 //    {

@@ -1,9 +1,7 @@
 package oldStaff.service;
 
 import com.test.Area.entity.Area;
-import com.test.core.command.BuildingConstruct;
 import com.test.core.command.PickingPlant;
-import com.test.core.command.PlantConstuct;
 import com.test.field.controller.FieldService;
 import com.test.field.entity.Building;
 import com.test.field.entity.Field;
@@ -87,20 +85,21 @@ public class GameService
 
     public String setPlant(String plantName, String x, String y)
     {
-        Field field = fieldService.getField(); //получаем поле в кеше
-
-        Plant plant = fieldService.getPlantByName(plantName);//тянем растение по нику из дао(кеш/БД)
-
-        PlantConstuct construct = new PlantConstuct(plant, field, Integer.parseInt(x), Integer.parseInt(y));
-        if (construct.run())//если успешно прошла операция в кеше, обновляем базу
-        {
-            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
-            return "";
-        }
-        else
-        {
-            return construct.getError();
-        }
+//        Field field = fieldService.getField(); //получаем поле в кеше
+//
+//        Plant plant = fieldService.getPlantByName(plantName);//тянем растение по нику из дао(кеш/БД)
+//
+//        PlantConstuct construct = new PlantConstuct(plant, field, Integer.parseInt(x), Integer.parseInt(y));
+//        if (construct.run())//если успешно прошла операция в кеше, обновляем базу
+//        {
+//            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
+//            return "";
+//        }
+//        else
+//        {
+//            return construct.getError();
+//        }
+        return null;
     }
 
     public String pickupPlant(String x, String y)
@@ -137,21 +136,21 @@ public class GameService
 
     public String setBuilding(String buildingName, String x, String y)
     {
-        Field field = fieldService.getField();
-        Building building = fieldService.getBuildingByName(buildingName);
-
-        BuildingConstruct construct = new BuildingConstruct(building, field, Integer.parseInt(x), Integer.parseInt(y));
-        if (construct.run())
-        {
-            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
-            updatePlayerBallance(field.getPlayer());
-            return "";
-        }
-        else
-        {
-            return construct.getError();
-        }
-
+//        Field field = fieldService.getField();
+//        Building building = fieldService.getBuildingByName(buildingName);
+//
+//        BuildingConstruct construct = new BuildingConstruct(building, field, Integer.parseInt(x), Integer.parseInt(y));
+//        if (construct.run())
+//        {
+//            fieldService.updateFieldCell(field.getId(), Integer.parseInt(x), Integer.parseInt(y));
+//            updatePlayerBallance(field.getPlayer());
+//            return "";
+//        }
+//        else
+//        {
+//            return construct.getError();
+//        }
+return null;
     }
 
     public List<Player> getAllPlayers()

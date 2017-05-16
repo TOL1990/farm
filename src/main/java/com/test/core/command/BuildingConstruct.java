@@ -1,8 +1,11 @@
 package com.test.core.command;
 
+import com.test.core.ConstCollections;
+import com.test.field.controller.FieldManager;
 import com.test.field.entity.Building;
 import com.test.field.entity.CELL_TYPE;
 import com.test.field.entity.Field;
+import com.test.player.conlroller.PlayerManager;
 import com.test.player.entity.Player;
 import com.test.util.propertyconfig.ErrorConfig;
 
@@ -11,20 +14,24 @@ import com.test.util.propertyconfig.ErrorConfig;
  */
 public class BuildingConstruct extends Command
 {
+    private Player player;
     private Building building;
     private Field field;
     private int x;
     private int y;
 
-    public BuildingConstruct(Building building, Field field, int x, int y)
+    public BuildingConstruct(String buildingName, long playerId, int x, int y)
     {
-        this.building = building;
+        this.building = getBuildingWithName(buildingName);
+        this.field = FieldManager.INSTANCE.getFieldByUserId(playerId);
+        this.player = PlayerManager.INSTANCE.getPlayer(playerId);
         this.field = field;
         this.x = x;
         this.y = y;
         this.error = "";
         setValid(true);
     }
+
 
     public boolean run()
     {
@@ -36,9 +43,11 @@ public class BuildingConstruct extends Command
             building.setXPosition(x);
             building.setYPosition(y);
 
-            Player player = field.getPlayer();
             player.setBalance(player.getBalance() - building.getPrice());
+            PlayerManager.INSTANCE.updatePlayerBallance(player);
+            
             field.setCell(building, x, y); // ложим в ячейку здание
+            FieldManager.INSTANCE.updateCell(field.getId(), field.getCell(x, y));
             run = true;
         }
         return run;
@@ -46,6 +55,12 @@ public class BuildingConstruct extends Command
 
     private void validation()
     {
+        if (this.building == null)
+        {
+            System.out.println("Wrong name for building in BuildingConstruct");
+            error = "Wrong name for building in BuildingConstruct";
+            setValid(false);
+        }
         if (field.getCell(x, y).getType() != CELL_TYPE.EMPTY)
         {
             System.out.println(ErrorConfig.CELL_NOT_EMPTY_CANT_BUILD);
@@ -54,11 +69,23 @@ public class BuildingConstruct extends Command
         }
         //если такого здания нету в базе
         //хватает ли денег
-        if (field.getAvaliableMoney() < building.getPrice())
+        if (player.getBalance() < building.getPrice())
         {
             System.out.println("Нехватает денег для постройки здания");
             setValid(false);
             error = ErrorConfig.NOT_ENOUGH_MONEY;
         }
+    }
+
+    private Building getBuildingWithName(String buildingName)
+    {
+        for (Building building : ConstCollections.avaliableBuildings)
+        {
+            if (building.getName().equals(buildingName))
+            {
+                return new Building(building.getId(), building.getName(), building.getBonus(), building.getPrice());
+            }
+        }
+        return null;
     }
 }

@@ -4,12 +4,12 @@ import com.aad.myutil.logger.MYLoggerFactory;
 import com.test.controller.COMMAND_FAMILY;
 import com.test.controller.FARM_COMMAND;
 import com.test.core.ConstCollections;
+import com.test.core.command.BuildingConstruct;
 import com.test.core.command.PickingPlant;
+import com.test.core.command.PlantConstuct;
 import com.test.field.controller.FieldManager;
-import com.test.field.entity.Building;
-import com.test.field.entity.Cell;
-import com.test.field.entity.Field;
-import com.test.field.entity.Plant;
+import com.test.field.entity.*;
+import com.test.player.conlroller.PlayerManager;
 import com.test.util.KEYS;
 import com.test.util.TransferCellInfo;
 import org.json.simple.JSONArray;
@@ -34,7 +34,7 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND>
     }
 
     @Override
-    public void executeCommand(long userId, FARM_COMMAND command, Object o)
+    public void executeCommand(long playerId, FARM_COMMAND command, Object o)
     {
         try
         {
@@ -43,37 +43,37 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND>
             {
                 case FARM_STATUS:
                 {
-                    farmStatus(userId);
+                    farmStatus(playerId);
                     break;
                 }
                 case GET_AVAILABLE_PLANTS:
                 {
-                    getAvaliablePlants(userId);
+                    getAvaliablePlants(playerId);
                     break;
                 }
                 case PICK_UP_PLANT:
                 {
-                    pickUpPlant(userId, json);
+                    pickUpPlant(playerId, json);
                     break;
                 }
                 case SET_PLANT:
                 {
-                    setUpPlant(userId, json);
+                    setUpPlant(playerId, json);
                     break;
                 }
                 case DELETE_PLANT:
                 {
-                    deletePlant(userId, json);
+                    deletePlant(playerId, json);
                     break;
                 }
                 case SET_BUILDING:
                 {
-                    setUpBuilding(userId, json);
+                    setUpBuilding(playerId, json);
                     break;
                 }
                 case DELETE_BUILDING:
                 {
-                    deleteBuilding(userId, json);
+                    deleteBuilding(playerId, json);
                     break;
                 }
             }
@@ -85,42 +85,74 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND>
         }
     }
 
-    private void deleteBuilding(long userId, JSONObject json)
+    private void deleteBuilding(long playerId, JSONObject json)
     {
-    }
-    
-    private void setUpBuilding(long userId, JSONObject json)
-    {
-    }
-
-    private void deletePlant(long userId, JSONObject json)
-    {
+        int x = Integer.parseInt(json.get("x").toString());
+        int y = Integer.parseInt(json.get("y").toString());
+        FieldManager.INSTANCE.updateCell(playerId,new EmptyCell(x,y));
+        farmStatus(playerId);
     }
 
-    private void setUpPlant(long userId, JSONObject json)
+    private void setUpBuilding(long playerId, JSONObject json)
     {
+        String buildingName = json.get("name").toString();
+        int x = Integer.parseInt(json.get("x").toString());
+        int y = Integer.parseInt(json.get("y").toString());
+        BuildingConstruct construct = new BuildingConstruct(buildingName, playerId, x, y);
+        if (!construct.run())
+            sendError(construct.getError(), playerId);
+        else
+            farmStatus(playerId);
+    }
+
+    private void deletePlant(long playerId, JSONObject json)
+    {
+        int x = Integer.parseInt(json.get("x").toString());
+        int y = Integer.parseInt(json.get("y").toString());
+        FieldManager.INSTANCE.updateCell(playerId,new EmptyCell(x,y));
+        farmStatus(playerId);
+    }
+
+    private void setUpPlant(long playerId, JSONObject json)
+    {
+        String plantName = json.get("name").toString();
+        int x = Integer.parseInt(json.get("x").toString());
+        int y = Integer.parseInt(json.get("y").toString());
+        PlantConstuct construct = new PlantConstuct(plantName, playerId, x, y);
+        if (!construct.run())
+        {
+            sendError(construct.getError(), playerId);
+        }
+        else
+        {
+            farmStatus(playerId);
+        }
     }
 
     private void pickUpPlant(long playerId, JSONObject json)
     {
-        int x = (int)json.get("x");
-        int y = (int)json.get("y");
+        int x = Integer.parseInt(json.get("x").toString());
+        int y = Integer.parseInt(json.get("y").toString());
 
         PickingPlant pick = new PickingPlant(playerId, x, y);
         if (!pick.run())
         {
             System.out.println("Не удалось собрать расстение");
-            sendError("Не удалось собрать расстение", playerId);
-        } 
+            sendError("Can't pickUp Plant", playerId);
+        }
+        else
+        {
+            farmStatus(playerId);
+        }
     }
 
-    private void getAvaliablePlants(long userId)
+    private void getAvaliablePlants(long playerId)
     {
         List<Plant> plants = ConstCollections.avaliablePlants;
-       String responseMsg = plantsListToJSON(plants);
+        String responseMsg = plantsListToJSON(plants);
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), responseMsg);
-        sendData(userId, FARM_COMMAND.GET_AVAILABLE_PLANTS, response);
+        sendData(playerId, FARM_COMMAND.GET_AVAILABLE_PLANTS, response);
     }
 
     private String plantsListToJSON(List<Plant> plants)
@@ -147,22 +179,22 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND>
         return FARM_COMMAND.valueOf(commandId);
     }
 
-    private void farmStatus(long userId)
+    private void farmStatus(long playerId)
     {
-        Field field = FieldManager.INSTANCE.getFieldByUserId(userId);
+        Field field = FieldManager.INSTANCE.getFieldByUserId(playerId);
         List<TransferCellInfo> cells = farmToTransferList(field);
         String responseMsg = cellsToJSON(cells);
 
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), responseMsg);
-        sendData(userId, FARM_COMMAND.FARM_STATUS, response);
+        sendData(playerId, FARM_COMMAND.FARM_STATUS, response);
+        sendBalance(playerId);
     }
 
     private List<TransferCellInfo> farmToTransferList(Field field)
     {
         List<TransferCellInfo> resultList = new ArrayList<>();
         TransferCellInfo tempobj = null;
-
 
         for (Map.Entry<Integer, Map<Integer, Cell>> entryRows : field.getCells().entrySet())
         {
@@ -226,11 +258,18 @@ public class FarmBuffer extends AbstractBuffer<FARM_COMMAND>
         return jsonList.toString();
     }
 
-    private void sendError(String errorMessage, long userId)
+    private void sendBalance(long playerId)
+    {
+        JSONObject response = new JSONObject();
+        response.put(KEYS.MODEL_DATA.getKey(), PlayerManager.INSTANCE.getPlayer(playerId).getBalance());
+        sendData(playerId, FARM_COMMAND.MONEY_BALANCE, response);
+    }
+
+    private void sendError(String errorMessage, long playerId)
     {
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), errorMessage);
-        sendData(userId, FARM_COMMAND.FARM_ERROR, response);
+        sendData(playerId, FARM_COMMAND.FARM_ERROR, response);
     }
 
 

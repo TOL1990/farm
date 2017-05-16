@@ -173,6 +173,7 @@ public class PlayerDaoImpl implements PlayerDao
                 e.printStackTrace();
             }
         }
+        players.get(player.getId()).setBalance(player.getBalance()); // update ballance in mapCash
     }
 
 

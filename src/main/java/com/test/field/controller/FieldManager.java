@@ -18,22 +18,24 @@ public enum FieldManager
 
     FieldManager()
     {
-      //  fieldByUserId = new ConcurrentHashMap<>();
+        //  fieldByUserId = new ConcurrentHashMap<>();
         fieldDao = FactoryDao.getInstance().getFieldDao();
     }
-    
+
     public Field getFieldById(long fieldId)
     {
-        return  fieldDao.getFieldById(fieldId);
+        return fieldDao.getFieldById(fieldId);
     }
+
     public Field getFieldByUserId(long userId)
     {
         return fieldDao.getField(new Player(userId));
     }
 
-    public void updateCell(Long fieldId, Cell cell)
+    public void updateCell(Long playerId, Cell cell)
     {
-        fieldDao.updateCell(fieldId,cell);
+        Field field = getFieldByUserId(playerId);
+        fieldDao.updateCell(field.getId(), cell);
     }
 
     // Реализация когда кеш лежит в менеджере
