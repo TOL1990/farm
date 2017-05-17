@@ -58,13 +58,18 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND>
         GameService gameService = GameManager.INSTANCE.getGameService(userId);
         int x = Integer.parseInt(json.get("x").toString());
         int y = Integer.parseInt(json.get("y").toString());
+        
+        
         Area area = gameService.getArea(new Area(x, y));
-        String msg = getJSONStringArea(area);
+        if(area != null)
+        {
+            String msg = getJSONStringArea(area);
 
-        JSONObject response = new JSONObject();
-        response.put(KEYS.MODEL_DATA.getKey(), msg);
-        sendData(userId, WORLD_COMMAND.GET_AREA, response);
-        System.out.println("SEND to client" + msg);
+            JSONObject response = new JSONObject();
+            response.put(KEYS.MODEL_DATA.getKey(), msg);
+            sendData(userId, WORLD_COMMAND.GET_AREA, response);
+            System.out.println("SEND to client" + msg);
+        }
     }
 
     @Override
@@ -124,12 +129,15 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND>
     private void getArea(long playerId, int x, int y)
     {
              Area area = AreaManager.INSTANCE.getAreaByCoorinates(x,y);
-            JSONObject response = new JSONObject();
-            // String msg = getRandomAreaCells();
-            String msg = getJSONStringArea(area);
-            response.put(KEYS.MODEL_DATA.getKey(), msg);
-            sendData(playerId, WORLD_COMMAND.GET_AREA, response);
-            //System.out.println("SEND to client" + msg);
+             if(area != null)
+             {
+                 JSONObject response = new JSONObject();
+                 // String msg = getRandomAreaCells();
+                 String msg = getJSONStringArea(area);
+                 response.put(KEYS.MODEL_DATA.getKey(), msg);
+                 sendData(playerId, WORLD_COMMAND.GET_AREA, response);
+                 //System.out.println("SEND to client" + msg);
+             }
     }
 
     private void sendHomeNeighbors(long userId, int homeX, int homeY)
