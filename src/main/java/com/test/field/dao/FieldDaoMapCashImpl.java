@@ -297,25 +297,7 @@ public class FieldDaoMapCashImpl implements FieldDao
             }
         }
     }
-
-//    public Player getPlayer(long playerId)
-//    {
-//        Player player = players.get(playerId);
-//        if (player == null)
-//        {
-//            player = addPlayer(playerId);
-//            // System.out.println("Ошибка от клиента если такоего нету");
-//        }
-//        return player;
-//    }
-//
-//    private Player addPlayer(long playerId)
-//    {
-//        Player player = playerDao.getPlayerById(playerId);
-//        players.put(playerId, player);
-//        return player;
-//    }
-
+    
 
     @Override
     public Field getFieldId(Player player)
@@ -395,6 +377,8 @@ public class FieldDaoMapCashImpl implements FieldDao
     private Map<Integer,Map<Integer,Cell>> addEmptyCells(long fieldId)
     {
         Field fildCellcontainer = new Field();
+
+        //todo заменить на булкInsert
         for (int x = 1; x < 8 + 1; x++)
         {
             for (int y = 1; y < 8 + 1; y++)
@@ -434,7 +418,12 @@ public class FieldDaoMapCashImpl implements FieldDao
         }
         return new EmptyCell(x,y);
     }
-
+    private String bulckEmptyCellsInsert(long id)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.toString();
+    }
+    
     @Override
     public void updateCell(long fieldId, Cell cell)
     {

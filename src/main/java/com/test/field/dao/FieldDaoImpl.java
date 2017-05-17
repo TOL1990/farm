@@ -123,7 +123,6 @@ public class FieldDaoImpl //implements FieldDao
 
     public void addField(Player player)
     {
-        //todo создать новое поле и заполнить его пустыми клеточками, написать запрос
         Connection connection = DaoUtils.getConnection();
         PreparedStatement preparedStatement = null;
 

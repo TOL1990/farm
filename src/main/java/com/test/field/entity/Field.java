@@ -34,6 +34,11 @@ public class    Field
         this.player = player;
     }
 
+    public Field(long id)
+    {
+        this.id = id;
+    }
+
     public Field(Field copyField)
     {
         this.cells =  copyField.getCells();

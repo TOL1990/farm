@@ -29,7 +29,7 @@ public class QueryConfig {
     public static String GET_CELLS_BY_AREA_ID;
     public static String GET_AREA_BY_ID;
     public static String GET_ALL_AREAS;
-
+    public static String UPDATE_AREA_CELL;
 
     static {
         Properties properties = new Properties();
@@ -55,6 +55,7 @@ public class QueryConfig {
             GET_CELLS_BY_AREA_ID = properties.getProperty("GET_CELLS_BY_AREA_ID");
             GET_AREA_BY_ID = properties.getProperty("GET_AREA_BY_ID");
             GET_ALL_AREAS = properties.getProperty("GET_ALL_AREAS");
+            UPDATE_AREA_CELL = properties.getProperty("UPDATE_AREA_CELL");
 
         } catch (FileNotFoundException ex) {
             System.err.println("Properties config file not found");

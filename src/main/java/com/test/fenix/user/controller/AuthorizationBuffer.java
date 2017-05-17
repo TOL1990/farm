@@ -4,6 +4,7 @@ import com.aad.myutil.logger.MYLoggerFactory;
 import com.aad.myutil.server.client.MYAuthorizationIF;
 import com.aad.myutil.server.client.MYClientIF;
 import com.aad.myutil.server.client.MYLoginIF;
+import com.test.Area.controller.AreaManager;
 import com.test.GameManager;
 import com.test.fenix.user.model.User;
 import com.test.field.controller.FieldManager;
@@ -80,6 +81,9 @@ public enum AuthorizationBuffer implements MYAuthorizationIF
             }
            Player newPlayer =  PlayerManager.INSTANCE.addPlayer(nickName, pass);
             FieldManager.INSTANCE.addField(newPlayer.getId());
+            long fieldId = FieldManager.INSTANCE.getFieldByUserId(newPlayer.getId()).getId();
+            AreaManager.INSTANCE.addNewArea(fieldId); //добавляем новую ферму на карту мира
+            
             clientIF = login(myLoginIF);
           //  long userId = -1;
 

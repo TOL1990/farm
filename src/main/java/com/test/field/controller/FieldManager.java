@@ -13,12 +13,10 @@ public enum FieldManager
 {
     INSTANCE;
 
-    //private Map<Long, Long> fieldByUserId;//<UserId, FieldId>
     private FieldDao fieldDao;
 
     FieldManager()
     {
-        //  fieldByUserId = new ConcurrentHashMap<>();
         fieldDao = FactoryDao.getInstance().getFieldDao();
     }
 

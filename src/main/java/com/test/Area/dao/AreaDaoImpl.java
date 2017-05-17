@@ -9,6 +9,7 @@ import com.test.util.propertyconfig.QueryConfig;
 
 import java.sql.*;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -304,6 +305,67 @@ public class AreaDaoImpl implements AreaDao
             }
         }
         return null;
+    }
+
+    @Override
+    public void addNewArea(Long fieldId)
+    {
+        AreaCell newCell = getAvailableSpace();
+        newCell.setField(new Field(fieldId));
+        updateCellInDB(newCell);
+    }
+
+
+    //Метод возвращает место в котором может разместится ферма
+    //в данном случае рандомно по всей карте.
+    private AreaCell getAvailableSpace()
+    {
+        AreaCell cell = null;
+        Random random = new Random();
+        random.nextInt(5);
+        //тут может быть случай когда область заполнится и не будет места для новой случайной клетки
+        //и тогда мы попадем  вбесконечный цкл
+        Area area = getAreaByCoordinates(random.nextInt(5), random.nextInt(5));
+        do
+        {
+            cell = area.getCell(random.nextInt(5), random.nextInt(5));
+            if (cell.getType().equals(AREA_TYPE.EMPTY))
+            {
+                return cell;
+            }
+        }
+        while (true);
+    }
+
+    //Делаем из ячейки ферму
+    private void updateCellInDB(AreaCell newCell)
+    {
+        Connection con = DaoUtils.getConnection();
+
+        PreparedStatement statement = null;
+        try
+        {
+            statement = con.prepareStatement(QueryConfig.UPDATE_AREA_CELL);
+            statement.setLong(1,newCell.getField().getId());
+            statement.setInt(2, 2);
+            statement.setLong(3, newCell.getId());
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                DaoUtils.close(con, statement);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean containFieldId(Area area, long fieldId)

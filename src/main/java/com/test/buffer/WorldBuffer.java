@@ -1,9 +1,11 @@
 package com.test.buffer;
 
 import com.aad.myutil.logger.MYLoggerFactory;
+import com.test.Area.controller.AreaManager;
 import com.test.GameManager;
 import com.test.controller.COMMAND_FAMILY;
 import com.test.controller.WORLD_COMMAND;
+import com.test.field.controller.FieldManager;
 import com.test.util.KEYS;
 import com.test.Area.entity.Area;
 import com.test.Area.entity.AreaCell;
@@ -105,32 +107,29 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND>
         return jsonTransfer.toString();
     }
 
-    private void getHomeArea(long userId)
+    private void getHomeArea(long playerId)
     {
-        GameService gameService = GameManager.INSTANCE.getGameService(userId);
-        Area homeArea = gameService.getArea(); // достанет по ид поля
-        String msg = getJSONStringArea(homeArea);
+        long fieldId = FieldManager.INSTANCE.getFieldByUserId(playerId).getId();
+        
+        Area homeArea = AreaManager.INSTANCE.getAreaByFieldId(fieldId);
 
+        String msg = getJSONStringArea(homeArea);
         JSONObject response = new JSONObject();
         response.put(KEYS.MODEL_DATA.getKey(), msg);
-        System.out.println("на сервер посылаем - " + msg);
-        sendData(userId, WORLD_COMMAND.GET_HOME_AREA, response);
-        sendHomeNeighbors(userId, homeArea.getX(), homeArea.getY());
+        //System.out.println("на сервер посылаем - " + msg);
+        sendData(playerId, WORLD_COMMAND.GET_HOME_AREA, response);
+        sendHomeNeighbors(playerId, homeArea.getX(), homeArea.getY());
     }
 
-    private void getArea(long userId, int x, int y)
+    private void getArea(long playerId, int x, int y)
     {
-        GameService gameService = GameManager.INSTANCE.getGameService(userId);
-        Area area = gameService.getArea(new Area(x, y));
-        if (area != null)
-        {
+             Area area = AreaManager.INSTANCE.getAreaByCoorinates(x,y);
             JSONObject response = new JSONObject();
             // String msg = getRandomAreaCells();
             String msg = getJSONStringArea(area);
             response.put(KEYS.MODEL_DATA.getKey(), msg);
-            sendData(userId, WORLD_COMMAND.GET_AREA, response);
+            sendData(playerId, WORLD_COMMAND.GET_AREA, response);
             //System.out.println("SEND to client" + msg);
-        }
     }
 
     private void sendHomeNeighbors(long userId, int homeX, int homeY)
