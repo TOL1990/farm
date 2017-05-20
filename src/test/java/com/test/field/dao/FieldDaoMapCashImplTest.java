@@ -48,9 +48,9 @@ public class FieldDaoMapCashImplTest
     public void getAllPlantsTest()
     {
         FieldDaoMapCashImpl daoImpl = new FieldDaoMapCashImpl();
-        assertNotNull(ConstCollections.avaliablePlants);
+        assertNotNull(ConstCollections.availablePlants);
             
-        int listSize = ConstCollections.avaliablePlants.size();
+        int listSize = ConstCollections.availablePlants.size();
         assertTrue(listSize > 1);
     }
 
@@ -58,8 +58,8 @@ public class FieldDaoMapCashImplTest
     public void getAllBuildingsTest()
     {
         FieldDaoMapCashImpl daoImpl = new FieldDaoMapCashImpl();
-        assertNotNull(ConstCollections.avaliableBuildings);
-        int listSize = ConstCollections.avaliableBuildings.size();
+        assertNotNull(ConstCollections.availableBuildings);
+        int listSize = ConstCollections.availableBuildings.size();
         assertTrue(listSize > 1);
     }
 }

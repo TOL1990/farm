@@ -1,6 +1,5 @@
 package com.test.buffer;
 
-import com.aad.myutil.logger.MYLoggerFactory;
 import com.aad.myutil.server.MYServer;
 import com.test.controller.COMMAND_FAMILY;
 import com.test.controller.LOGIN_COMMAND;
@@ -20,39 +19,8 @@ public class LoginBuffer extends AbstractBuffer<LOGIN_COMMAND> {
 
     @Override
     public void executeCommand(long userId, LOGIN_COMMAND command, Object o) {
-        try {
-            JSONObject json = (JSONObject) o;
-            switch (command) {
-                case LOGIN: {
-                    getDeviceInfo(userId, json);
-                    break;
-                }
-//                case OTVETKA: {
-//                    //otvetkaMeth(userId, json);
-//                  //  getFarm(userId);
-//                    break;
-//                }
 
-//                case LOGIN: {
-//                    String msg = JSONHelper.getString(json.get(KEYS.MODEL_DATA.getKey()));
-//                    break;
-//                }
-//                case GETAVPLANTS: {
-//                    getAvaliablePlants(userId);
-//                    break;
-//                }
-//                case PICK_UP_PLANT: {
-//                    pickUpPlant(userId,json);
-//                    break;
-//                }
-            }
-        } catch (Exception e) {
-            MYLoggerFactory.get().error(e.getMessage(), e);
-            e.printStackTrace();
-        }
     }
-
-    private void getDeviceInfo(long userId, JSONObject json) {}
 
     private void loginEvent() {
         MYServer.getServerEvents().addListener(MYServer.MYSERVER_EVENTS.LISTENER_LOGIN, params ->

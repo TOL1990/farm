@@ -118,7 +118,6 @@ public class AreaDaoImpl implements AreaDao
 
     private Map<Integer, Map<Integer, AreaCell>> getCellsInAreaByIdDB(long areaId)
     {
-        // List<AreaCell> areaCells = new ArrayList<>();
         Area area = new Area();
 
         Connection connection = DaoUtils.getConnection();
@@ -289,7 +288,6 @@ public class AreaDaoImpl implements AreaDao
         return getArea(x, y);
     }
 
-
     @Override
     public Area getAreaByFieldId(long fieldId)
     {
@@ -310,8 +308,10 @@ public class AreaDaoImpl implements AreaDao
     @Override
     public void addNewArea(Long fieldId)
     {
+        System.out.println("УРА зашло!");
         AreaCell newCell = getAvailableSpace();
         newCell.setField(new Field(fieldId));
+        newCell.setType(AREA_TYPE.FARM);
         updateCellInDB(newCell);
     }
 

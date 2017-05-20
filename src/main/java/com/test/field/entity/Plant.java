@@ -1,24 +1,25 @@
 package com.test.field.entity;
 
-
 /**
  * Created by Taras on 09.03.2017.
  */
+
 public class Plant extends Cell
 {
     private long id;
     private String name;
     private long price;
-    private long proseed; //выручка
+    private long proceed; //выручка
     private long growTime;
     private long plantedTime;
 
+    public Plant(){setType(CELL_TYPE.PLANT);}
     public Plant(Plant copyPlant)
     {
         this.id = copyPlant.getId();
         this.name = copyPlant.getName();
         this.price = copyPlant.getPrice();
-        this.proseed = copyPlant.getProseed();
+        this.proceed = copyPlant.getProceed();
         this.growTime = copyPlant.getGrowTime();
         this.plantedTime = copyPlant.getPlantedTime();
     }
@@ -59,24 +60,24 @@ public class Plant extends Cell
         this.setType(CELL_TYPE.PLANT);
     }
 
-    public Plant(long id, String name, long price, long proseed, long growTime)
+    public Plant(long id, String name, long price, long proceed, long growTime)
     {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.proseed = proseed;
+        this.proceed = proceed;
         this.growTime = growTime;
         this.setType(CELL_TYPE.PLANT);
     }
 
-    public Plant(long id, String name, long price, long proseed, long growTime, long plantedTime, int x, int y)
+        public Plant(long id, String name, long price, long proceed, long growTime, long plantedTime, int x, int y)
     {
         this.xPosition = x;
         this.yPosition = y;
         this.id = id;
         this.name = name;
         this.price = price;
-        this.proseed = proseed;
+        this.proceed = proceed;
         this.growTime = growTime;
         this.plantedTime = plantedTime;
         this.setType(CELL_TYPE.PLANT);
@@ -112,14 +113,14 @@ public class Plant extends Cell
         this.price = price;
     }
 
-    public long getProseed()
+    public long getProceed()
     {
-        return proseed;
+        return proceed;
     }
 
-    public void setProseed(long proseed)
+    public void setProceed(long proceed)
     {
-        this.proseed = proseed;
+        this.proceed = proceed;
     }
 
     public long getGrowTime()
@@ -164,7 +165,7 @@ public class Plant extends Cell
         {
             return false;
         }
-        if (proseed != plant.proseed)
+        if (proceed != plant.proceed)
         {
             return false;
         }
@@ -185,7 +186,7 @@ public class Plant extends Cell
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (int) (price ^ (price >>> 32));
-        result = 31 * result + (int) (proseed ^ (proseed >>> 32));
+        result = 31 * result + (int) (proceed ^ (proceed >>> 32));
         result = 31 * result + (int) (growTime ^ (growTime >>> 32));
         result = 31 * result + (int) (plantedTime ^ (plantedTime >>> 32));
         return result;
@@ -199,6 +200,6 @@ public class Plant extends Cell
     @Override
     public String toString()
     {
-        return "Plant{" + "[" + this.xPosition + " , " + this.yPosition + "] id=" + id + ", name='" + name + '\'' + ", price=" + price + ", proseed=" + proseed + ", growTime=" + growTime + ", plantedTime=" + plantedTime + '}';
+        return "Plant{" + "[" + this.xPosition + " , " + this.yPosition + "] id=" + id + ", name='" + name + '\'' + ", price=" + price + ", proceed=" + proceed + ", growTime=" + growTime + ", plantedTime=" + plantedTime + '}';
     }
 }

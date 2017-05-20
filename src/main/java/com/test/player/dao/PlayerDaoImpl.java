@@ -5,13 +5,11 @@ import com.test.util.DaoUtils;
 import com.test.util.propertyconfig.QueryConfig;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by Taras 
+ * Created by Taras
  */
 public class PlayerDaoImpl implements PlayerDao
 {
@@ -26,9 +24,9 @@ public class PlayerDaoImpl implements PlayerDao
         loadPlayers();
     }
 
-    public List<Player> getAllPlayers()
+    public Map<Long, Player> getAllPlayers()
     {
-        return new ArrayList<>(players.values());
+        return players;
     }
 
     private void loadPlayers()
@@ -72,17 +70,17 @@ public class PlayerDaoImpl implements PlayerDao
     }
 
 
-    public void addPlayer(Player player)
+    public Player addPlayer(Player player)
     {
         player.setBalance(PLAYERS_STARTING_MONEY);
         long id = addPlayerDB(player);
         if (id >= 0)
         {
             player.setId(id);
-
             players.put(id, player);
             playersByLogin.put(player.getNick(), id);
         }
+        return player;
     }
 
     public long addPlayerDB(Player player)

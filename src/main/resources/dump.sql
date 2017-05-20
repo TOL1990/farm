@@ -28,7 +28,7 @@ CREATE TABLE `building_bonuces` (
   `id_bonus` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `time` int(11) DEFAULT NULL COMMENT 'бонус к времени',
-  `proseed` int(11) DEFAULT NULL COMMENT 'бонус к урожаю',
+  `proceed` int(11) DEFAULT NULL COMMENT 'бонус к урожаю',
   PRIMARY KEY (`id_bonus`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -164,7 +164,7 @@ CREATE TABLE `plants` (
   `id_plant` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
-  `proseed` int(11) DEFAULT NULL,
+  `proceed` int(11) DEFAULT NULL,
   `grow_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_plant`),
   UNIQUE KEY `id_plant_UNIQUE` (`id_plant`)

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<buildings>
+    <building>
+        <id>1</id>
+        <name>reactor</name>
+        <price>700</price>
+        <timeBonus>0</timeBonus>
+        <proceedBunus>350</proceedBunus>
+    </building>
+    <building>
+        <id>2</id>
+        <name>greenhouse</name>
+        <price>800</price>
+        <timeBonus>30</timeBonus>
+        <proceedBunus>0</proceedBunus>
+    </building>
+    <building>
+        <id>3</id>
+        <name>fertilizer</name>
+        <price>150</price>
+        <timeBonus>0</timeBonus>
+        <proceedBunus>25</proceedBunus>
+    </building>
+    <building>
+        <id>4</id>
+        <name>tent</name>
+        <price>40</price>
+        <timeBonus>30</timeBonus>
+        <proceedBunus>0</proceedBunus>
+    </building> 
+</buildings>

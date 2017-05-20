@@ -14,6 +14,7 @@ import com.test.player.entity.Player;
 public class PickingPlant extends Command
 {
     private Plant plant;
+    private Plant plantTemplate;
     private Field field;
     private Player player;
     private long timeBonus = 0; // бонус к созреваниб
@@ -34,6 +35,7 @@ public class PickingPlant extends Command
     {
         this.field = FieldManager.INSTANCE.getFieldByUserId(playerId);
         this.player = PlayerManager.INSTANCE.getPlayer(playerId);
+        
         this.x = x;
         this.y = y;
         setValid(true);
@@ -46,13 +48,13 @@ public class PickingPlant extends Command
 
         if (isValid())
         {
-            long earning = plant.getProseed();
+            long earning = plant.getProceed();
 
             player.setBalance(player.getBalance() + earning);
             PlayerManager.INSTANCE.updatePlayerBallance(player);
             
             field.setCell(new EmptyCell(x, y), x, y); // делаем ячейку пустой в кеше поля
-            FieldManager.INSTANCE.updateCell(field.getId(), field.getCell(x, y));
+            FieldManager.INSTANCE.updateCell(field.getId(), x, y);
             run = true;
         }
         return run;
@@ -62,12 +64,13 @@ public class PickingPlant extends Command
     {
         if (field.getCell(x, y).getType() != CELL_TYPE.PLANT)
         {
-            System.out.println("В ячейке не расстение.");
+            System.out.println("IN cell not a plant.");
             setValid(false);
         }
         else
         {
             plant = (Plant) field.getCell(x, y);
+         //        this.plantTemplate = ConstCollections.getPlant(plant.getName());
         }
 
         // List<Cell> cells = field.getCells();
@@ -118,7 +121,7 @@ public class PickingPlant extends Command
 //                Building building = (Building) c; // кастонули ячейку к зданию чтобы получить бонус
 //
 //                long time = building.getBonus().getTime();
-//                long proseed = building.getBonus().getProseed();
+//                long proseed = building.getBonus().getProceed();
 //
 //                if (time > timeBonus)
 //                {
@@ -345,7 +348,7 @@ public class PickingPlant extends Command
 //
 //        if (isValid())
 //        {
-//            long earning = plant.getProseed() + (plant.getProseed() * proseedBonus / 100);
+//            long earning = plant.getProceed() + (plant.getProceed() * proseedBonus / 100);
 //
 //            Player player = field.getPlayer();
 //            player.setBalance(player.getBalance() + earning);
@@ -397,7 +400,7 @@ public class PickingPlant extends Command
 //                Building building = (Building) c; // кастонули ячейку к зданию чтобы получить бонус
 //
 //                long time = building.getBonus().getTime();
-//                long proseed = building.getBonus().getProseed();
+//                long proseed = building.getBonus().getProceed();
 //
 //                if (time > timeBonus)
 //                {

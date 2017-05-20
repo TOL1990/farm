@@ -16,6 +16,12 @@ private int proseed; // увеличение урожая
         this.proseed = proseed;
     }
 
+    public BuildingBonus(int time, int proseed)
+    {   
+        this.time = time;
+        this.proseed = proseed;
+    }
+
     public BuildingBonus(long id) {
         this.id = id;
     }

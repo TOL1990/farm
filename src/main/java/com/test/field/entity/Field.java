@@ -3,14 +3,13 @@ package com.test.field.entity;
 
 import com.test.player.entity.Player;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Taras on 09.03.2017.
  */
-public class    Field
+public class Field
 {
 
     private final int HORIZONTAL_CELL = 8;
@@ -18,8 +17,6 @@ public class    Field
    // private List<Cell> cells;
     private Player player;
     private long id;
-    private List<Plant> allPlants;
-    private List<Building> allBuildings;
 
     private Map<Integer, Map<Integer, Cell>> cells = new ConcurrentHashMap<>();
 
@@ -44,8 +41,6 @@ public class    Field
         this.cells =  copyField.getCells();
         this.player = copyField.getPlayer();
         this.id = copyField.getId();
-        this.allPlants = copyField.getAllPlants();
-        this.allBuildings = copyField.getAllBuildings();
     }
 
     public void createEmptyCells()
@@ -107,6 +102,8 @@ public class    Field
      */
     public void setCell(Cell obj, int x, int y)
     {
+         obj.setXPosition(x);
+         obj.setYPosition(y);
         Map<Integer, Cell> mapY = cells.get(x);
 
         if (mapY == null)
@@ -117,122 +114,7 @@ public class    Field
 
         mapY.put(y, obj);
     }
-//    public void setCell(Cell obj, int x, int y)
-//    {
-//        obj.setXPosition(x);
-//        obj.setYPosition(y);
-//        for (int i = 0; i < cells.size(); i++)
-//        {
-//            if (cells.get(i).getXPosition() == x && cells.get(i).getYPosition() == y)
-//            {
-//                cells.set(i, obj);
-//            }
-//        }
-//    }
 
-    public void consoleSoutField()
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-        for (int i = 8; i < 16; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-        for (int i = 16; i < 24; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-        for (int i = 24; i < 32; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-        for (int i = 32; i < 40; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-        for (int i = 40; i < 48; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-        for (int i = 48; i < 56; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-        for (int i = 56; i < 64; i++)
-        {
-            System.out.print(cells.get(i) + "  ");
-        }
-        System.out.println();
-
-    }
-
-    public String getConsoleSoutField()
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Хазяин поля " + player.toString());
-        builder.append("\n");
-
-        builder.append("id = " + id);
-        builder.append("\n");
-
-
-        for (int i = 0; i < 8; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-        for (int i = 8; i < 16; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-        for (int i = 16; i < 24; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-        for (int i = 24; i < 32; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-        for (int i = 32; i < 40; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-        for (int i = 40; i < 48; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-        for (int i = 48; i < 56; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-        for (int i = 56; i < 64; i++)
-        {
-            builder.append(cells.get(i) + "  ");
-        }
-        builder.append("\n");
-
-        return builder.toString();
-    }
-
-    public long getAvaliableMoney()
-    {
-        return player.getBalance();
-    }
 
     public long getId()
     {
@@ -243,14 +125,10 @@ public class    Field
     {
         this.id = id;
     }
-//    public Map<Integer, Map<Integer, Cell>> getCells()
-//    {
-//        return cells;
-//    }
 
     public Map<Integer, Map<Integer, Cell>> getCells()
     {
-        return cells;
+        return this.cells;
     }
     public void setCells(Map<Integer, Map<Integer, Cell>> cells)
     {
@@ -267,23 +145,4 @@ public class    Field
         this.player = player;
     }
 
-    public List<Plant> getAllPlants()
-    {
-        return allPlants;
-    }
-
-    public void setAllPlants(List<Plant> allPlants)
-    {
-        this.allPlants = allPlants;
-    }
-
-    public List<Building> getAllBuildings()
-    {
-        return allBuildings;
-    }
-
-    public void setAllBuildings(List<Building> allBuildings)
-    {
-        this.allBuildings = allBuildings;
-    }
 }

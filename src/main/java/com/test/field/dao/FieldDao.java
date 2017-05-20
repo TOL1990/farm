@@ -9,14 +9,14 @@ import java.util.Map;
 /**
  * Created by Taras on 09.03.2017.
  */
-public interface FieldDao {
+public interface FieldDao
+{
 
-    Field getFieldId(Player player);
-    Field getField();
-    Field getFieldById(long fieldId);
     Map<Integer, Map<Integer, Cell>> getCellsByFieldId(long id);
+
     void addField(Long playerId);
 
     Field getField(Player player);
-    void updateCell(long fieldId, Cell cell);
+
+    void updateCell(long fieldId, int x, int y);    
 }

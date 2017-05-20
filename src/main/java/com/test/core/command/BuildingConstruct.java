@@ -3,6 +3,7 @@ package com.test.core.command;
 import com.test.core.ConstCollections;
 import com.test.field.controller.FieldManager;
 import com.test.field.entity.Building;
+import com.test.field.entity.BuildingBonus;
 import com.test.field.entity.CELL_TYPE;
 import com.test.field.entity.Field;
 import com.test.player.conlroller.PlayerManager;
@@ -16,16 +17,16 @@ public class BuildingConstruct extends Command
 {
     private Player player;
     private Building building;
+    private Building buildTemplate;
     private Field field;
     private int x;
     private int y;
 
     public BuildingConstruct(String buildingName, long playerId, int x, int y)
     {
-        this.building = getBuildingWithName(buildingName);
+        this.buildTemplate = ConstCollections.getBuilding(buildingName);
         this.field = FieldManager.INSTANCE.getFieldByUserId(playerId);
         this.player = PlayerManager.INSTANCE.getPlayer(playerId);
-        this.field = field;
         this.x = x;
         this.y = y;
         this.error = "";
@@ -40,27 +41,34 @@ public class BuildingConstruct extends Command
         validation();
         if (isValid())
         {
-            building.setXPosition(x);
-            building.setYPosition(y);
+            Building newBldng = getNewBuilding();
 
-            player.setBalance(player.getBalance() - building.getPrice());
+            player.setBalance(player.getBalance() - buildTemplate.getPrice());
             PlayerManager.INSTANCE.updatePlayerBallance(player);
-            
-            field.setCell(building, x, y); // ложим в ячейку здание
-            FieldManager.INSTANCE.updateCell(field.getId(), field.getCell(x, y));
+
+            field.setCell(newBldng, x, y); // ложим в ячейку здание
+            FieldManager.INSTANCE.updateCell(field.getId(), x, y);
             run = true;
         }
         return run;
     }
 
+    private Building getNewBuilding()
+    {
+        int x = this.x;
+        int y = this.y;
+        long price = buildTemplate.getPrice();
+        String name = buildTemplate.getName();
+        long id = buildTemplate.getId();
+        int timeBonus = buildTemplate.getBonus().getTime();
+        int proceedBonus = buildTemplate.getBonus().getProseed();
+        return new Building(id, name, new BuildingBonus(timeBonus, proceedBonus), price, x, y);
+    }
+
     private void validation()
     {
-        if (this.building == null)
-        {
-            System.out.println("Wrong name for building in BuildingConstruct");
-            error = "Wrong name for building in BuildingConstruct";
-            setValid(false);
-        }
+
+        
         if (field.getCell(x, y).getType() != CELL_TYPE.EMPTY)
         {
             System.out.println(ErrorConfig.CELL_NOT_EMPTY_CANT_BUILD);
@@ -69,23 +77,11 @@ public class BuildingConstruct extends Command
         }
         //если такого здания нету в базе
         //хватает ли денег
-        if (player.getBalance() < building.getPrice())
+        if (player.getBalance() < buildTemplate.getPrice())
         {
-            System.out.println("Нехватает денег для постройки здания");
+            System.out.println("NOT ENOUGHT MONEY FOR BUILD");
             setValid(false);
             error = ErrorConfig.NOT_ENOUGH_MONEY;
         }
-    }
-
-    private Building getBuildingWithName(String buildingName)
-    {
-        for (Building building : ConstCollections.avaliableBuildings)
-        {
-            if (building.getName().equals(buildingName))
-            {
-                return new Building(building.getId(), building.getName(), building.getBonus(), building.getPrice());
-            }
-        }
-        return null;
     }
 }

@@ -2,14 +2,12 @@ package com.test.buffer;
 
 import com.aad.myutil.logger.MYLoggerFactory;
 import com.test.Area.controller.AreaManager;
-import com.test.GameManager;
 import com.test.controller.COMMAND_FAMILY;
 import com.test.controller.WORLD_COMMAND;
 import com.test.field.controller.FieldManager;
 import com.test.util.KEYS;
 import com.test.Area.entity.Area;
 import com.test.Area.entity.AreaCell;
-import oldStaff.service.GameService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -55,12 +53,9 @@ public class WorldBuffer extends AbstractBuffer<WORLD_COMMAND>
 
     private void getArea(long userId, JSONObject json)
     {
-        GameService gameService = GameManager.INSTANCE.getGameService(userId);
         int x = Integer.parseInt(json.get("x").toString());
         int y = Integer.parseInt(json.get("y").toString());
-        
-        
-        Area area = gameService.getArea(new Area(x, y));
+        Area area = AreaManager.INSTANCE.getAreaByCoorinates(x, y);
         if(area != null)
         {
             String msg = getJSONStringArea(area);

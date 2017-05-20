@@ -7,7 +7,6 @@ import com.test.util.DaoUtils;
 import com.test.util.propertyconfig.QueryConfig;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,12 +21,8 @@ public class FieldDaoMapCashImpl implements FieldDao
 
     public FieldDaoMapCashImpl()
     {
-        //Обновляем листы доступных растений и строений из бд. Или здесь же добавиьт из вне
-        //todo подсобрать all plants и all buildings из конфигов из xml
         fields = new ConcurrentHashMap<>();
         fieldByUserId = new ConcurrentHashMap<>();
-        initAllBuildingsDB();
-        initAllPlantsDB();
     }
 
 
@@ -39,6 +34,13 @@ public class FieldDaoMapCashImpl implements FieldDao
             return getFieldByPlayerId(player.getId());
         }
         return null;
+    }
+
+    @Override
+    public void updateCell(long fieldId, int x, int y)
+    {
+        Field field = fields.get(fieldId);      
+        updateCellDB(fieldId, field.getCell(x,y));
     }
 
     private Field getFieldByPlayerId(long playerId)
@@ -122,15 +124,7 @@ public class FieldDaoMapCashImpl implements FieldDao
         Connection connection = DaoUtils.getConnection();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-
-        if (ConstCollections.avaliablePlants.size() < 1)
-        {
-            System.out.println("avaliablePlants не загрузился.");
-        }
-        if (ConstCollections.avaliableBuildings.size() < 1)
-        {
-            System.out.println("avaliableBuildings не загрузился. ");
-        }
+        
         try
         {
             preparedStatement = connection.prepareStatement(QueryConfig.GET_CELLS_BY_FIELD_ID);
@@ -153,14 +147,14 @@ public class FieldDaoMapCashImpl implements FieldDao
                 }
                 if (typeName.equals(CELL_TYPE.PLANT.toString()))
                 {
-                    Plant plantInfo = getPlantWithId(typeId);
-                    Plant plant = new Plant((long) typeId, plantInfo.getName(), plantInfo.getPrice(), plantInfo.getProseed(), plantInfo.getGrowTime(), plantedDate.getTime(), x, y);
+                    Plant plantInfo = ConstCollections.getPlant(typeId);
+                    Plant plant = new Plant((long) typeId, plantInfo.getName(), plantInfo.getPrice(), plantInfo.getProceed(), plantInfo.getGrowTime(), plantedDate.getTime(), x, y);
                     //   cells.add(plant);
                     field.setCell(plant, x, y);
                 }
                 if (typeName.equals(CELL_TYPE.BUILDING.toString()))
                 {
-                    Building buildInfo = getBuildingWithId(typeId);
+                    Building buildInfo = ConstCollections.getBuilding(typeId);
                     Building building = new Building((long) typeId, buildInfo.getName(), buildInfo.getBonus(), buildInfo.getPrice(), x, y);
 //                    cells.add(building);
                     field.setCell(building, x, y);
@@ -187,136 +181,7 @@ public class FieldDaoMapCashImpl implements FieldDao
         return field.getCells();
     }
 
-    private Plant getPlantWithId(int typeId)
-    {
-        for (Plant p : ConstCollections.avaliablePlants)
-        {
-            if (p.getId() == (long) typeId)
-            {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    private Building getBuildingWithId(int typeId)
-    {
-        for (Building building : ConstCollections.avaliableBuildings)
-        {
-            if (building.getId() == (long) typeId)
-            {
-                return building;
-            }
-        }
-        return null;
-    }
-
-    private void initAllPlantsDB()
-    {
-        Connection connection = DaoUtils.getConnection();
-        ConstCollections.avaliablePlants = new ArrayList<Plant>();
-
-
-        Statement statement = null;
-        ResultSet rs = null;
-        try
-        {
-            statement = connection.createStatement();
-            rs = statement.executeQuery(QueryConfig.GET_ALL_PLANTS);
-
-            while (rs.next())
-            {
-                long id = rs.getLong("id_plant");
-                int growTime = rs.getInt("grow_time");
-                String name = rs.getString("name");
-                long price = rs.getLong("price");
-                long proseed = rs.getLong("proseed");
-                ConstCollections.avaliablePlants.add(new Plant(id, name, price, proseed, growTime));
-            }
-        }
-        catch (SQLException e)
-        {
-            System.err.println("Can't get plants from DB");
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                DaoUtils.close(connection, statement, rs);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    private void initAllBuildingsDB()
-    {
-        Connection connection = DaoUtils.getConnection();
-        ConstCollections.avaliableBuildings = new ArrayList<Building>();
-
-
-        Statement statement = null;
-        ResultSet rs = null;
-        try
-        {
-            statement = connection.createStatement();
-            rs = statement.executeQuery(QueryConfig.GET_ALL_BUILDINGS);
-
-            while (rs.next())
-            {
-                int id = rs.getInt("id_building");
-                String buildingName = rs.getString("building_name");
-                long price = rs.getLong("price");
-
-                int proseed = rs.getInt("proseed");
-                int time = rs.getInt("time");
-                String bonusName = rs.getString("bonus_name");
-                long bonusId = rs.getLong("id_bonus");
-
-                ConstCollections.avaliableBuildings.add(new Building(id, buildingName, new BuildingBonus(bonusId, bonusName, time, proseed), price));
-            }
-        }
-        catch (SQLException e)
-        {
-            System.err.println("Can't get buildings from DB");
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                DaoUtils.close(connection, statement, rs);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-    
-
-    @Override
-    public Field getFieldId(Player player)
-    {
-        return null;
-    }
-
-    @Override
-    public Field getField()
-    {
-        return null;
-    }
-
-    @Override
-    public Field getFieldById(long fieldId)
-    {
-        return null;
-    }
-
+  
     @Override
     public void addField(Long playerId)
     {
@@ -423,16 +288,6 @@ public class FieldDaoMapCashImpl implements FieldDao
         StringBuilder stringBuilder = new StringBuilder();
         return stringBuilder.toString();
     }
-    
-    @Override
-    public void updateCell(long fieldId, Cell cell)
-    {
-       Field field = fields.get(fieldId);
-       
-       field.setCell(cell, cell.getXPosition(), cell.getYPosition());//поменяли филд в кеше
-        updateCellDB(fieldId, cell);
-    }
-
     
     private void updateCellDB(long fieldId, Cell cell)
     {

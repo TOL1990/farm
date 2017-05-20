@@ -17,76 +17,75 @@ public class PlantConstuct extends Command
 {
     private Player player;
     private Plant plant;
+    private Plant plantTemplate;
     private Field field;
     private int x;
     private int y;
 
 
-
-    public PlantConstuct(String plantName, long  playerId, int x, int y)
+    public PlantConstuct(String plantName, long playerId, int x, int y)
     {
-        this.plant = getPlantWithName(plantName);
+        this.plant = new Plant();
+        plantTemplate = ConstCollections.getPlant(plantName);
         this.field = FieldManager.INSTANCE.getFieldByUserId(playerId);
         this.player = PlayerManager.INSTANCE.getPlayer(playerId);
         this.x = x;
         this.y = y;
         error = "";
+        setValid(true);
     }
 
-    
 
     public boolean run()
     {
+        boolean run = false;
         //нельзя строить в непустой клетке
         validation();
-        boolean run = false;
         if (isValid())
         {
-            plant.setXPosition(x);
-            plant.setYPosition(y);
-            plant.setPlantedTime(System.currentTimeMillis());
-            
-            player.setBalance(player.getBalance() - plant.getPrice());
+            Plant newPlantedCell = getNewPlantCell();
+
+            player.setBalance(player.getBalance() - plantTemplate.getPrice());
             PlayerManager.INSTANCE.updatePlayerBallance(player);
-            
-            field.setCell(plant, x, y); // ложим в ячейку растение
-            FieldManager.INSTANCE.updateCell(field.getId(), field.getCell(x, y));
+
+            field.setCell(newPlantedCell, x, y); // ложим в ячейку растение
+            FieldManager.INSTANCE.updateCell(field.getId(), x, y);
             run = true;
         }
         return run;
     }
 
+    private Plant getNewPlantCell()
+    {
+        int x = this.x;
+        int y = this.y;
+        long proceed = plantTemplate.getProceed();
+        long growTime = plantTemplate.getGrowTime();
+        long planted = System.currentTimeMillis();
+        String name = plantTemplate.getName();
+        long price = plantTemplate.getPrice();
+        long id = plantTemplate.getId();
+
+        Plant newPlantCell = new Plant(id, name, price, proceed, growTime, planted, x, y);
+        return newPlantCell;
+    }
+
     public void validation()
     {
-        if (this.plant == null)
-        {
-            System.out.println("Wrong name for plant in PlantConstruct");
-            error = "Wrong name for plant in PlantConstruct";
-            setValid(false);
-        }
+        
         if (field.getCell(x, y).getType() != CELL_TYPE.EMPTY)
         {
             error = ErrorConfig.CELL_NOT_EMPTY_CANT_PLANT;
-            System.out.println(error);
             setValid(false);
         }
         //если такого здания нету в базе
 
         //хватает ли денег
-        if (player.getBalance()< plant.getPrice())
+        if (player.getBalance() < plantTemplate.getPrice())
         {
             error = ErrorConfig.NOT_ENOUGH_MONEY;
-            System.out.println(error);
             setValid(false);
         }
     }
-    private Plant getPlantWithName(String serchPlant)
-    {
-        for (Plant plant : ConstCollections.avaliablePlants)
-        {
-            if(plant.getName().equals(serchPlant))
-                return new Plant(plant.getId(), plant.getName(), plant.getPrice(), plant.getProseed(), plant.getGrowTime());
-        }
-        return null;
-    }
+
 }
